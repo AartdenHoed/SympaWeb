@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ADHCinfo>
+	<Stagelib>
+	  <Directory Process="C#">D:\AartenHetty\OneDrive\Staging Library\SympaWeb</Directory>
+	</Stagelib>
+	<Target>
+	  <Directory>C:\AdHC\SympaWeb</Directory>
+	  <Nodes>*ALL*</Nodes>
+	</Target>
+	<DSL>
+	  <Directory>D:\Software\DSL\SympaWeb</Directory>
+	  <Nodes>*ALL*</Nodes>
+	</DSL>
+</ADHCinfo>
