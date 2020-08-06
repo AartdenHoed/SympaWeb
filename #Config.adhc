@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ADHCinfo Nodes="*ALL*">
 	<Stagelib>
-	  <Directory Build="C#">D:\AartenHetty\OneDrive\Staging Library\SympaWeb</Directory>
+	  <Directory Build="C#">$ADHC_Onedrive + 'Staging Library\SympaWeb'</Directory>
 	</Stagelib>
 	<Target>
 	  <Directory Deploy="Copy" Delay="0">C:\AdHC\SympaWeb</Directory>
