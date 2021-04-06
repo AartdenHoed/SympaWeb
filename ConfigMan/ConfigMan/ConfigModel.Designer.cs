@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\AartenHetty\OneDrive\ADHC Dev\Sympa\ConfigMan\ConfigMan\ConfigModel.edmx'. 
+﻿// T4 code generation is enabled for model 'D:\AartenHetty\OneDrive\ADHC Development\SympaWeb.git\ConfigMan\ConfigMan\ConfigModel.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.
