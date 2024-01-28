@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="SympaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="SympaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Component">
           <Key>
             <PropertyRef Name="ComponentID" />
@@ -20,6 +20,7 @@
           <Property Name="ComputerID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ComputerName" Type="nchar" MaxLength="32" Nullable="false" />
           <Property Name="ComputerPurchaseDate" Type="date" />
+          <Property Name="OS" Type="char" MaxLength="24" />
         </EntityType>
         <EntityType Name="Documentation">
           <Key>
@@ -47,11 +48,17 @@
             <PropertyRef Name="ComputerID" />
             <PropertyRef Name="ComponentID" />
             <PropertyRef Name="Release" />
+            <PropertyRef Name="StartDateTime" />
           </Key>
           <Property Name="ComputerID" Type="int" Nullable="false" />
           <Property Name="ComponentID" Type="int" Nullable="false" />
-          <Property Name="Release" Type="nchar" MaxLength="44" Nullable="false" />
-          <Property Name="DateMeasured" Type="date" />
+          <Property Name="Release" Type="char" MaxLength="44" Nullable="false" />
+          <Property Name="Location" Type="char" MaxLength="120" />
+          <Property Name="InstallDate" Type="date" />
+          <Property Name="MeasuredDateTime" Type="datetime" Nullable="false" />
+          <Property Name="StartDateTime" Type="datetime" Nullable="false" />
+          <Property Name="EndDateTime" Type="datetime" />
+          <Property Name="Count" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="License">
           <Key>
@@ -66,6 +73,36 @@
           <Property Name="LicenseKey" Type="nchar" MaxLength="64" Nullable="false" />
           <Property Name="LicenseStartDate" Type="date" />
           <Property Name="LicenseEndDate" Type="date" />
+        </EntityType>
+        <EntityType Name="Service">
+          <Key>
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="StartDate" />
+            <PropertyRef Name="ComponentID" />
+            <PropertyRef Name="ComputerID" />
+          </Key>
+          <Property Name="PSComputerNAme" Type="char" MaxLength="16" Nullable="false" />
+          <Property Name="SystemName" Type="char" MaxLength="16" Nullable="false" />
+          <Property Name="Name" Type="char" MaxLength="64" Nullable="false" />
+          <Property Name="Suffix" Type="char" MaxLength="8" Nullable="false" />
+          <Property Name="Caption" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="DisplayName" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="PathName" Type="varchar" MaxLength="2048" Nullable="false" />
+          <Property Name="ServiceType" Type="char" MaxLength="16" Nullable="false" />
+          <Property Name="StartMode" Type="char" MaxLength="8" Nullable="false" />
+          <Property Name="Started" Type="char" MaxLength="8" Nullable="false" />
+          <Property Name="State" Type="char" MaxLength="8" Nullable="false" />
+          <Property Name="Status" Type="char" MaxLength="8" Nullable="false" />
+          <Property Name="ExitCode" Type="bigint" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="2048" Nullable="false" />
+          <Property Name="DirName" Type="char" MaxLength="256" Nullable="false" />
+          <Property Name="ProgramName" Type="char" MaxLength="64" Nullable="false" />
+          <Property Name="Parameter" Type="varchar" MaxLength="2048" />
+          <Property Name="ChangeState" Type="char" MaxLength="8" Nullable="false" />
+          <Property Name="StartDate" Type="datetime" Nullable="false" />
+          <Property Name="CheckDate" Type="datetime" Nullable="false" />
+          <Property Name="ComponentID" Type="int" Nullable="false" />
+          <Property Name="ComputerID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -180,6 +217,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Service_Component">
+          <End Role="Component" Type="Self.Component" Multiplicity="1" />
+          <End Role="Service" Type="Self.Service" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Component">
+              <PropertyRef Name="ComponentID" />
+            </Principal>
+            <Dependent Role="Service">
+              <PropertyRef Name="ComponentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Service_Computer">
+          <End Role="Computer" Type="Self.Computer" Multiplicity="1" />
+          <End Role="Service" Type="Self.Service" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Computer">
+              <PropertyRef Name="ComputerID" />
+            </Principal>
+            <Dependent Role="Service">
+              <PropertyRef Name="ComputerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="SympaModelStoreContainer">
           <EntitySet Name="Component" EntityType="Self.Component" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Computer" EntityType="Self.Computer" Schema="dbo" store:Type="Tables" />
@@ -187,6 +248,7 @@
           <EntitySet Name="ICON" EntityType="Self.ICON" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Installation" EntityType="Self.Installation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="License" EntityType="Self.License" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Service" EntityType="Self.Service" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Vendor" EntityType="Self.Vendor" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Component_Vendor" Association="Self.FK_Component_Vendor">
@@ -221,9 +283,16 @@
             <End Role="Computer" EntitySet="Computer" />
             <End Role="License" EntitySet="License" />
           </AssociationSet>
+          <AssociationSet Name="FK_Service_Component" Association="Self.FK_Service_Component">
+            <End Role="Component" EntitySet="Component" />
+            <End Role="Service" EntitySet="Service" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Service_Computer" Association="Self.FK_Service_Computer">
+            <End Role="Computer" EntitySet="Computer" />
+            <End Role="Service" EntitySet="Service" />
+          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SympaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -239,6 +308,7 @@
           <NavigationProperty Name="ICONs" Relationship="Self.FK_ICON_Component" FromRole="Component" ToRole="ICON" />
           <NavigationProperty Name="Installations" Relationship="Self.FK_Installation_Component" FromRole="Component" ToRole="Installation" />
           <NavigationProperty Name="Licenses" Relationship="Self.FK_License_Component" FromRole="Component" ToRole="License" />
+          <NavigationProperty Name="Services" Relationship="SympaModel.FK_Service_Component" FromRole="Component" ToRole="Service" />
         </EntityType>
         <EntityType Name="Computer">
           <Key>
@@ -250,6 +320,8 @@
           <NavigationProperty Name="ICONs" Relationship="Self.FK_ICON_Computer" FromRole="Computer" ToRole="ICON" />
           <NavigationProperty Name="Installations" Relationship="Self.FK_Installation_Computer" FromRole="Computer" ToRole="Installation" />
           <NavigationProperty Name="Licenses" Relationship="Self.FK_License_Computer" FromRole="Computer" ToRole="License" />
+          <Property Name="OS" Type="String" MaxLength="24" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="Services" Relationship="SympaModel.FK_Service_Computer" FromRole="Computer" ToRole="Service" />
         </EntityType>
         <EntityType Name="Documentation">
           <Key>
@@ -280,13 +352,19 @@
             <PropertyRef Name="ComputerID" />
             <PropertyRef Name="ComponentID" />
             <PropertyRef Name="Release" />
+            <PropertyRef Name="StartDateTime" />
           </Key>
           <Property Name="ComputerID" Type="Int32" Nullable="false" />
           <Property Name="ComponentID" Type="Int32" Nullable="false" />
-          <Property Name="Release" Type="String" MaxLength="44" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="DateMeasured" Type="DateTime" Precision="0" />
+          <Property Name="Release" Type="String" MaxLength="44" FixedLength="true" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Component" Relationship="Self.FK_Installation_Component" FromRole="Installation" ToRole="Component" />
           <NavigationProperty Name="Computer" Relationship="Self.FK_Installation_Computer" FromRole="Installation" ToRole="Computer" />
+          <Property Name="Location" Type="String" MaxLength="120" FixedLength="true" Unicode="false" />
+          <Property Name="InstallDate" Type="DateTime" Precision="0" />
+          <Property Name="MeasuredDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="StartDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndDateTime" Type="DateTime" Precision="3" />
+          <Property Name="Count" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="License">
           <Key>
@@ -459,7 +537,72 @@
             <End Role="Computer" EntitySet="Computers" />
             <End Role="License" EntitySet="Licenses" />
           </AssociationSet>
+          <EntitySet Name="Services1" EntityType="SympaModel.Service" />
+          <AssociationSet Name="FK_Service_Component" Association="SympaModel.FK_Service_Component">
+            <End Role="Component" EntitySet="Components" />
+            <End Role="Service" EntitySet="Services1" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Service_Computer" Association="SympaModel.FK_Service_Computer">
+            <End Role="Computer" EntitySet="Computers" />
+            <End Role="Service" EntitySet="Services1" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Service">
+          <Key>
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="StartDate" />
+            <PropertyRef Name="ComponentID" />
+            <PropertyRef Name="ComputerID" />
+          </Key>
+          <Property Name="PSComputerNAme" Type="String" Nullable="false" MaxLength="16" FixedLength="true" Unicode="false" />
+          <Property Name="SystemName" Type="String" Nullable="false" MaxLength="16" FixedLength="true" Unicode="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="64" FixedLength="true" Unicode="false" />
+          <Property Name="Suffix" Type="String" Nullable="false" MaxLength="8" FixedLength="true" Unicode="false" />
+          <Property Name="Caption" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="DisplayName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="PathName" Type="String" Nullable="false" MaxLength="2048" FixedLength="false" Unicode="false" />
+          <Property Name="ServiceType" Type="String" Nullable="false" MaxLength="16" FixedLength="true" Unicode="false" />
+          <Property Name="StartMode" Type="String" Nullable="false" MaxLength="8" FixedLength="true" Unicode="false" />
+          <Property Name="Started" Type="String" Nullable="false" MaxLength="8" FixedLength="true" Unicode="false" />
+          <Property Name="State" Type="String" Nullable="false" MaxLength="8" FixedLength="true" Unicode="false" />
+          <Property Name="Status" Type="String" Nullable="false" MaxLength="8" FixedLength="true" Unicode="false" />
+          <Property Name="ExitCode" Type="Int64" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="2048" FixedLength="false" Unicode="false" />
+          <Property Name="DirName" Type="String" Nullable="false" MaxLength="256" FixedLength="true" Unicode="false" />
+          <Property Name="ProgramName" Type="String" Nullable="false" MaxLength="64" FixedLength="true" Unicode="false" />
+          <Property Name="Parameter" Type="String" MaxLength="2048" FixedLength="false" Unicode="false" />
+          <Property Name="ChangeState" Type="String" Nullable="false" MaxLength="8" FixedLength="true" Unicode="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CheckDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ComponentID" Type="Int32" Nullable="false" />
+          <Property Name="ComputerID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Component" Relationship="SympaModel.FK_Service_Component" FromRole="Service" ToRole="Component" />
+          <NavigationProperty Name="Computer" Relationship="SympaModel.FK_Service_Computer" FromRole="Service" ToRole="Computer" />
+        </EntityType>
+        <Association Name="FK_Service_Component">
+          <End Type="SympaModel.Component" Role="Component" Multiplicity="1" />
+          <End Type="SympaModel.Service" Role="Service" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Component">
+              <PropertyRef Name="ComponentID" />
+            </Principal>
+            <Dependent Role="Service">
+              <PropertyRef Name="ComponentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Service_Computer">
+          <End Type="SympaModel.Computer" Role="Computer" Multiplicity="1" />
+          <End Type="SympaModel.Service" Role="Service" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Computer">
+              <PropertyRef Name="ComputerID" />
+            </Principal>
+            <Dependent Role="Service">
+              <PropertyRef Name="ComputerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -478,6 +621,7 @@
           <EntitySetMapping Name="Computers">
             <EntityTypeMapping TypeName="SympaModel.Computer">
               <MappingFragment StoreEntitySet="Computer">
+                <ScalarProperty Name="OS" ColumnName="OS" />
                 <ScalarProperty Name="ComputerID" ColumnName="ComputerID" />
                 <ScalarProperty Name="ComputerName" ColumnName="ComputerName" />
                 <ScalarProperty Name="ComputerPurchaseDate" ColumnName="ComputerPurchaseDate" />
@@ -508,10 +652,15 @@
           <EntitySetMapping Name="Installations">
             <EntityTypeMapping TypeName="SympaModel.Installation">
               <MappingFragment StoreEntitySet="Installation">
+                <ScalarProperty Name="Count" ColumnName="Count" />
+                <ScalarProperty Name="EndDateTime" ColumnName="EndDateTime" />
+                <ScalarProperty Name="StartDateTime" ColumnName="StartDateTime" />
+                <ScalarProperty Name="MeasuredDateTime" ColumnName="MeasuredDateTime" />
+                <ScalarProperty Name="InstallDate" ColumnName="InstallDate" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
                 <ScalarProperty Name="ComputerID" ColumnName="ComputerID" />
                 <ScalarProperty Name="ComponentID" ColumnName="ComponentID" />
                 <ScalarProperty Name="Release" ColumnName="Release" />
-                <ScalarProperty Name="DateMeasured" ColumnName="DateMeasured" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -547,6 +696,34 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Services1">
+            <EntityTypeMapping TypeName="SympaModel.Service">
+              <MappingFragment StoreEntitySet="Service">
+                <ScalarProperty Name="ComputerID" ColumnName="ComputerID" />
+                <ScalarProperty Name="ComponentID" ColumnName="ComponentID" />
+                <ScalarProperty Name="CheckDate" ColumnName="CheckDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="ChangeState" ColumnName="ChangeState" />
+                <ScalarProperty Name="Parameter" ColumnName="Parameter" />
+                <ScalarProperty Name="ProgramName" ColumnName="ProgramName" />
+                <ScalarProperty Name="DirName" ColumnName="DirName" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ExitCode" ColumnName="ExitCode" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="Started" ColumnName="Started" />
+                <ScalarProperty Name="StartMode" ColumnName="StartMode" />
+                <ScalarProperty Name="ServiceType" ColumnName="ServiceType" />
+                <ScalarProperty Name="PathName" ColumnName="PathName" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="Caption" ColumnName="Caption" />
+                <ScalarProperty Name="Suffix" ColumnName="Suffix" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="SystemName" ColumnName="SystemName" />
+                <ScalarProperty Name="PSComputerNAme" ColumnName="PSComputerNAme" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -561,8 +738,8 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="true" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>

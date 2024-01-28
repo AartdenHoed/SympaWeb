@@ -33,5 +33,6 @@ namespace ConfigMan
         public virtual DbSet<License> Licenses { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<Vendor> Vendors { get; set; }
+        public virtual DbSet<Service> Services1 { get; set; }
     }
 }

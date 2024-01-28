@@ -44,8 +44,9 @@ function initPage(how) {
 function lightButton(e) {       
     
     e.parentElement.style.backgroundColor = "Yellow";
-    e.style.color = "Red";
-    e.style.fontSize = "Larger";
+    e.style.color = "red";
+    e.style.fontWeight = "bold"
+    e.style.fontSize = "smaller";
 
     e.parentElement.style.backgroundSize = "cover";
     e.parentElement.style.backgroundRepeat = "no-repeat";

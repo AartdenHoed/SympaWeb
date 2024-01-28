@@ -11,8 +11,7 @@ namespace ConfigMan
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class Computer
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -21,14 +20,13 @@ namespace ConfigMan
             this.ICONs = new HashSet<ICON>();
             this.Installations = new HashSet<Installation>();
             this.Licenses = new HashSet<License>();
+            this.Services = new HashSet<Service>();
         }
     
         public int ComputerID { get; set; }
         public string ComputerName { get; set; }
-
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public Nullable<System.DateTime> ComputerPurchaseDate { get; set; }
+        public string OS { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ICON> ICONs { get; set; }
@@ -36,5 +34,7 @@ namespace ConfigMan
         public virtual ICollection<Installation> Installations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<License> Licenses { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Service> Services { get; set; }
     }
 }

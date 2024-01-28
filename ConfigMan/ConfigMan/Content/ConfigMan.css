@@ -159,7 +159,8 @@ h2, h3 {
     box-shadow: 4px 4px 4px 0px #000000  inset;
     background-color: lightseagreen;  
     font-weight: bold;
-    font-size: larger;
+    font-size: smaller;
+    
 }
 .index-wrapper {
     background-image: url(/Images/ValleeEtroite.png); 
@@ -205,11 +206,11 @@ h2, h3 {
     width: 95%;
     border: none;
 }
-.menu2>li:hover {
-    box-shadow: 4px 4px 4px 0px #000000  inset;
-    background-color: lightseagreen;  
+.menu2 > li:hover {
+    box-shadow: 4px 4px 4px 0px #000000 inset;
+    background-color: lightseagreen;
     font-weight: bold;
-    font-size: larger;
+    font-size: smaller;
 }
 #loadfile {
     width: 80%;

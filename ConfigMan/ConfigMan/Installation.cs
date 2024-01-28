@@ -17,7 +17,12 @@ namespace ConfigMan
         public int ComputerID { get; set; }
         public int ComponentID { get; set; }
         public string Release { get; set; }
-        public Nullable<System.DateTime> DateMeasured { get; set; }
+        public string Location { get; set; }
+        public Nullable<System.DateTime> InstallDate { get; set; }
+        public System.DateTime MeasuredDateTime { get; set; }
+        public System.DateTime StartDateTime { get; set; }
+        public Nullable<System.DateTime> EndDateTime { get; set; }
+        public int Count { get; set; }
     
         public virtual Component Component { get; set; }
         public virtual Computer Computer { get; set; }

@@ -5,14 +5,14 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="5a218a37852c47549e58a64aa51334b8" Name="Diagram1">
-        <EntityTypeShape EntityType="SympaModel.Component" Width="1.5" PointX="5" PointY="3.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="SympaModel.Computer" Width="1.5" PointX="0.5" PointY="3.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="SympaModel.Documentation" Width="1.5" PointX="7.125" PointY="6.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="SympaModel.ICON" Width="1.5" PointX="2.75" PointY="2.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="SympaModel.Installation" Width="1.5" PointX="2.75" PointY="9.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="SympaModel.License" Width="1.5" PointX="2.75" PointY="6.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="SympaModel.sysdiagram" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="SympaModel.Vendor" Width="1.5" PointX="4.875" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="SympaModel.Component" Width="1.5" PointX="8.125" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SympaModel.Computer" Width="1.5" PointX="0.875" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="SympaModel.Documentation" Width="1.5" PointX="10.625" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SympaModel.ICON" Width="1.5" PointX="3.25" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="SympaModel.Installation" Width="1.5" PointX="3.75" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SympaModel.License" Width="1.5" PointX="3.125" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="SympaModel.sysdiagram" Width="1.5" PointX="12" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="SympaModel.Vendor" Width="1.5" PointX="10" PointY="0.5" IsExpanded="true" />
         <AssociationConnector Association="SympaModel.FK_Component_Vendor" ManuallyRouted="false" />
         <AssociationConnector Association="SympaModel.FK_Documentation_Component" ManuallyRouted="false" />
         <AssociationConnector Association="SympaModel.FK_ICON_Component" ManuallyRouted="false" />
@@ -21,6 +21,9 @@
         <AssociationConnector Association="SympaModel.FK_ICON_Computer" ManuallyRouted="false" />
         <AssociationConnector Association="SympaModel.FK_Installation_Computer" ManuallyRouted="false" />
         <AssociationConnector Association="SympaModel.FK_License_Computer" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="SympaModel.Service" Width="1.5" PointX="6" PointY="3.375" />
+        <AssociationConnector Association="SympaModel.FK_Service_Component" />
+        <AssociationConnector Association="SympaModel.FK_Service_Computer" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
