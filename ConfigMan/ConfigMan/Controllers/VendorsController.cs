@@ -7,44 +7,89 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using ConfigMan;
+using ConfigMan.ViewModels;
+using System.Diagnostics.Contracts;
 using ConfigMan.ActionFilters;
+using System.Diagnostics;
+using System.ComponentModel;
+using System.Runtime.Remoting.Messaging;
 
-namespace ConfigMan.Controllers
-{
+namespace ConfigMan.Controllers { 
+
     [LogActionFilter]
     [HandleError]
-
+   
     public class VendorsController : Controller
     {
         private readonly DbEntities db = new DbEntities();
+        private static bool ContractErrorOccurred = false;
+        private static string ErrorMessage = " ";
 
-        // GET: Vendors
-       
-        public ActionResult Index()
+        public ActionResult Menu()
         {
             ViewBag.SympaMsg = TempData["SympaMsg"];
-            return View(db.Vendors.OrderBy(x => x.VendorName).ToList());
+            return View();
         }
 
+        //
+        // GET: Vendors
+        //
+        public ActionResult Index()
+        {
+            if (ContractErrorOccurred) {
+                ContractErrorOccurred = false;
+                ViewBag.SympaMsg = ErrorMessage;
+                ErrorMessage = " ";
+            }
+            else {
+                ViewBag.SympaMsg = TempData["SympaMsg"];
+            }
+            List<Vendor> complist = db.Vendors.OrderBy(x => x.VendorGroup).ToList();
+            List<VendorVM> vmlist = new List<VendorVM>();
+            foreach (Vendor c in complist) {
+                VendorVM VM = new VendorVM();
+                VM.Fill(c);
+                vmlist.Add(VM); 
+            }
+            return View(vmlist);
+
+        }
+
+        //
         // GET: Vendors/Details/5
+        //
         public ActionResult Details(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+           
+            Contract.ContractFailed += (Contract_ContractFailed);
+            Contract.Requires(id > 0, "Contract Failed!");
+
+            if (!ContractErrorOccurred) {
+                Vendor vendor = db.Vendors.Find(id);
+                if (vendor == null) {
+                    TempData["SympaMsg"] = "*** ERROR *** ID " + id.ToString() + " not found in database.";
+                }
+                else {
+                    VendorVM vendorVM = new VendorVM();
+                    vendorVM.Fill(vendor);
+                    return View(vendorVM);
+                }
             }
-            Vendor vendor = db.Vendors.Find(id);
-            if (vendor == null)
-            {
-                return HttpNotFound();
-            }
-            return View(vendor);
+            return RedirectToAction("Index");
         }
 
+        private void Contract_ContractFailed(object sender, ContractFailedEventArgs e) {
+            ErrorMessage = "*** ERROR *** Selected vendor id is invalid.";
+            ContractErrorOccurred = true;
+            e.SetHandled();
+            return;
+        }
+
+        //
         // GET: Vendors/Create
+        //
         public ActionResult Create()
-        {
+        {    
             return View();
         }
 
@@ -53,42 +98,50 @@ namespace ConfigMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "VendorID,VendorName")] Vendor vendor)
+        public ActionResult Create([Bind(Include = "VendorID,VendorName,VendorGroup")] VendorVM vendorVM)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid)            
             {
+                Vendor vendor = new Vendor();
+                vendor.Fill(vendorVM);
                 bool addfailed = false;
                 db.Vendors.Add(vendor);
                 try {
                     db.SaveChanges();
-                    TempData["SympaMsg"] = vendor.VendorName + " succesfully added";
+                    TempData["SympaMsg"] = "Vendor " + vendor.VendorName + " succesfully added."; 
                 }
                 catch (DbUpdateException) {
                     addfailed = true;
-                    ViewBag.SympaMsg = vendor.VendorName + " already exists, use update function";
+                    ViewBag.SympaMsg = "Vendor " + vendor.VendorName + " already exists, use update function.";
                 }
-               
                 if (addfailed) { return View(); }
-                else { return RedirectToAction("Index"); } 
+                else { return RedirectToAction("Index"); }
             }
 
-            return View(vendor);
+            return View(vendorVM);
         }
 
+        //
         // GET: Vendors/Edit/5
+        //
         public ActionResult Edit(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            Contract.Requires((id != null) && (id > 0));
+            Contract.ContractFailed += (Contract_ContractFailed);
+
+            if (!ContractErrorOccurred) {
+                Vendor vendor = db.Vendors.Find(id);
+                if (vendor == null) {
+                    TempData["SympaMsg"] = "*** ERROR *** ID " + id.ToString() + " not found in database.";
+                }
+                else {
+                    VendorVM vendorVM = new VendorVM();
+                    vendorVM.Fill(vendor);
+                    return View(vendorVM);
+                }
             }
-            Vendor vendor = db.Vendors.Find(id);
-            if (vendor == null)
-            {
-                return HttpNotFound();
-            }
-            vendor.VendorName = vendor.VendorName.Trim();
-            return View(vendor);
+            return RedirectToAction("Index");
+
         }
 
         // POST: Vendors/Edit/5
@@ -96,43 +149,131 @@ namespace ConfigMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "VendorID,VendorName")] Vendor vendor)
+        public ActionResult Edit([Bind(Include = "VendorID,VendorName,VendorGroup")] VendorVM vendorVM)
         {
             if (ModelState.IsValid)
             {
+                Vendor vendor = new Vendor();
+                vendor.Fill(vendorVM);
                 db.Entry(vendor).State = EntityState.Modified;
                 db.SaveChanges();
-                TempData["SympaMsg"] = vendor.VendorName + " succesfully updated";
+                TempData["SympaMsg"] = "Vendor " + vendor.VendorName + " succesfully updated.";
                 return RedirectToAction("Index");
             }
+            else {
+                TempData["SympaMsg"] = "Update filed for vendor " + vendorVM.VendorName ;
+                return View(vendorVM);
+            }
             
-            return View(vendor);
         }
 
+        //
         // GET: Vendors/Delete/5
+        //
         public ActionResult Delete(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            Contract.Requires((id != null) && (id > 0));
+            Contract.ContractFailed += (Contract_ContractFailed);
+
+            if (!ContractErrorOccurred) {
+                Vendor vendor = db.Vendors.Find(id);
+                if (vendor == null) {
+                    TempData["SympaMsg"] = "*** ERROR *** ID " + id.ToString() + " not found in database.";
+                }
+                else {
+                    VendorVM vendorVM = new VendorVM();
+                    vendorVM.Fill(vendor);
+                    return View(vendorVM);
+                }
             }
-            Vendor vendor = db.Vendors.Find(id);
-            if (vendor == null)
-            {
-                return HttpNotFound();
-            }
-            return View(vendor);
+            return RedirectToAction("Index");
+
         }
+        
 
         // POST: Vendors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Vendor vendor = db.Vendors.Find(id);
-            db.Vendors.Remove(vendor);
-            db.SaveChanges();
+            Contract.Requires(id > 0);
+            Contract.ContractFailed += (Contract_ContractFailed);
+            if (!ContractErrorOccurred) {
+                Vendor vendor = db.Vendors.Find(id);
+                db.Vendors.Remove(vendor);
+                db.SaveChanges();
+                TempData["SympaMsg"] = "Vendor "+ vendor.VendorName + " succesfully deleted.";
+            }
             return RedirectToAction("Index");
+        }
+
+        public ActionResult Report01()
+        {
+            if (ContractErrorOccurred)
+            {
+                ContractErrorOccurred = false;
+                ViewBag.SympaMsg = ErrorMessage;
+                ErrorMessage = " ";
+            }
+            else
+            {
+                ViewBag.SympaMsg = TempData["SympaMsg"];
+            }
+            var query = from v in db.Vendors
+                        join c in db.Components on v.VendorID equals c.VendorID
+                        select new
+                        {
+                            VendorID = v.VendorID,
+                            VendorName = v.VendorName,
+                            VendorGroup = v.VendorGroup,
+                            ComponentID = c.ComponentID
+                        } into j1                      
+                        where !(from i in db.Installations
+                                select i.ComponentID)
+                               .Contains(j1.ComponentID)
+                        select new VendorVM
+                        {
+                            VendorID = j1.VendorID,
+                            VendorName = j1.VendorName,
+                            VendorGroup = j1.VendorGroup,
+                        } into j2
+                        orderby j2.VendorGroup
+                        select j2;
+
+            List < VendorVM > venlist = query.ToList();
+            
+            return View(venlist);
+
+        }
+
+        public ActionResult Report02()
+        {
+            if (ContractErrorOccurred)
+            {
+                ContractErrorOccurred = false;
+                ViewBag.SympaMsg = ErrorMessage;
+                ErrorMessage = " ";
+            }
+            else
+            {
+                ViewBag.SympaMsg = TempData["SympaMsg"];
+            }
+            var query = from v in db.Vendors
+                        where !(from c in db.Components
+                                select c.VendorID)
+                               .Contains(v.VendorID)
+                        orderby v.VendorGroup
+                        select new VendorVM
+                        {
+                            VendorID = v.VendorID,
+                            VendorName = v.VendorName,
+                            VendorGroup = v.VendorGroup
+                        };
+
+            List<VendorVM> venlist = query.ToList();
+
+            return View(venlist);
+
         }
 
         protected override void Dispose(bool disposing)
@@ -143,5 +284,8 @@ namespace ConfigMan.Controllers
             }
             base.Dispose(disposing);
         }
+        
     }
+    
+
 }

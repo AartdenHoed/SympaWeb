@@ -119,7 +119,8 @@
             <PropertyRef Name="VendorID" />
           </Key>
           <Property Name="VendorID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="VendorName" Type="nchar" MaxLength="120" Nullable="false" />
+          <Property Name="VendorName" Type="char" MaxLength="120" Nullable="false" />
+          <Property Name="VendorGroup" Type="char" MaxLength="120" Nullable="false" />
         </EntityType>
         <Association Name="FK_Component_Vendor">
           <End Role="Vendor" Type="Self.Vendor" Multiplicity="1" />
@@ -397,8 +398,9 @@
             <PropertyRef Name="VendorID" />
           </Key>
           <Property Name="VendorID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="VendorName" Type="String" MaxLength="120" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="VendorName" Type="String" MaxLength="120" FixedLength="true" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Components" Relationship="Self.FK_Component_Vendor" FromRole="Vendor" ToRole="Component" />
+          <Property Name="VendorGroup" Type="String" Nullable="false" MaxLength="120" FixedLength="true" Unicode="false" />
         </EntityType>
         <Association Name="FK_Component_Vendor">
           <End Role="Vendor" Type="Self.Vendor" Multiplicity="1" />
@@ -691,6 +693,7 @@
           <EntitySetMapping Name="Vendors">
             <EntityTypeMapping TypeName="SympaModel.Vendor">
               <MappingFragment StoreEntitySet="Vendor">
+                <ScalarProperty Name="VendorGroup" ColumnName="VendorGroup" />
                 <ScalarProperty Name="VendorID" ColumnName="VendorID" />
                 <ScalarProperty Name="VendorName" ColumnName="VendorName" />
               </MappingFragment>

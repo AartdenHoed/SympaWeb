@@ -5,16 +5,15 @@
         ViewBag.Title = "Index";
     }
 
-    <h2>Index</h2>
+    <h2>Vendors zonder installaties</h2>
 
-    <p>
-        @Html.ActionLink("Nieuwe Vendor", "Create", "", new { @class = "sy-a" }) |   
-        @Html.ActionLink("Terug naar Menu", "Menu", "Vendors", new { @class = "sy-a" })
-    </p>
-    
+
     <div class="sympaMsg">
         <p>@ViewBag.SympaMsg</p>
     </div>
+    <p>
+        @Html.ActionLink("Terug naar Menu", "Menu", "Vendors", new { @class = "sy-a" })
+    </p>
     <table class="table">
         <tr>
             <th>
@@ -24,7 +23,6 @@
                 @Html.DisplayNameFor(model => model.VendorGroup)
             </th>
 
-            <th></th>
         </tr>
 
         @foreach (var item in Model)
@@ -37,11 +35,6 @@
                     @Html.DisplayFor(modelItem => item.VendorGroup)
                 </td>
 
-                <td>
-                    @Html.ActionLink("Bewerk", "Edit", new { id = item.VendorID }, new { @class = "sy-a" }) |
-                    @Html.ActionLink("Bekijk", "Details", new { id = item.VendorID }, new { @class = "sy-a" }) |
-                    @Html.ActionLink("Verwijder", "Delete", new { id = item.VendorID }, new { @class = "sy-a" })
-                </td>
             </tr>
         }
 

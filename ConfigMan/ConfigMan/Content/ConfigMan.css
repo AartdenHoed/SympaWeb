@@ -181,7 +181,7 @@ h2, h3 {
     display: block;
     padding: 0.5%;
     width: 25%;
-    height: 33%;
+    height: 60%;
     border: solid 2px #000000;
     border-radius: 12px;
     box-shadow: 4px 4px 4px Black;
@@ -193,7 +193,7 @@ h2, h3 {
     padding: 3%;
     text-align: center;
     width: 95%;
-    height: 33%;
+    height: 25%;
     list-style: none; 
     border: solid 1px #000000;
     border-radius: 8px;

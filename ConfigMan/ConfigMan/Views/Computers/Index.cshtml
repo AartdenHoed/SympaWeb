@@ -8,7 +8,8 @@
     <h2>Index</h2>
 
     <p>
-        @Html.ActionLink("Create New", "Create", "", new { @class = "sy-a" })
+        @Html.ActionLink("Nieuwe Computer", "Create", "", new { @class = "sy-a" }) | 
+        @Html.ActionLink("Terug naar Menu", "Menu", "Computers", new { @class = "sy-a" })
     </p>
     <div class="sympaMsg">
         <p>@ViewBag.SympaMsg</p>
@@ -48,8 +49,8 @@
         }
 
     </table>
-    <p>
-        @Html.ActionLink("Terug naar Menu", "Menu", "Computer", new { @class = "sy-a" })
-    </p>
+   
+       
+   
 
 </div>

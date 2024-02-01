@@ -222,17 +222,17 @@ namespace ConfigMan.Controllers {
                                 select i.ComputerID)
                                .Contains(c.ComputerID)
                         orderby c.ComputerName
-                        select c;
+                        select new ComputerVM
+                        {
+                            ComputerID = c.ComputerID,  
+                            ComputerName = c.ComputerName,
+                            ComputerPurchaseDate = c.ComputerPurchaseDate,
+                            OS = c.OS
+                        };
 
-            List<Computer> complist = query.ToList();
-            List<ComputerVM> vmlist = new List<ComputerVM>();
-            foreach (Computer c in complist)
-            {
-                ComputerVM VM = new ComputerVM();
-                VM.Fill(c);
-                vmlist.Add(VM);
-            }
-            return View(vmlist);
+            List<ComputerVM> complist = query.ToList();
+           
+            return View(complist);
 
         }
 

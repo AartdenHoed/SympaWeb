@@ -1,0 +1,22 @@
+﻿
+<div class="controller">
+
+    @{
+        ViewBag.Title = "Vendor Beheer Menu";
+    }
+
+    <h2>Vendor Beheer Menu</h2>
+
+    <div class="sympaMsg">
+        <p>@ViewBag.SympaMsg</p>
+    </div>
+    <ul class="menu2">
+        <li>@Html.ActionLink("Bewerk Vendor Data ", "Index", "Vendors")</li>
+        <li>@Html.ActionLink("Vendors Zonder Installaties", "Report01", "Vendors")</li>
+        <li>@Html.ActionLink("Vendors Zonder Componenten", "Report02", "Vendors")</li>
+    </ul>
+    <div>
+        @Html.ActionLink("Hoofd Menu", "Index", "Home","", new { @class = "sy-a" })
+    </div>
+
+</div>

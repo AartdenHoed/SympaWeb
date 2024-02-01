@@ -278,6 +278,8 @@
     <Compile Include="ViewModels\Computer.cs" />
     <Compile Include="ViewModels\ComputerVM.cs" />
     <Compile Include="ViewModels\ConfigMSG.cs" />
+    <Compile Include="ViewModels\Vendor.cs" />
+    <Compile Include="ViewModels\VendorVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ConfigModel.Context.tt">
@@ -421,6 +423,9 @@
     <Content Include="Scripts\jquery-3.6.1.min.map" />
     <Content Include="Views\Computers\Menu.cshtml" />
     <Content Include="Views\Computers\Report01.cshtml" />
+    <Content Include="Views\Vendors\Menu.cshtml" />
+    <Content Include="Views\Vendors\Report01.cshtml" />
+    <Content Include="Views\Vendors\Report02.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

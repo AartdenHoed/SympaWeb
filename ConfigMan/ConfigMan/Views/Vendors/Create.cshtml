@@ -1,16 +1,16 @@
 ﻿<div class="controller">
-
-    @model ConfigMan.Vendor
-
+    @model ConfigMan.ViewModels.VendorVM
+   
     @{
         ViewBag.Title = "Vendor Add";
     }
 
-    <h2>Create</h2>
-    
+    <h2>Nieuwe</h2>
 
 
-    @using (Html.BeginForm()) {
+
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
         <div class="form-horizontal">
@@ -20,28 +20,39 @@
             </div>
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group">
-                @Html.LabelFor(model => model.VendorName, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.VendorName, new { htmlAttributes = new { @class = "form-control", @autofocus = "autofocus" } })
+            <dl class="sy-dl">
+                <dt class="sy-dt">
+                    @Html.LabelFor(model => model.VendorName)
+                </dt>
+                <dd class="sy-dd">
+                    @Html.EditorFor(model => model.VendorName, new { htmlAttributes = new { @class = "sy-input", @autofocus = "autofocus" } })
                     @Html.ValidationMessageFor(model => model.VendorName, "", new { @class = "text-danger" })
-                </div>
-            </div>
+                </dd>
+                <dt class="sy-dt">
+                    @Html.LabelFor(model => model.VendorGroup)
+                </dt>
+                <dd class="sy-dd">
+                    @Html.EditorFor(model => model.VendorGroup, new { htmlAttributes = new { @class = "sy-input40" } })
+                    @Html.ValidationMessageFor(model => model.VendorGroup, "", new { @class = "text-danger" })
+                </dd>
+                
+            </dl>
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Create" class="btn btn-default" />
+                    <input type="submit" value="Aanmaken" class="sy-button" />
                 </div>
             </div>
         </div>
     }
-   
 
     <div>
-        @Html.ActionLink("Back to List", "Index")
+        @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-a" })
     </div>
+
 
     @section Scripts {
         @Scripts.Render("~/bundles/jqueryval")
     }
 </div>
+
