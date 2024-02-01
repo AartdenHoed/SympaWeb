@@ -11,10 +11,9 @@
 </head>
 <body class="sympabody" onresize="initPage('resize')"> 
 <div id="wrapper">
-    <div class="header">
-        
+    <div class="header">        
         <div class="leftcol">&nbsp;
-        <canvas id="sympaSprite"></canvas>
+            <canvas id="sympaSprite"></canvas>
         </div>
         <div class="midcol">
             <div class="title">
@@ -23,9 +22,9 @@
             <nav class="navigation">
                 @Html.Partial("_LoginPartial")
                 <ul class="menu">
-                    <li>@Html.ActionLink("Home            ", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Hoofd Menu", "Index", "Home")</li>
                     <li>@Html.ActionLink("Admin Functies  ", "Index", "Admin")</li>
-                    <li>@Html.ActionLink("Computer   Rapport ", "Index", "Computers")</li>
+                    <li>@Html.ActionLink("Computer  Beheer", "Menu", "Computers")</li>
                     <li>@Html.ActionLink("Component  Rapport ", "Index", "Components")</li>
                     <li>@Html.ActionLink("Installatie Rapport ", "Index", "Installations")</li>
                     <li>@Html.ActionLink("Vendor     Rapport ", "Index", "Vendors")</li>
@@ -54,16 +53,11 @@
         </div>
     </div>
     <div class="footer">&nbsp;
-        <div class="leftcol">&nbsp;
-        </div>
-        <div class="midcol">&nbsp;       
-        </div>
-        <div class="rightcol">&nbsp;
-        </div>
+        <footer class="cline">
+            &copy; @DateTime.Now.Year - AdH.Code Application -
+        </footer>
     </div>
-    <footer class="cline">
-        &copy; @DateTime.Now.Year - AdH.Code Application -
-    </footer>
+    
     <div class="preload">
 
     </div>

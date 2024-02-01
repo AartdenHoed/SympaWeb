@@ -7,8 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using ConfigMan;
-using ConfigMan.Models;
+using ConfigMan.ViewModels;
 using System.Diagnostics.Contracts;
 using ConfigMan.ActionFilters;
 using System.Diagnostics;
@@ -20,10 +19,15 @@ namespace ConfigMan.Controllers {
    
     public class ComputersController : Controller
     {
-        private DbEntities db = new DbEntities();
+        private readonly DbEntities db = new DbEntities();
         private static bool ContractErrorOccurred = false;
         private static string ErrorMessage = " ";
-       
+
+        public ActionResult Menu()
+        {
+            ViewBag.SympaMsg = TempData["SympaMsg"];
+            return View();
+        }
 
         //
         // GET: Computers
@@ -38,7 +42,15 @@ namespace ConfigMan.Controllers {
             else {
                 ViewBag.SympaMsg = TempData["SympaMsg"];
             }
-            return View(db.Computers.OrderBy(x => x.ComputerName).ToList());
+            List<Computer> complist = db.Computers.OrderBy(x => x.ComputerName).ToList();
+            List<ComputerVM> vmlist = new List<ComputerVM>();
+            foreach (Computer c in complist) {
+                ComputerVM VM = new ComputerVM();
+                VM.Fill(c);
+                vmlist.Add(VM); 
+            }
+            return View(vmlist);
+
         }
 
         //
@@ -56,7 +68,9 @@ namespace ConfigMan.Controllers {
                     TempData["SympaMsg"] = "*** ERROR *** ID " + id.ToString() + " not found in database.";
                 }
                 else {
-                    return View(computer);
+                    ComputerVM computerVM = new ComputerVM();
+                    computerVM.Fill(computer);
+                    return View(computerVM);
                 }
             }
             return RedirectToAction("Index");
@@ -73,7 +87,7 @@ namespace ConfigMan.Controllers {
         // GET: Computers/Create
         //
         public ActionResult Create()
-        {
+        {    
             return View();
         }
 
@@ -82,25 +96,27 @@ namespace ConfigMan.Controllers {
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ComputerID,ComputerName,ComputerPurchaseDate")] Computer computer)
+        public ActionResult Create([Bind(Include = "ComputerID,ComputerName,ComputerPurchaseDate,OS")] ComputerVM computerVM)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid)            
             {
+                Computer computer = new Computer();
+                computer.Fill(computerVM);
                 bool addfailed = false;
                 db.Computers.Add(computer);
                 try {
                     db.SaveChanges();
-                    TempData["SympaMsg"] = computer.ComputerName + " succesfully added."; 
+                    TempData["SympaMsg"] = "Computer " + computer.ComputerName + " succesfully added."; 
                 }
                 catch (DbUpdateException) {
                     addfailed = true;
-                    ViewBag.SympaMsg = computer.ComputerName + " already exists, use update function.";
+                    ViewBag.SympaMsg = "Computer " + computer.ComputerName + " already exists, use update function.";
                 }
                 if (addfailed) { return View(); }
                 else { return RedirectToAction("Index"); }
             }
 
-            return View(computer);
+            return View(computerVM);
         }
 
         //
@@ -117,8 +133,9 @@ namespace ConfigMan.Controllers {
                     TempData["SympaMsg"] = "*** ERROR *** ID " + id.ToString() + " not found in database.";
                 }
                 else {
-                    computer.ComputerName = computer.ComputerName.Trim();
-                    return View(computer);
+                    ComputerVM computerVM = new ComputerVM();
+                    computerVM.Fill(computer);
+                    return View(computerVM);
                 }
             }
             return RedirectToAction("Index");
@@ -130,16 +147,22 @@ namespace ConfigMan.Controllers {
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ComputerID,ComputerName,ComputerPurchaseDate")] Computer computer)
+        public ActionResult Edit([Bind(Include = "ComputerID,ComputerName,ComputerPurchaseDate,OS")] ComputerVM computerVM)
         {
             if (ModelState.IsValid)
             {
+                Computer computer = new Computer();
+                computer.Fill(computerVM);
                 db.Entry(computer).State = EntityState.Modified;
                 db.SaveChanges();
-                TempData["SympaMsg"] = computer.ComputerName + " succesfully updated.";
+                TempData["SympaMsg"] = "Computer " + computer.ComputerName + " succesfully updated.";
                 return RedirectToAction("Index");
             }
-            return View(computer);
+            else {
+                TempData["SympaMsg"] = "Update filed for computer " + computerVM.ComputerName ;
+                return View(computerVM);
+            }
+            
         }
 
         //
@@ -156,7 +179,9 @@ namespace ConfigMan.Controllers {
                     TempData["SympaMsg"] = "*** ERROR *** ID " + id.ToString() + " not found in database.";
                 }
                 else {
-                    return View(computer);
+                    ComputerVM computerVM = new ComputerVM();
+                    computerVM.Fill(computer);
+                    return View(computerVM);
                 }
             }
             return RedirectToAction("Index");
@@ -175,9 +200,40 @@ namespace ConfigMan.Controllers {
                 Computer computer = db.Computers.Find(id);
                 db.Computers.Remove(computer);
                 db.SaveChanges();
-                TempData["SympaMsg"] = computer.ComputerName + " succesfully deleted.";
+                TempData["SympaMsg"] = "Computer "+ computer.ComputerName + " succesfully deleted.";
             }
             return RedirectToAction("Index");
+        }
+
+        public ActionResult Report01()
+        {
+            if (ContractErrorOccurred)
+            {
+                ContractErrorOccurred = false;
+                ViewBag.SympaMsg = ErrorMessage;
+                ErrorMessage = " ";
+            }
+            else
+            {
+                ViewBag.SympaMsg = TempData["SympaMsg"];
+            }
+            var query = from c in db.Computers
+                        where !(from i in db.Installations
+                                select i.ComputerID)
+                               .Contains(c.ComputerID)
+                        orderby c.ComputerName
+                        select c;
+
+            List<Computer> complist = query.ToList();
+            List<ComputerVM> vmlist = new List<ComputerVM>();
+            foreach (Computer c in complist)
+            {
+                ComputerVM VM = new ComputerVM();
+                VM.Fill(c);
+                vmlist.Add(VM);
+            }
+            return View(vmlist);
+
         }
 
         protected override void Dispose(bool disposing)

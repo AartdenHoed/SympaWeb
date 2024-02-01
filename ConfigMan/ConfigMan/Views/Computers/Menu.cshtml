@@ -1,0 +1,21 @@
+﻿
+<div class="controller">
+
+    @{
+        ViewBag.Title = "Computer Beheer Menu";
+    }
+
+    <h2>Computer Beheer Menu</h2>
+
+    <div class="sympaMsg">
+        <p>@ViewBag.SympaMsg</p>
+    </div>
+    <ul class="menu2">
+        <li>@Html.ActionLink("Bewerk Computer Data ", "Index", "Computers")</li>
+        <li>@Html.ActionLink("Computers Zonder Installaties", "Report01", "Computers")</li>
+    </ul>
+    <div>
+        @Html.ActionLink("Hoofd Menu", "Index", "Home","", new { @class = "sy-a" })
+    </div>
+
+</div>

@@ -275,6 +275,9 @@
     <Compile Include="Vendor.cs">
       <DependentUpon>ConfigModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\Computer.cs" />
+    <Compile Include="ViewModels\ComputerVM.cs" />
+    <Compile Include="ViewModels\ConfigMSG.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ConfigModel.Context.tt">
@@ -306,7 +309,6 @@
     <Content Include="Content\ConfigMan.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
     <Content Include="Images\Blueguitar.png" />
     <Content Include="Images\Button.png" />
     <Content Include="Images\ValleeEtroite.png" />
@@ -417,6 +419,8 @@
     <Content Include="Views\Admin\Load.cshtml" />
     <Content Include="Scripts\jquery-3.6.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.6.1.min.map" />
+    <Content Include="Views\Computers\Menu.cshtml" />
+    <Content Include="Views\Computers\Report01.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

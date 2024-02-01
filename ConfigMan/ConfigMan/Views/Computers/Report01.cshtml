@@ -5,11 +5,9 @@
         ViewBag.Title = "Index";
     }
 
-    <h2>Index</h2>
+    <h2>Computers zonder installatie</h2>
 
-    <p>
-        @Html.ActionLink("Create New", "Create", "", new { @class = "sy-a" })
-    </p>
+    
     <div class="sympaMsg">
         <p>@ViewBag.SympaMsg</p>
     </div>
@@ -39,11 +37,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.OS)
                 </td>
-                <td>
-                    @Html.ActionLink("Bewerk", "Edit", new { id = item.ComputerID }, new { @class = "sy-a" }) |
-                    @Html.ActionLink("Bekijk", "Details", new { id = item.ComputerID }, new { @class = "sy-a" }) |
-                    @Html.ActionLink("Verwijder", "Delete", new { id = item.ComputerID }, new { @class = "sy-a" })
-                </td>
+                
             </tr>
         }
 

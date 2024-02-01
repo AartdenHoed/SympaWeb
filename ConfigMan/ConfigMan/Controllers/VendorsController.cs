@@ -17,7 +17,7 @@ namespace ConfigMan.Controllers
 
     public class VendorsController : Controller
     {
-        private DbEntities db = new DbEntities();
+        private readonly DbEntities db = new DbEntities();
 
         // GET: Vendors
        

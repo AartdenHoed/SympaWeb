@@ -1,5 +1,5 @@
 ﻿<div class="controller">
-    @model ConfigMan.Computer
+    @model ConfigMan.ViewModels.ComputerVM
 
     @{
         ViewBag.Title = "Computer Details";
@@ -10,27 +10,38 @@
     <div>
         <h4>Computer</h4>
         <hr />
-        <dl class="dl-horizontal">
-            <dt>
+        <dl class="sy-dl">
+            <dt class="sy-dt">
                 @Html.DisplayNameFor(model => model.ComputerName)
             </dt>
 
-            <dd>
+            <dd class="sy-dd">
                 @Html.DisplayFor(model => model.ComputerName)
             </dd>
 
-            <dt>
+            <dt class="sy-dt">
                 @Html.DisplayNameFor(model => model.ComputerPurchaseDate)
             </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.ComputerPurchaseDate)
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.ComputerPurchaseDate) &nbsp;
+            </dd>
+
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.OS)
+            </dt>
+
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.OS) &nbsp;
             </dd>
 
         </dl>
     </div>
     <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.ComputerID }) |
-        @Html.ActionLink("Back to List", "Index")
+        @Html.ActionLink("Bewerk", "Edit", new { id = Model.ComputerID}, new { @class = "sy-a" }) 
     </p>
+    <p>
+        @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-a" })
+    </p>
+    
 </div>

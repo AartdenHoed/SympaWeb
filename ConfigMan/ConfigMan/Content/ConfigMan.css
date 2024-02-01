@@ -2,6 +2,8 @@
     padding: 0;
     margin: 0;
     overflow: hidden;
+    height: 100%;
+    width: 100%
 }
 h2, h3 {
     font-weight: bold;
@@ -61,7 +63,7 @@ h2, h3 {
 }
 .content {
     width: 100%;
-    height: 73%;
+    height: 75%;
     box-sizing: border-box;  
     float: left; 
     margin: 0;
@@ -109,7 +111,7 @@ h2, h3 {
     background-color: lightgrey;
     text-align: center;
     width: 100%;
-    height: 2%;
+    height: 3%;
     margin: 0;
     padding: 0; 
     bottom: 0;
@@ -220,4 +222,54 @@ h2, h3 {
     width: 100%;
     max-width: none;
     
+}
+.sy-a:hover {
+    color: purple;
+    background-color: yellow;
+}
+.sy-dl {
+    overflow: hidden;
+    margin: 1%;
+}
+
+.sy-dd {
+    width: 75%;
+    float: left;
+}
+
+.sy-dt {
+    width: 24%;
+    float: left;
+}
+.sy-button {
+    color: black;
+    background-color: lightskyblue;
+    border-color: darkblue;
+    font-size: larger;
+    margin: 3%;
+    border-radius: 12px;
+}
+
+.sy-button:hover {
+    background-color: lightgreen;
+}
+.sy-button:disabled:hover {
+    background-color: red;
+}
+.sy-input {
+    width: 100%;
+}
+.sy-input40 {
+    width: 40%;
+}
+input[disabled], textarea[disabled],
+select[disabled='disabled'] {
+    -webkit-text-fill-color: rgba(0, 0, 0, 1);
+    color: rgba(0, 0, 0, 1);
+}
+input[readonly], textarea[readonly],
+select[readonly='readonly'] {
+    -webkit-text-fill-color: #333333;
+    color: #333333;
+    background-color: #eeeeee;
 }
