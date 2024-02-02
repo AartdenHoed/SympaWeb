@@ -1,0 +1,40 @@
+﻿<div class="controller">
+    @model IEnumerable<ConfigMan.ViewModels.ComponentVM>
+
+    @{
+        ViewBag.Title = "Index";
+    }
+
+    <h2>Components zonder installaties</h2>
+
+
+    <div class="sympaMsg">
+        <p>@ViewBag.SympaMsg</p>
+    </div>
+    <p>
+        @Html.ActionLink("Terug naar Menu", "Menu", "Components", new { @class = "sy-a" })
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ComponentName)
+            </th>
+           
+
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ComponentName)
+                </td>
+                
+
+            </tr>
+        }
+
+    </table>
+
+
+</div>

@@ -1,8 +1,8 @@
 ﻿<div class="controller">
-    @model ConfigMan.Component
+    @model ConfigMan.ViewModels.ComponentVM
 
     @{
-        ViewBag.Title = "Details";
+        ViewBag.Title = "Component Details";
     }
 
     <h2>Details</h2>
@@ -10,27 +10,23 @@
     <div>
         <h4>Component</h4>
         <hr />
-        <dl class="dl-horizontal">
-            <dt>
+        <dl class="sy-dl">
+            <dt class="sy-dt">
                 @Html.DisplayNameFor(model => model.ComponentName)
             </dt>
 
-            <dd>
+            <dd class="sy-dd">
                 @Html.DisplayFor(model => model.ComponentName)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Vendor.VendorName)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Vendor.VendorName)
             </dd>
 
 
         </dl>
     </div>
     <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.ComponentID }) |
-        @Html.ActionLink("Back to List", "Index")
+        @Html.ActionLink("Bewerk", "Edit", new { id = Model.ComponentID}, new { @class = "sy-a" }) 
     </p>
+    <p>
+        @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-a" })
+    </p>
+    
 </div>

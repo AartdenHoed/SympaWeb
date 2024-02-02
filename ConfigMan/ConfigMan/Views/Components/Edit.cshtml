@@ -1,47 +1,46 @@
 ﻿<div class="controller">
-    @model ConfigMan.Component
+    @model ConfigMan.ViewModels.ComponentVM
 
     @{
-        ViewBag.Title = "Edit";
+        ViewBag.Title = "Component Edit";
     }
 
     <h2>Edit</h2>
 
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
-        <div class="form-horizontal">
-            <h4>Component</h4>
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @Html.HiddenFor(model => model.ComponentID)
+<div class="form-horizontal">
+    <h4>Component</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.ComponentID)
+    @Html.HiddenFor(model => model.VendorID)
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.ComponentName, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.ComponentName, new { htmlAttributes = new { @class = "form-control", @autofocus = "autofocus" } })
-                    @Html.ValidationMessageFor(model => model.ComponentName, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(model => model.Vendor.VendorName, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Vendor.VendorName, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Vendor.VendorName, "", new { @class = "text-danger" })
-                </div>
-            </div>
+    <dl class="sy-dl">
+        <dt class="sy-dt">
+            @Html.LabelFor(model => model.ComponentName)
+        </dt>
+        <dd class="sy-dd">
+            @Html.EditorFor(model => model.ComponentName, new { htmlAttributes = new { @class = "sy-input", @autofocus = "autofocus" } })
+            @Html.ValidationMessageFor(model => model.ComponentName, "", new { @class = "text-danger" })
+        </dd>
 
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Save" class="btn btn-default" />
-                </div>
-            </div>
+
+    </dl>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Opslaan" class="sy-button" />
         </div>
+    </div>
+</div>
     }
 
     <div>
-        @Html.ActionLink("Back to List", "Index")
+        @Html.ActionLink("Terug naar lijst", "Index","", new { @class = "sy-a" })
     </div>
 
     @section Scripts {

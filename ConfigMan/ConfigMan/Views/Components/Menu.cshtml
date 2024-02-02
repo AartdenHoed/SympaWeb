@@ -1,0 +1,22 @@
+﻿
+<div class="controller">
+
+    @{
+        ViewBag.Title = "Component Beheer Menu";
+    }
+
+    <h2>Component Beheer Menu</h2>
+
+    <div class="sympaMsg">
+        <p>@ViewBag.SympaMsg</p>
+    </div>
+    <ul class="menu2">
+        <li>@Html.ActionLink("Bewerk Component Data ", "Index", "Components")</li>
+        <li>@Html.ActionLink("Components Zonder Installaties", "Report01", "Components")</li>
+        
+    </ul>
+    <div>
+        @Html.ActionLink("Hoofd Menu", "Index", "Home","", new { @class = "sy-a" })
+    </div>
+
+</div>

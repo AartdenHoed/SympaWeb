@@ -161,7 +161,7 @@ namespace ConfigMan.Controllers {
                 return RedirectToAction("Index");
             }
             else {
-                TempData["SympaMsg"] = "Update filed for vendor " + vendorVM.VendorName ;
+                TempData["SympaMsg"] = "Update failed for vendor " + vendorVM.VendorName ;
                 return View(vendorVM);
             }
             

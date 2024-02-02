@@ -1,8 +1,8 @@
 ﻿<div class="controller">
-    @model ConfigMan.Component
+    @model ConfigMan.ViewModels.ComponentVM
 
     @{
-        ViewBag.Title = "Delete";
+        ViewBag.Title = "Component Delete";
     }
 
     <h2>Delete</h2>
@@ -11,31 +11,29 @@
     <div>
         <h4>Component</h4>
         <hr />
-        <dl class="dl-horizontal">
-            <dt>
+        <dl class="sy-dl">
+            <dt class="sy-dt">
                 @Html.DisplayNameFor(model => model.ComponentName)
             </dt>
 
-            <dd>
+            <dd class="sy-dd">
                 @Html.DisplayFor(model => model.ComponentName)
             </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Vendor.VendorName)
-            </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.Vendor.VendorName)
-            </dd>
 
         </dl>
 
-        @using (Html.BeginForm()) {
+        @using (Html.BeginForm())
+        {
             @Html.AntiForgeryToken()
 
             <div class="form-actions no-color">
-                <input type="submit" value="Delete" class="btn btn-default" /> |
-                @Html.ActionLink("Back to List", "Index")
+                <input type="submit" value="Verwijder" class="sy-button" /> 
+               
             </div>
         }
+        <div>
+            @Html.ActionLink("Terug naar lijst", "Index","", new { @class = "sy-a" } )
+        </div>
     </div>
 </div>

@@ -13,7 +13,7 @@ namespace ConfigMan.ViewModels
 
         [Required(ErrorMessage = "Vendornaam is een verplicht veld")]
         [DisplayName("Unieke Vendor Naam")]
-        [MaxLength(120, ErrorMessage = "Maximaal 102 characters")]
+        [MaxLength(120, ErrorMessage = "Maximaal 120 characters")]
         public string VendorName { get; set; }
 
         [Required(ErrorMessage = "Vendorgroup is een verplicht veld")]

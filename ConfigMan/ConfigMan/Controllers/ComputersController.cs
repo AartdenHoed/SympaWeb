@@ -159,7 +159,7 @@ namespace ConfigMan.Controllers {
                 return RedirectToAction("Index");
             }
             else {
-                TempData["SympaMsg"] = "Update filed for computer " + computerVM.ComputerName ;
+                TempData["SympaMsg"] = "Update failed for computer " + computerVM.ComputerName ;
                 return View(computerVM);
             }
             

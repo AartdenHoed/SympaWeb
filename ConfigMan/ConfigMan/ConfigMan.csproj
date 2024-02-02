@@ -275,6 +275,8 @@
     <Compile Include="Vendor.cs">
       <DependentUpon>ConfigModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\Component.cs" />
+    <Compile Include="ViewModels\ComponentVM.cs" />
     <Compile Include="ViewModels\Computer.cs" />
     <Compile Include="ViewModels\ComputerVM.cs" />
     <Compile Include="ViewModels\ConfigMSG.cs" />
@@ -426,6 +428,8 @@
     <Content Include="Views\Vendors\Menu.cshtml" />
     <Content Include="Views\Vendors\Report01.cshtml" />
     <Content Include="Views\Vendors\Report02.cshtml" />
+    <Content Include="Views\Components\Menu.cshtml" />
+    <Content Include="Views\Components\Report01.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
