@@ -1,0 +1,50 @@
+﻿<div class="controller">
+    @model IEnumerable<ConfigMan.ViewModels.InstallationVM>
+
+    @{
+        ViewBag.Title = "Index";
+    }
+
+    <h2>Installations zonder installatie</h2>
+
+
+    <div class="sympaMsg">
+        <p>@ViewBag.SympaMsg</p>
+    </div>
+    <p>
+        @Html.ActionLink("Terug naar Menu", "Menu", "Installations", new { @class = "sy-a" })
+    </p>
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.InstallationName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InstallationPurchaseDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OS)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InstallationName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InstallationPurchaseDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OS)
+                </td>
+
+            </tr>
+        }
+
+    </table>
+
+
+</div>

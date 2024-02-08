@@ -280,6 +280,8 @@
     <Compile Include="ViewModels\Computer.cs" />
     <Compile Include="ViewModels\ComputerVM.cs" />
     <Compile Include="ViewModels\ConfigMSG.cs" />
+    <Compile Include="ViewModels\Installation.cs" />
+    <Compile Include="ViewModels\InstallationVM.cs" />
     <Compile Include="ViewModels\Vendor.cs" />
     <Compile Include="ViewModels\VendorVM.cs" />
   </ItemGroup>
@@ -430,12 +432,18 @@
     <Content Include="Views\Vendors\Report02.cshtml" />
     <Content Include="Views\Components\Menu.cshtml" />
     <Content Include="Views\Components\Report01.cshtml" />
+    <Content Include="Views\Installations\Create.cshtml" />
+    <Content Include="Views\Installations\Delete.cshtml" />
+    <Content Include="Views\Installations\Details.cshtml" />
+    <Content Include="Views\Installations\Edit.cshtml" />
+    <Content Include="Views\Installations\Index.cshtml" />
+    <Content Include="Views\Installations\Menu.cshtml" />
+    <Content Include="Views\Installations\Report01.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Documentations\" />
     <Folder Include="Views\ICONS\" />
-    <Folder Include="Views\Installations\" />
     <Folder Include="Views\Licenses\" />
   </ItemGroup>
   <ItemGroup>

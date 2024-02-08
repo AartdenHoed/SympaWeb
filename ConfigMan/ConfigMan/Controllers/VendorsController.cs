@@ -13,6 +13,7 @@ using ConfigMan.ActionFilters;
 using System.Diagnostics;
 using System.ComponentModel;
 using System.Runtime.Remoting.Messaging;
+using Microsoft.Ajax.Utilities;
 
 namespace ConfigMan.Controllers { 
 
@@ -219,28 +220,23 @@ namespace ConfigMan.Controllers {
             {
                 ViewBag.SympaMsg = TempData["SympaMsg"];
             }
-            var query = from v in db.Vendors
-                        join c in db.Components on v.VendorID equals c.VendorID
-                        select new
-                        {
-                            VendorID = v.VendorID,
-                            VendorName = v.VendorName,
-                            VendorGroup = v.VendorGroup,
-                            ComponentID = c.ComponentID
-                        } into j1                      
-                        where !(from i in db.Installations
-                                select i.ComponentID)
-                               .Contains(j1.ComponentID)
+            var query = from ven in db.Vendors
                         select new VendorVM
                         {
-                            VendorID = j1.VendorID,
-                            VendorName = j1.VendorName,
-                            VendorGroup = j1.VendorGroup,
-                        } into j2
-                        orderby j2.VendorGroup
-                        select j2;
-
+                            VendorID = ven.VendorID,
+                            VendorName = ven.VendorName,
+                            VendorGroup = ven.VendorGroup
+                        } into v1
+                        where
+                        !(from v in db.Vendors
+                          join c in db.Components on v.VendorID equals c.VendorID into join1
+                          from j1 in join1
+                          join inst in db.Installations on j1.ComponentID equals inst.ComponentID
+                          select v.VendorID).Contains(v1.VendorID)
+                        select v1;
+             
             List < VendorVM > venlist = query.ToList();
+
             
             return View(venlist);
 

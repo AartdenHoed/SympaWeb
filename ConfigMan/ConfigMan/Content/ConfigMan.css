@@ -78,7 +78,7 @@ h2, h3 {
     padding: 0; 
     
 }
-.leftcol, .rightcol {
+.leftcol {
     width: 15%;
     height: 100%;
     box-sizing: border-box;
@@ -87,7 +87,7 @@ h2, h3 {
     padding: 0; 
 } 
 .midcol {
-    width: 70%;
+    width: 85%;
     height: 100%;
     box-sizing: border-box; 
     float: left; 

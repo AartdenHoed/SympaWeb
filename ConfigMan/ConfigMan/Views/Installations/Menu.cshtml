@@ -1,0 +1,21 @@
+﻿
+<div class="controller">
+
+    @{
+        ViewBag.Title = "Installation Beheer Menu";
+    }
+
+    <h2>Installation Beheer Menu</h2>
+
+    <div class="sympaMsg">
+        <p>@ViewBag.SympaMsg</p>
+    </div>
+    <ul class="menu2">
+        <li>@Html.ActionLink("Bewerk Installatie Data ", "Index", "Installations")</li>
+        <li>@Html.ActionLink("Report01", "Report01", "Installations")</li>
+    </ul>
+    <div>
+        @Html.ActionLink("Hoofd Menu", "Index", "Home","", new { @class = "sy-a" })
+    </div>
+
+</div>
