@@ -19,7 +19,10 @@
             <th>
                 @Html.DisplayNameFor(model => model.ComponentName)
             </th>
-           
+            <th>
+                @Html.DisplayNameFor(model => model.VendorName)
+            </th>
+
 
         </tr>
 
@@ -29,7 +32,10 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.ComponentName)
                 </td>
-                
+                <td>
+                    @Html.DisplayFor(modelItem => item.VendorName)
+                </td>
+
 
             </tr>
         }

@@ -18,15 +18,19 @@
             <dd class="sy-dd">
                 @Html.DisplayFor(model => model.ComponentName)
             </dd>
+            <dt class="sy-dt">
+            @Html.DisplayNameFor(model => model.VendorName)
+            </dt>
+
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.VendorName)
+            </dd>
 
 
         </dl>
     </div>
     <p>
-        @Html.ActionLink("Bewerk", "Edit", new { id = Model.ComponentID}, new { @class = "sy-a" }) 
+        @Html.ActionLink("Bewerk", "Edit", new { id = Model.ComponentID }, new { @class = "sy-a" }) | @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-a" })
     </p>
-    <p>
-        @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-a" })
-    </p>
-    
+   
 </div>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using ConfigMan.ViewModels;
+using Microsoft.Ajax.Utilities;
 
 namespace ConfigMan
 {
@@ -13,7 +14,13 @@ namespace ConfigMan
             this.ComponentName = componentVM.ComponentName.Trim();
             this.ComponentID = componentVM.ComponentID;
             
-            this.VendorID = componentVM.VendorID;
+            if ((componentVM.SelectedVendorIDstring != null) && (componentVM.SelectedVendorIDstring != "")) {
+                this.VendorID = Int32.Parse(componentVM.SelectedVendorIDstring);
+            }
+            else
+            {
+                this.VendorID = componentVM.VendorID;
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ namespace ConfigMan.ViewModels
     public class VendorVM
     {
         public int VendorID { get; set; }
+        public string VendorIDstring { get { return VendorID.ToString();}}
 
         [Required(ErrorMessage = "Vendornaam is een verplicht veld")]
         [DisplayName("Unieke Vendor Naam")]

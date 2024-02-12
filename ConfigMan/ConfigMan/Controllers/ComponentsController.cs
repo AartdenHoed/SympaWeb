@@ -11,6 +11,9 @@ using ConfigMan.ViewModels;
 using System.Diagnostics.Contracts;
 using ConfigMan.ActionFilters;
 using System.Diagnostics;
+using System.Reflection;
+using System.Collections;
+using System.ComponentModel;
 
 namespace ConfigMan.Controllers
 {
@@ -45,15 +48,21 @@ namespace ConfigMan.Controllers
             {
                 ViewBag.SympaMsg = TempData["SympaMsg"];
             }
-            List<Component> complist = db.Components.OrderBy(x => x.ComponentName).ToList();
-            List<ComponentVM> vmlist = new List<ComponentVM>();
-            foreach (Component c in complist)
-            {
-                ComponentVM VM = new ComponentVM();
-                VM.Fill(c);
-                vmlist.Add(VM);
-            }
-            return View(vmlist);
+            var query = from component in db.Components
+                        join vendor in db.Vendors
+                        on component.VendorID equals vendor.VendorID into join1
+                        from j1 in join1
+                        orderby component.ComponentName
+                        select new ComponentVM
+                        {
+                            ComponentID = component.ComponentID,
+                            ComponentName = component.ComponentName,
+                            VendorID = j1.VendorID,
+                            VendorName = j1.VendorName,
+                        };
+            List<ComponentVM> complist = query.ToList();
+
+            return View(complist);
 
         }
 
@@ -68,15 +77,26 @@ namespace ConfigMan.Controllers
 
             if (!ContractErrorOccurred)
             {
-                Component component = db.Components.Find(id);
-                if (component == null)
+                var query = from component in db.Components
+                            where component.ComponentID == id
+                            join vendor in db.Vendors
+                            on component.VendorID equals vendor.VendorID into join1
+                            from j1 in join1
+                            orderby component.ComponentName
+                            select new ComponentVM
+                            {
+                                ComponentID = component.ComponentID,
+                                ComponentName = component.ComponentName,
+                                VendorID = j1.VendorID,
+                                VendorName = j1.VendorName,
+                            };
+                ComponentVM componentVM = query.Single();
+                if (componentVM == null)
                 {
                     TempData["SympaMsg"] = "*** ERROR *** ID " + id.ToString() + " not found in database.";
                 }
                 else
                 {
-                    ComponentVM componentVM = new ComponentVM();
-                    componentVM.Fill(component);
                     return View(componentVM);
                 }
             }
@@ -96,7 +116,16 @@ namespace ConfigMan.Controllers
         //
         public ActionResult Create()
         {
-            return View();
+            // Create vendor drop down list
+            ComponentVM componentVM = new ComponentVM();
+            List<Vendor> vendordblist = db.Vendors.OrderBy(x => x.VendorName).ToList();
+            foreach (Vendor v in vendordblist)
+            {
+                VendorVM VM = new VendorVM();
+                VM.Fill(v);
+                componentVM.VendorLijst.Add(VM);
+            }
+            return View(componentVM);
         }
 
         // POST: Components/Create
@@ -104,7 +133,7 @@ namespace ConfigMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ComponentID,VendorID,ComponentName")] ComponentVM componentVM)
+        public ActionResult Create([Bind(Include = "ComponentID,VendorID,ComponentName,SelectedVendorIDstring")] ComponentVM componentVM)
         {
             if (ModelState.IsValid)
             {
@@ -139,16 +168,42 @@ namespace ConfigMan.Controllers
 
             if (!ContractErrorOccurred)
             {
-                Component component = db.Components.Find(id);
-                if (component == null)
+                var query = from component in db.Components
+                            where component.ComponentID == id
+                            join vendor in db.Vendors
+                            on component.VendorID equals vendor.VendorID into join1
+                            from j1 in join1
+                            orderby component.ComponentName
+                            select new ComponentVM
+                            {
+                                ComponentID = component.ComponentID,
+                                ComponentName = component.ComponentName,
+                                VendorID = j1.VendorID,
+                                VendorName = j1.VendorName,
+                            };
+                ComponentVM componentVM = query.Single();
+                List<Vendor> vendordblist = db.Vendors.OrderBy(x => x.VendorName).ToList();
+                
+                // Set first entry on current value
+                VendorVM firstentry = new VendorVM();
+                firstentry.VendorID = componentVM.VendorID;
+                firstentry.VendorName = componentVM.VendorName;
+                componentVM.VendorLijst.Add(firstentry);
+
+                // add entries form Vendor db
+                foreach (Vendor v in vendordblist)
+                {
+                    VendorVM VM = new VendorVM();
+                    VM.Fill(v);
+                    componentVM.VendorLijst.Add(VM);
+                }
+                if (componentVM == null)
                 {
                     TempData["SympaMsg"] = "*** ERROR *** ID " + id.ToString() + " not found in database.";
                 }
                 else
                 {
-                    ComponentVM componentVM = new ComponentVM();
-                    componentVM.Fill(component);
-                    return View(componentVM);
+                   return View(componentVM);
                 }
             }
             return RedirectToAction("Index");
@@ -160,15 +215,40 @@ namespace ConfigMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ComponentID,VendorID,ComponentName")] ComponentVM componentVM)
+        public ActionResult Edit([Bind(Include = "ComponentID,VendorID,ComponentName,SelectedVendorIDstring")] ComponentVM componentVM)
         {
             if (ModelState.IsValid)
             {
+                int selectedVendorID = Int32.Parse(componentVM.SelectedVendorIDstring);
                 Component component = new Component();
                 component.Fill(componentVM);
-                db.Entry(component).State = EntityState.Modified;
-                db.SaveChanges();
-                TempData["SympaMsg"] = "Component " + component.ComponentName + " succesfully updated.";
+                if (selectedVendorID == componentVM.VendorID) {  
+                    // Vendor did not change                    
+                    db.Entry(component).State = EntityState.Modified;
+                    db.SaveChanges();
+                    TempData["SympaMsg"] = "Component " + component.ComponentName + " succesfully updated.";
+                }
+                else
+                {
+                    // Vendor ID changed. delete old record en insert new one
+                    Component c = db.Components.Find(component.ComponentID);
+                    db.Components.Remove(c);                    
+                    
+                    component.VendorID = selectedVendorID;
+                    db.Components.Add(component);
+                    
+                    try
+                    {
+                        db.SaveChanges();
+                        TempData["SympaMsg"] = "Component " + component.ComponentName + " succesfully added.";
+                    }
+                    catch (DbUpdateException)
+                    {
+                        
+                        ViewBag.SympaMsg = "Component " + component.ComponentName + " already exists, use update function.";
+                    }
+
+                }
                 return RedirectToAction("Index");
             }
             else
@@ -189,15 +269,27 @@ namespace ConfigMan.Controllers
 
             if (!ContractErrorOccurred)
             {
-                Component component = db.Components.Find(id);
-                if (component == null)
+                var query = from component in db.Components
+                            where component.ComponentID == id
+                            join vendor in db.Vendors
+                            on component.VendorID equals vendor.VendorID into join1
+                            from j1 in join1
+                            orderby component.ComponentName
+                            select new ComponentVM
+                            {
+                                ComponentID = component.ComponentID,
+                                ComponentName = component.ComponentName,
+                                VendorID = j1.VendorID,
+                                VendorName = j1.VendorName,
+                            };
+                ComponentVM componentVM = query.Single();
+                if (componentVM == null)
                 {
                     TempData["SympaMsg"] = "*** ERROR *** ID " + id.ToString() + " not found in database.";
                 }
                 else
                 {
-                    ComponentVM componentVM = new ComponentVM();
-                    componentVM.Fill(component);
+                    
                     return View(componentVM);
                 }
             }
@@ -239,12 +331,16 @@ namespace ConfigMan.Controllers
                         where !(from i in db.Installations
                                 select i.ComponentID)
                                .Contains(c.ComponentID)
+                        join vendor in db.Vendors
+                            on c.VendorID equals vendor.VendorID into join1
                         orderby c.ComponentName
+                        from j1 in join1
                         select new ComponentVM
                         {
                             ComponentID = c.ComponentID,
                             ComponentName = c.ComponentName,
-                            VendorID = c.VendorID
+                            VendorID = c.VendorID,
+                            VendorName = j1.VendorName
                             
                         };
 

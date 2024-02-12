@@ -43,12 +43,10 @@
             @Html.AntiForgeryToken()
 
             <div class="form-actions no-color">
-                <input type="submit" value="Verwijder" class="sy-button" /> 
-               
+                <input type="submit" value="Verwijder" class="sy-button" /> | @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-a" })
+
             </div>
         }
-        <div>
-            @Html.ActionLink("Terug naar lijst", "Index","", new { @class = "sy-a" } )
-        </div>
+        
     </div>
 </div>

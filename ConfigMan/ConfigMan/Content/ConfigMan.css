@@ -273,3 +273,64 @@ select[readonly='readonly'] {
     color: #333333;
     background-color: #eeeeee;
 }
+.sy-field textarea {
+    font-size: inherit;
+    color: black;
+    font-family: sans-serif;
+}
+
+.sy-field select {
+    width: 100%;
+}
+
+.sy-field {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    padding: 1%;
+    margin: 1%;
+    font-size: inherit;
+    color: black;
+    background-color: lightgray;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    -moz-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    -o-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+
+.sy-field:focus:not([readonly]),
+.sy-field:active:not([readonly]) {
+    border-color: darkblue;
+    background-color: lightblue;
+    color: black;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+
+.sy-field:read-only {
+    background-color: lightgray;
+    color: black;
+}
+
+.sy-field:disabled {
+    background-color: lightgray;
+    color: black;
+}
+
+.sy-field:enabled:read-only {
+    background-color: lightgray;
+    color: black;
+}
+
+.sy-field:enabled:not([readonly]) {
+    background-color: antiquewhite;
+    color: black;
+}

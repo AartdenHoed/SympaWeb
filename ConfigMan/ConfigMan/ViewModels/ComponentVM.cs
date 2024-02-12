@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.Linq;
-using System.Web;
+using System.Web.Mvc;
+
 
 namespace ConfigMan.ViewModels
 {
     public class ComponentVM
     {
+        public List<VendorVM> VendorLijst = new List<VendorVM>();
+        
+        public string SelectedVendorIDstring { get; set; }
+
         public int ComponentID { get; set; }
         public int VendorID { get; set; }
+        public string VendorName { get; set; }
 
         [Required(ErrorMessage = "Componentnaam is een verplicht veld")]
         [DisplayName("Unieke Component Naam")]

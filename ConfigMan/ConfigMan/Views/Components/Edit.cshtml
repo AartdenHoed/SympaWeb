@@ -19,30 +19,36 @@
     @Html.HiddenFor(model => model.ComponentID)
     @Html.HiddenFor(model => model.VendorID)
 
-    <dl class="sy-dl">
-        <dt class="sy-dt">
-            @Html.LabelFor(model => model.ComponentName)
-        </dt>
-        <dd class="sy-dd">
-            @Html.EditorFor(model => model.ComponentName, new { htmlAttributes = new { @class = "sy-input", @autofocus = "autofocus" } })
-            @Html.ValidationMessageFor(model => model.ComponentName, "", new { @class = "text-danger" })
-        </dd>
+<dl class="sy-dl">
+    <dt class="sy-dt">
+        @Html.LabelFor(model => model.ComponentName)
+    </dt>
+    <dd class="sy-dd">
+        @Html.EditorFor(model => model.ComponentName, new { htmlAttributes = new { @class = "sy-input", @autofocus = "autofocus" } })
+        @Html.ValidationMessageFor(model => model.ComponentName, "", new { @class = "text-danger" })
+    </dd>
+    <dt class="sy-dt">
+        @Html.LabelFor(model => model.VendorName)
+    </dt>
+    <dd class="sy-dd">
+        @Html.DropDownListFor(model => model.SelectedVendorIDstring, new SelectList(Model.VendorLijst, "VendorIDstring", "VendorName"),
+                                                    new { @class = "sy-field" })
+        @Html.ValidationMessageFor(model => model.SelectedVendorIDstring, "", new { @class = "text-danger" })
+    </dd>
 
 
-    </dl>
 
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Opslaan" class="sy-button" />
+</dl>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Opslaan" class="sy-button" /> |  @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-a" })
+            </div>
         </div>
     </div>
-</div>
     }
 
-    <div>
-        @Html.ActionLink("Terug naar lijst", "Index","", new { @class = "sy-a" })
-    </div>
-
+   
     @section Scripts {
         @Scripts.Render("~/bundles/jqueryval")
     }
