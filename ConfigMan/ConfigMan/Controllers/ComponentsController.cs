@@ -182,28 +182,29 @@ namespace ConfigMan.Controllers
                                 VendorName = j1.VendorName,
                             };
                 ComponentVM componentVM = query.Single();
-                List<Vendor> vendordblist = db.Vendors.OrderBy(x => x.VendorName).ToList();
-                
-                // Set first entry on current value
-                VendorVM firstentry = new VendorVM();
-                firstentry.VendorID = componentVM.VendorID;
-                firstentry.VendorName = componentVM.VendorName;
-                componentVM.VendorLijst.Add(firstentry);
 
-                // add entries form Vendor db
-                foreach (Vendor v in vendordblist)
-                {
-                    VendorVM VM = new VendorVM();
-                    VM.Fill(v);
-                    componentVM.VendorLijst.Add(VM);
-                }
                 if (componentVM == null)
                 {
                     TempData["SympaMsg"] = "*** ERROR *** ID " + id.ToString() + " not found in database.";
                 }
-                else
-                {
-                   return View(componentVM);
+                else { 
+                    List<Vendor> vendordblist = db.Vendors.OrderBy(x => x.VendorName).ToList();
+                
+                    // Set first entry on current value
+                    VendorVM firstentry = new VendorVM();
+                    firstentry.VendorID = componentVM.VendorID;
+                    firstentry.VendorName = componentVM.VendorName;
+                    componentVM.VendorLijst.Add(firstentry);
+
+                    // add entries form Vendor db
+                    foreach (Vendor v in vendordblist)
+                    {
+                        VendorVM VM = new VendorVM();
+                        VM.Fill(v);
+                        componentVM.VendorLijst.Add(VM);
+                    }               
+                
+                    return View(componentVM);
                 }
             }
             return RedirectToAction("Index");
@@ -222,33 +223,14 @@ namespace ConfigMan.Controllers
                 int selectedVendorID = Int32.Parse(componentVM.SelectedVendorIDstring);
                 Component component = new Component();
                 component.Fill(componentVM);
-                if (selectedVendorID == componentVM.VendorID) {  
-                    // Vendor did not change                    
-                    db.Entry(component).State = EntityState.Modified;
-                    db.SaveChanges();
-                    TempData["SympaMsg"] = "Component " + component.ComponentName + " succesfully updated.";
-                }
-                else
+                if (selectedVendorID != componentVM.VendorID)
                 {
-                    // Vendor ID changed. delete old record en insert new one
-                    Component c = db.Components.Find(component.ComponentID);
-                    db.Components.Remove(c);                    
-                    
                     component.VendorID = selectedVendorID;
-                    db.Components.Add(component);
-                    
-                    try
-                    {
-                        db.SaveChanges();
-                        TempData["SympaMsg"] = "Component " + component.ComponentName + " succesfully added.";
-                    }
-                    catch (DbUpdateException)
-                    {
-                        
-                        ViewBag.SympaMsg = "Component " + component.ComponentName + " already exists, use update function.";
-                    }
-
-                }
+                }  
+                db.Entry(component).State = EntityState.Modified;
+                db.SaveChanges();
+                TempData["SympaMsg"] = "Component " + component.ComponentName + " succesfully updated.";
+                                
                 return RedirectToAction("Index");
             }
             else

@@ -25,8 +25,14 @@ namespace ConfigMan.ViewModels
 
         public void Fill(Vendor vendor)
         {
-            this.VendorName = vendor.VendorName.Trim();
-            this.VendorGroup = vendor.VendorGroup.Trim();
+            this.VendorName = vendor.VendorName.TrimEnd();
+            if (vendor.VendorGroup == null)
+            {
+                this.VendorGroup = vendor.VendorGroup;
+            }
+            else { 
+                this.VendorGroup = vendor.VendorGroup.TrimEnd();
+            }
             this.VendorID = vendor.VendorID;
 
         }

@@ -10,9 +10,15 @@ namespace ConfigMan
     {
         public void Fill(VendorVM vendorVM)
         {
-            this.VendorName = vendorVM.VendorName.Trim();
-            this.VendorGroup = vendorVM.VendorGroup.Trim();
-            
+            this.VendorName = vendorVM.VendorName.TrimEnd();
+            if (vendorVM.VendorName == null)
+            {
+                this.VendorGroup = vendorVM.VendorGroup;
+            }
+            else
+            {
+                this.VendorGroup = vendorVM.VendorGroup.TrimEnd();
+            }
             this.VendorID = vendorVM.VendorID;
         }
     }

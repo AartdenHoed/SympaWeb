@@ -13,6 +13,7 @@ using ConfigMan.ActionFilters;
 using System.Diagnostics;
 using ConfigMan.Models;
 using System.Runtime.Remoting.Lifetime;
+using System.ComponentModel;
 
 namespace ConfigMan.Controllers
 {
@@ -59,8 +60,8 @@ namespace ConfigMan.Controllers
                         {
                             ComputerID = installation.ComputerID,
                             ComponentID = installation.ComponentID,
-                            Release = installation.Release.Trim(),
-                            Location = installation.Location.Trim(),
+                            Release = installation.Release.TrimEnd(),
+                            Location = installation.Location.TrimEnd(),
                             InstallDate = installation.InstallDate,
                             MeasuredDateTime = installation.MeasuredDateTime,
                             StartDateTime = installation.StartDateTime,
@@ -104,8 +105,8 @@ namespace ConfigMan.Controllers
                             {
                                 ComputerID = installation.ComputerID,
                                 ComponentID = installation.ComponentID,
-                                Release = installation.Release.Trim(),
-                                Location = installation.Location.Trim(),
+                                Release = installation.Release.TrimEnd(),
+                                Location = installation.Location.TrimEnd(),
                                 InstallDate = installation.InstallDate,
                                 MeasuredDateTime = installation.MeasuredDateTime,
                                 StartDateTime = installation.StartDateTime,
@@ -140,7 +141,25 @@ namespace ConfigMan.Controllers
         //
         public ActionResult Create()
         {
-            return View();
+            // Create vendor drop down list
+            InstallationVM installationVM = new InstallationVM();
+            // fill selectlist with computers
+            List<Computer> computerdblist = db.Computers.OrderBy(x => x.ComputerName).ToList();
+            foreach (Computer c in computerdblist)
+            {
+                ComputerVM cVM = new ComputerVM();
+                cVM.Fill(c);
+                installationVM.ComputerLijst.Add(cVM);
+            }
+            // fill selectlist with components
+            List<Component> componentdblist = db.Components.OrderBy(x => x.ComponentName).ToList();
+            foreach (Component o in componentdblist)
+            {
+                ComponentVM oVM = new ComponentVM();
+                oVM.Fill(o);
+                installationVM.ComponentLijst.Add(oVM);
+            }
+            return View(installationVM);
         }
 
         // POST: Installations/Create
@@ -148,12 +167,23 @@ namespace ConfigMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ComputerID,ComponentID,Release,Location,InstallDate,MeasuredDateTime,StartDateTime,EndDateTime,Count")] InstallationVM installationVM)
+        public ActionResult Create([Bind(Include = "ComputerID,ComponentID,Release,Location,InstallDate,MeasuredDateTime,StartDateTime,EndDateTime,Count,SelectedComputerIDstring,SelectedComponentIDstring")] InstallationVM installationVM)
         {
             if (ModelState.IsValid)
             {
                 Installation installation = new Installation();
                 installation.Fill(installationVM);
+
+                int selectedComputerID = Int32.Parse(installationVM.SelectedComputerIDstring);
+                int selectedComponentID = Int32.Parse(installationVM.SelectedComponentIDstring);
+                if (selectedComputerID != installationVM.ComputerID)
+                {
+                   installation.ComputerID = selectedComputerID;
+                }
+                if (selectedComponentID != installationVM.ComponentID)
+                {
+                    installation.ComponentID = selectedComponentID;
+                }
                 bool addfailed = false;
                 db.Installations.Add(installation);
                 try
@@ -195,8 +225,8 @@ namespace ConfigMan.Controllers
                             {
                                 ComputerID = installation.ComputerID,
                                 ComponentID = installation.ComponentID,
-                                Release = installation.Release.Trim(),
-                                Location = installation.Location.Trim(),
+                                Release = installation.Release.TrimEnd(),
+                                Location = installation.Location.TrimEnd(),
                                 InstallDate = installation.InstallDate,
                                 MeasuredDateTime = installation.MeasuredDateTime,
                                 StartDateTime = installation.StartDateTime,
@@ -271,8 +301,8 @@ namespace ConfigMan.Controllers
                             {
                                 ComputerID = installation.ComputerID,
                                 ComponentID = installation.ComponentID,
-                                Release = installation.Release.Trim(),
-                                Location = installation.Location.Trim(),
+                                Release = installation.Release.TrimEnd(),
+                                Location = installation.Location.TrimEnd(),
                                 InstallDate = installation.InstallDate,
                                 MeasuredDateTime = installation.MeasuredDateTime,
                                 StartDateTime = installation.StartDateTime,

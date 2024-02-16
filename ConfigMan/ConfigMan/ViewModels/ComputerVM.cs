@@ -10,6 +10,7 @@ namespace ConfigMan.ViewModels
     public class ComputerVM
     {
         public int ComputerID { get; set; }
+        public string ComputerIDstring { get { return ComputerID.ToString(); } }
 
         [Required(ErrorMessage = "Computernaam is een verplicht veld")]
         [DisplayName("Unieke Computer Naam")]
@@ -28,9 +29,16 @@ namespace ConfigMan.ViewModels
 
         public void Fill(Computer computer)
         {
-            this.ComputerName = computer.ComputerName.Trim();
+            this.ComputerName = computer.ComputerName.TrimEnd();
             this.ComputerPurchaseDate = computer.ComputerPurchaseDate;
-            this.OS = computer.OS.Trim();
+            if (computer.OS == null)
+            {
+                this.OS = computer.OS;
+            }
+            else
+            {
+                this.OS = computer.OS.TrimEnd();
+            }
             this.ComputerID = computer.ComputerID;
 
         }

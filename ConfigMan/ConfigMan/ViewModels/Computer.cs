@@ -10,9 +10,16 @@ namespace ConfigMan
     {
         public void Fill(ComputerVM computerVM)
         {
-            this.ComputerName = computerVM.ComputerName.Trim();
+            this.ComputerName = computerVM.ComputerName.TrimEnd();
             this.ComputerPurchaseDate = computerVM.ComputerPurchaseDate;
-            this.OS = computerVM.OS.Trim();
+            if (computerVM.OS == null)
+            {
+                this.OS = computerVM.OS;
+            }
+            else
+            {
+                this.OS = computerVM.OS.TrimEnd();
+            }
             this.ComputerID = computerVM.ComputerID;
         }
     }

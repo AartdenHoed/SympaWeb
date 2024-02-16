@@ -258,9 +258,11 @@ h2, h3 {
 }
 .sy-input {
     width: 100%;
+    background-color: antiquewhite;
 }
 .sy-input40 {
     width: 40%;
+    background-color: antiquewhite;
 }
 input[disabled], textarea[disabled],
 select[disabled='disabled'] {
@@ -287,9 +289,7 @@ select[readonly='readonly'] {
     display: block;
     box-sizing: border-box;
     width: 100%;
-    height: auto;
-    padding: 1%;
-    margin: 1%;
+    height: auto;   
     font-size: inherit;
     color: black;
     background-color: lightgray;
@@ -333,4 +333,27 @@ select[readonly='readonly'] {
 .sy-field:enabled:not([readonly]) {
     background-color: antiquewhite;
     color: black;
+}
+.sy-table {
+    background-color: lightblue;
+    margin-right: 3%;
+    width: 100%;
+}
+.sy-table tr:nth-child(even) {
+    background-color: lightyellow;
+        
+}
+
+.sy-table tr:nth-child(odd) {
+    background-color: lightgreen;
+       
+}
+
+.sy-table th {
+    background-color: lightblue;
+    text-align: center;
+}
+
+.sy-table td {
+    text-align: center;
 }

@@ -12,8 +12,22 @@ namespace ConfigMan
         {
             this.ComputerID = installationVM.ComputerID;
             this.ComponentID = installationVM.ComponentID;
-            this.Release = installationVM.Release.Trim();
-            this.Location = installationVM.Location.Trim();
+            if (installationVM.Release == null)
+            {
+                this.Release = installationVM.Release;
+            }
+            else
+            {
+                this.Release = installationVM.Release.TrimEnd();
+            }
+            if (installationVM.Location == null)
+            {
+                this.Location = installationVM.Location;
+            }
+            else
+            {
+                this.Location = installationVM.Location.TrimEnd();
+            }
             this.InstallDate = installationVM.InstallDate;
             this.MeasuredDateTime = installationVM.MeasuredDateTime;
             this.StartDateTime = installationVM.StartDateTime;

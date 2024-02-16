@@ -15,18 +15,21 @@ namespace ConfigMan.ViewModels
         public string SelectedVendorIDstring { get; set; }
 
         public int ComponentID { get; set; }
+        public string ComponentIDstring { get { return ComponentID.ToString(); } }
         public int VendorID { get; set; }
         public string VendorName { get; set; }
 
+        private string _ComponentName = "";
+
         [Required(ErrorMessage = "Componentnaam is een verplicht veld")]
         [DisplayName("Unieke Component Naam")]
-        [MaxLength(120, ErrorMessage = "Maximaal 120 characters")]
-        public string ComponentName { get; set; }
+        [MaxLength(120, ErrorMessage = "Maximaal 120 characters")]       
+        public string ComponentName { get { return _ComponentName.TrimEnd(); }  set { _ComponentName = value.TrimEnd(); } }
 
        
         public void Fill(Component component)
         {
-            this.ComponentName = component.ComponentName.Trim();
+            this.ComponentName = component.ComponentName.TrimEnd();
             this.ComponentID = component.ComponentID;
             this.VendorID = component.VendorID;
 

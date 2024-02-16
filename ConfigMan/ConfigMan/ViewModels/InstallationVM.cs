@@ -9,6 +9,10 @@ namespace ConfigMan.ViewModels
 {
     public class InstallationVM
     {
+        public List<ComputerVM> ComputerLijst = new List<ComputerVM>();
+        public string SelectedComputerIDstring { get; set; }
+        public List<ComponentVM> ComponentLijst = new List<ComponentVM>();
+        public string SelectedComponentIDstring { get; set; }
         public int ComputerID { get; set; }
         public int ComponentID { get; set; }
 
@@ -23,22 +27,31 @@ namespace ConfigMan.ViewModels
 
         [DisplayName("Installatiedatum op het systeem")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.Date)]
         public Nullable<System.DateTime> InstallDate { get; set; }
 
         [Required(ErrorMessage = "Datum/tijd van meting is een verplicht veld")]
         [DisplayName("Datum/tijd van meting")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm:ss}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.DateTime)]
+
         public System.DateTime MeasuredDateTime { get; set; }
 
         [Required(ErrorMessage = "Datum/tijd van start van deze installatie is een verplicht veld")]
         [DisplayName("Installatie Start")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm:ss}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.DateTime)]
+
         public System.DateTime StartDateTime { get; set; }
 
         [DisplayName("Installatie Einde")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm:ss}", ApplyFormatInEditMode = true)]
+        [DataType(DataType.DateTime)]
         public Nullable<System.DateTime> EndDateTime { get; set; }
+
         [DisplayName("Aantal installatie instances")]
+        [Required(ErrorMessage = "Installatie count moet minimaal 1 zijn en maximaal 999")]
+        [Range(1, 999, ErrorMessage = "Minimaal 1, maximaal 999")]
         public int Count { get; set; }
 
         public string ComponentName { get; set;}
@@ -47,9 +60,19 @@ namespace ConfigMan.ViewModels
         public void Fill(Installation installation)
         {
             this.ComputerID = installation.ComputerID;
-            this.ComponentID = installation.ComponentID;    
-            this.Release = installation.Release.Trim();    
-            this.Location = installation.Location.Trim();      
+            this.ComponentID = installation.ComponentID;
+            if (installation.Release == null) {
+                this.Release = installation.Release;
+            }
+            else { 
+                this.Release = installation.Release.TrimEnd();
+            }
+            if (installation.Location == null) {
+                this.Location = installation.Location;
+            }
+            else { 
+                this.Location = installation.Location.TrimEnd();
+            }
             this.InstallDate = installation.InstallDate;    
             this.MeasuredDateTime = installation.MeasuredDateTime;
             this.StartDateTime = installation.StartDateTime;
