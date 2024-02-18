@@ -87,7 +87,7 @@ h2, h3 {
     padding: 0; 
 } 
 .midcol {
-    width: 85%;
+    width: 84%;
     height: 100%;
     box-sizing: border-box; 
     float: left; 
@@ -165,10 +165,14 @@ h2, h3 {
     
 }
 .index-wrapper {
-    background-image: url(/Images/ValleeEtroite.png); 
+    background-image: url(/Images/ValleeEtroite.png);
     background-size: cover;
     background-color: azure;
     height: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    align-items: center;
+    
 }
 .sympaMsg {
     color: red;

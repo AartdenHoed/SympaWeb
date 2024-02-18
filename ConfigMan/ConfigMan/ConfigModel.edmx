@@ -28,20 +28,8 @@
           </Key>
           <Property Name="DocumentID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ComponentID" Type="int" Nullable="false" />
-          <Property Name="InstallationText" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="InstallationText" Type="varchar(max)" Nullable="false" />
           <Property Name="LastRevisionDate" Type="date" />
-        </EntityType>
-        <EntityType Name="ICON">
-          <Key>
-            <PropertyRef Name="ComputerID" />
-            <PropertyRef Name="ComponentID" />
-            <PropertyRef Name="SubComponentName" />
-          </Key>
-          <Property Name="ComputerID" Type="int" Nullable="false" />
-          <Property Name="ComponentID" Type="int" Nullable="false" />
-          <Property Name="SubComponentName" Type="nchar" MaxLength="120" Nullable="false" />
-          <Property Name="IconName" Type="nchar" MaxLength="24" Nullable="false" />
-          <Property Name="IconCategory" Type="nchar" MaxLength="44" Nullable="false" />
         </EntityType>
         <EntityType Name="Installation">
           <Key>
@@ -146,30 +134,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ICON_Component">
-          <End Role="Component" Type="Self.Component" Multiplicity="1" />
-          <End Role="ICON" Type="Self.ICON" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Component">
-              <PropertyRef Name="ComponentID" />
-            </Principal>
-            <Dependent Role="ICON">
-              <PropertyRef Name="ComponentID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ICON_Computer">
-          <End Role="Computer" Type="Self.Computer" Multiplicity="1" />
-          <End Role="ICON" Type="Self.ICON" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Computer">
-              <PropertyRef Name="ComputerID" />
-            </Principal>
-            <Dependent Role="ICON">
-              <PropertyRef Name="ComputerID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Installation_Component">
           <End Role="Component" Type="Self.Component" Multiplicity="1" />
           <End Role="Installation" Type="Self.Installation" Multiplicity="*" />
@@ -246,7 +210,6 @@
           <EntitySet Name="Component" EntityType="Self.Component" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Computer" EntityType="Self.Computer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Documentation" EntityType="Self.Documentation" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="ICON" EntityType="Self.ICON" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Installation" EntityType="Self.Installation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="License" EntityType="Self.License" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Service" EntityType="Self.Service" Schema="dbo" store:Type="Tables" />
@@ -259,14 +222,6 @@
           <AssociationSet Name="FK_Documentation_Component" Association="Self.FK_Documentation_Component">
             <End Role="Component" EntitySet="Component" />
             <End Role="Documentation" EntitySet="Documentation" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ICON_Component" Association="Self.FK_ICON_Component">
-            <End Role="Component" EntitySet="Component" />
-            <End Role="ICON" EntitySet="ICON" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ICON_Computer" Association="Self.FK_ICON_Computer">
-            <End Role="Computer" EntitySet="Computer" />
-            <End Role="ICON" EntitySet="ICON" />
           </AssociationSet>
           <AssociationSet Name="FK_Installation_Component" Association="Self.FK_Installation_Component">
             <End Role="Component" EntitySet="Component" />
@@ -306,7 +261,6 @@
           <Property Name="ComponentName" Type="String" MaxLength="120" FixedLength="true" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Vendor" Relationship="Self.FK_Component_Vendor" FromRole="Component" ToRole="Vendor" />
           <NavigationProperty Name="Documentations" Relationship="Self.FK_Documentation_Component" FromRole="Component" ToRole="Documentation" />
-          <NavigationProperty Name="ICONs" Relationship="Self.FK_ICON_Component" FromRole="Component" ToRole="ICON" />
           <NavigationProperty Name="Installations" Relationship="Self.FK_Installation_Component" FromRole="Component" ToRole="Installation" />
           <NavigationProperty Name="Licenses" Relationship="Self.FK_License_Component" FromRole="Component" ToRole="License" />
           <NavigationProperty Name="Services" Relationship="SympaModel.FK_Service_Component" FromRole="Component" ToRole="Service" />
@@ -318,7 +272,6 @@
           <Property Name="ComputerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ComputerName" Type="String" MaxLength="32" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="ComputerPurchaseDate" Type="DateTime" Precision="0" />
-          <NavigationProperty Name="ICONs" Relationship="Self.FK_ICON_Computer" FromRole="Computer" ToRole="ICON" />
           <NavigationProperty Name="Installations" Relationship="Self.FK_Installation_Computer" FromRole="Computer" ToRole="Installation" />
           <NavigationProperty Name="Licenses" Relationship="Self.FK_License_Computer" FromRole="Computer" ToRole="License" />
           <Property Name="OS" Type="String" MaxLength="24" FixedLength="true" Unicode="false" />
@@ -330,23 +283,9 @@
           </Key>
           <Property Name="DocumentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ComponentID" Type="Int32" Nullable="false" />
-          <Property Name="InstallationText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="InstallationText" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="LastRevisionDate" Type="DateTime" Precision="0" />
           <NavigationProperty Name="Component" Relationship="Self.FK_Documentation_Component" FromRole="Documentation" ToRole="Component" />
-        </EntityType>
-        <EntityType Name="ICON">
-          <Key>
-            <PropertyRef Name="ComputerID" />
-            <PropertyRef Name="ComponentID" />
-            <PropertyRef Name="SubComponentName" />
-          </Key>
-          <Property Name="ComputerID" Type="Int32" Nullable="false" />
-          <Property Name="ComponentID" Type="Int32" Nullable="false" />
-          <Property Name="SubComponentName" Type="String" MaxLength="120" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="IconName" Type="String" MaxLength="24" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="IconCategory" Type="String" MaxLength="44" FixedLength="true" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Component" Relationship="Self.FK_ICON_Component" FromRole="ICON" ToRole="Component" />
-          <NavigationProperty Name="Computer" Relationship="Self.FK_ICON_Computer" FromRole="ICON" ToRole="Computer" />
         </EntityType>
         <EntityType Name="Installation">
           <Key>
@@ -426,18 +365,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_ICON_Component">
-          <End Role="Component" Type="Self.Component" Multiplicity="1" />
-          <End Role="ICON" Type="Self.ICON" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Component">
-              <PropertyRef Name="ComponentID" />
-            </Principal>
-            <Dependent Role="ICON">
-              <PropertyRef Name="ComponentID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Installation_Component">
           <End Role="Component" Type="Self.Component" Multiplicity="1" />
           <End Role="Installation" Type="Self.Installation" Multiplicity="*" />
@@ -459,18 +386,6 @@
             </Principal>
             <Dependent Role="License">
               <PropertyRef Name="ComponentID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_ICON_Computer">
-          <End Role="Computer" Type="Self.Computer" Multiplicity="1" />
-          <End Role="ICON" Type="Self.ICON" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Computer">
-              <PropertyRef Name="ComputerID" />
-            </Principal>
-            <Dependent Role="ICON">
-              <PropertyRef Name="ComputerID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -502,7 +417,6 @@
           <EntitySet Name="Components" EntityType="Self.Component" />
           <EntitySet Name="Computers" EntityType="Self.Computer" />
           <EntitySet Name="Documentations" EntityType="Self.Documentation" />
-          <EntitySet Name="ICONs" EntityType="Self.ICON" />
           <EntitySet Name="Installations" EntityType="Self.Installation" />
           <EntitySet Name="Licenses" EntityType="Self.License" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
@@ -515,10 +429,6 @@
             <End Role="Component" EntitySet="Components" />
             <End Role="Documentation" EntitySet="Documentations" />
           </AssociationSet>
-          <AssociationSet Name="FK_ICON_Component" Association="Self.FK_ICON_Component">
-            <End Role="Component" EntitySet="Components" />
-            <End Role="ICON" EntitySet="ICONs" />
-          </AssociationSet>
           <AssociationSet Name="FK_Installation_Component" Association="Self.FK_Installation_Component">
             <End Role="Component" EntitySet="Components" />
             <End Role="Installation" EntitySet="Installations" />
@@ -526,10 +436,6 @@
           <AssociationSet Name="FK_License_Component" Association="Self.FK_License_Component">
             <End Role="Component" EntitySet="Components" />
             <End Role="License" EntitySet="Licenses" />
-          </AssociationSet>
-          <AssociationSet Name="FK_ICON_Computer" Association="Self.FK_ICON_Computer">
-            <End Role="Computer" EntitySet="Computers" />
-            <End Role="ICON" EntitySet="ICONs" />
           </AssociationSet>
           <AssociationSet Name="FK_Installation_Computer" Association="Self.FK_Installation_Computer">
             <End Role="Computer" EntitySet="Computers" />
@@ -637,17 +543,6 @@
                 <ScalarProperty Name="ComponentID" ColumnName="ComponentID" />
                 <ScalarProperty Name="InstallationText" ColumnName="InstallationText" />
                 <ScalarProperty Name="LastRevisionDate" ColumnName="LastRevisionDate" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ICONs">
-            <EntityTypeMapping TypeName="SympaModel.ICON">
-              <MappingFragment StoreEntitySet="ICON">
-                <ScalarProperty Name="ComputerID" ColumnName="ComputerID" />
-                <ScalarProperty Name="ComponentID" ColumnName="ComponentID" />
-                <ScalarProperty Name="SubComponentName" ColumnName="SubComponentName" />
-                <ScalarProperty Name="IconName" ColumnName="IconName" />
-                <ScalarProperty Name="IconCategory" ColumnName="IconCategory" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

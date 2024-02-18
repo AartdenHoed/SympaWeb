@@ -233,7 +233,6 @@
     <Compile Include="Controllers\ComponentsController.cs" />
     <Compile Include="Controllers\ComputersController.cs" />
     <Compile Include="Controllers\DocumentationsController.cs" />
-    <Compile Include="Controllers\ICONSController.cs" />
     <Compile Include="Controllers\InstallationsController.cs" />
     <Compile Include="Controllers\LicensesController.cs" />
     <Compile Include="Documentation.cs">
@@ -247,9 +246,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ReadWMICfile.cs" />
-    <Compile Include="ICON.cs">
-      <DependentUpon>ConfigModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Installation.cs">
       <DependentUpon>ConfigModel.tt</DependentUpon>
     </Compile>
@@ -443,7 +439,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Documentations\" />
-    <Folder Include="Views\ICONS\" />
     <Folder Include="Views\Licenses\" />
   </ItemGroup>
   <ItemGroup>

@@ -18,7 +18,6 @@ namespace ConfigMan
         public Component()
         {
             this.Documentations = new HashSet<Documentation>();
-            this.ICONs = new HashSet<ICON>();
             this.Installations = new HashSet<Installation>();
             this.Licenses = new HashSet<License>();
             this.Services = new HashSet<Service>();
@@ -31,8 +30,6 @@ namespace ConfigMan
         public virtual Vendor Vendor { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Documentation> Documentations { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ICON> ICONs { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Installation> Installations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -28,7 +28,6 @@ namespace ConfigMan
         public virtual DbSet<Component> Components { get; set; }
         public virtual DbSet<Computer> Computers { get; set; }
         public virtual DbSet<Documentation> Documentations { get; set; }
-        public virtual DbSet<ICON> ICONs { get; set; }
         public virtual DbSet<Installation> Installations { get; set; }
         public virtual DbSet<License> Licenses { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
