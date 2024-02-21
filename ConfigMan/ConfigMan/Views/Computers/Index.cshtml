@@ -1,56 +1,67 @@
 ﻿<div class="controller">
-    @model IEnumerable<ConfigMan.ViewModels.ComputerVM>
-
-    @{
-        ViewBag.Title = "Index";
-    }
-
-    <h2>Index</h2>
-
+    @model ConfigMan.ViewModels.ComputerIndex
+    <h2>
+        @Html.DisplayFor(model => model.Message.Title)
+    </h2>
     <p>
-        @Html.ActionLink("Nieuwe Computer", "Create", "", new { @class = "sy-a" }) | 
+        @Html.DisplayFor(model => model.Message.Tekst)
+    </p>
+    <p>
+        @Html.ActionLink("Nieuwe Computer", "Create", "", new { @class = "sy-a" }) |
         @Html.ActionLink("Terug naar Menu", "Menu", "Computers", new { @class = "sy-a" })
     </p>
-    <div class="sympaMsg">
-        <p>@ViewBag.SympaMsg</p>
-    </div>
-    <table class="sy-table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ComputerName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ComputerPurchaseDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OS)
-            </th>
-            <th></th>
-        </tr>
 
-        @foreach (var item in Model)
+    <table class="sy-table">
+        @if (Model.ComputerLijst != null)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ComputerName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ComputerPurchaseDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.OS)
-                </td>
-                <td>
-                    @Html.ActionLink("Bewerk", "Edit", new { id = item.ComputerID }, new { @class = "sy-a" }) |
-                    @Html.ActionLink("Bekijk", "Details", new { id = item.ComputerID }, new { @class = "sy-a" }) |
-                    @Html.ActionLink("Verwijder", "Delete", new { id = item.ComputerID }, new { @class = "sy-a" })
-                </td>
-            </tr>
+            var i = 0;
+
+            foreach (var item in Model.ComputerLijst)
+            {
+                if (i == 0)
+                {
+                    <tr>
+                        <th></th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.ComputerName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.ComputerPurchaseDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.OS)
+                        </th>
+
+                    </tr>
+                }
+                i = i + 1;
+
+                <tr>
+                    <td>
+                        @Html.ActionLink("Bewerk", "Edit", new { id = item.ComputerID }, new { @class = "sy-a" }) |
+                        @Html.ActionLink("Bekijk", "Details", new { id = item.ComputerID }, new { @class = "sy-a" }) |
+                        @Html.ActionLink("Verwijder", "Delete", new { id = item.ComputerID }, new { @class = "sy-a" })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ComputerName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ComputerPurchaseDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OS)
+                    </td>
+
+                </tr>
+            }
         }
 
     </table>
-   
-       
-   
+    <p>
+        *** Einde van de lijst ***
+    </p>
+
+
+
 
 </div>

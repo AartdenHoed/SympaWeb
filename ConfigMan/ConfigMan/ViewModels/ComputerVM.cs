@@ -9,6 +9,7 @@ namespace ConfigMan.ViewModels
 {
     public class ComputerVM
     {
+        public SympaMessage Message = new SympaMessage();
         public int ComputerID { get; set; }
         public string ComputerIDstring { get { return ComputerID.ToString(); } }
 

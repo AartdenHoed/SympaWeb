@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
+
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
-using System.Web;
+
 using System.Web.Mvc;
 using ConfigMan.ViewModels;
 using System.Diagnostics.Contracts;
 using ConfigMan.ActionFilters;
-using System.Diagnostics;
-using System.Reflection;
-using System.Collections;
-using System.ComponentModel;
-using Microsoft.Ajax.Utilities;
+
 
 namespace ConfigMan.Controllers
 {
@@ -26,12 +21,13 @@ namespace ConfigMan.Controllers
     {
         private readonly DbEntities db = new DbEntities();
         private static bool ContractErrorOccurred = false;
-        private static string ErrorMessage = " ";
-
+        
         public ActionResult Menu()
         {
-            
-            return View();
+            SympaMessage msg = new SympaMessage();
+            msg.Fill("Component - Beheer Menu", msg.Info, "Kies een optie");
+            ViewData["Title"] = "Component - Beheer Menu";
+            return View(msg);
         }
 
         //
@@ -67,7 +63,7 @@ namespace ConfigMan.Controllers
                             VendorName = j1.VendorName,
                         };
             index.ComponentLijst = query.ToList();
-
+                 
             return View(index);
 
         }
@@ -100,20 +96,25 @@ namespace ConfigMan.Controllers
 
                 if (componentVM == null)
                 {
-                    componentVM.Message.Fill("Component - Bekijken", componentVM.Message.Error, "*** ERROR *** ComponentID " + id.ToString() + " not found in database.");
+                    componentVM.Message.Fill("Component - Bekijken", componentVM.Message.Error, "*** ERROR *** ComponentID " + id.ToString() + " staat niet in de database.");
 
                 }
                 else
-                {                    
+                {
                     componentVM.Message.Fill("Component - Bekijken", componentVM.Message.Info, "Klik op BEWERK om deze component te bewerken");
-                    
+
                 }
                 ViewData["Title"] = "Component - Bekijken";
                 return View(componentVM);
             }
-            string m = "Contract error bij Component Bekijken (GET)";
-            string l = componentVM.Message.Error;
-            return RedirectToAction("Index", "Components", new { Message = m, MsgLevel = l });
+            else
+            {
+                ContractErrorOccurred = false;
+
+                string m = "Contract error bij Component Bekijken (GET)";
+                string l = componentVM.Message.Error;
+                return RedirectToAction("Index", "Components", new { Message = m, MsgLevel = l });
+            }
            
         }
         
@@ -163,7 +164,7 @@ namespace ConfigMan.Controllers
                 if (addfailed)
                 {
                     componentVM.Message.Fill("Component - Aanmaken",
-                        componentVM.Message.Error, "Component " + component.ComponentName + " already exists, use update function.");
+                        componentVM.Message.Error, "Component " + component.ComponentName + " bestaat al, gebruik de BEWERK functie.");
                 }
                 else
                 {
@@ -175,7 +176,7 @@ namespace ConfigMan.Controllers
             }
             else { 
                 componentVM.Message.Fill("Component - Aanmaken",
-                        componentVM.Message.Error, "Model ERROR for " + componentVM.ComponentName);
+                        componentVM.Message.Error, "Model ERROR in " + componentVM.ComponentName);
             }
             ViewData["Title"] = "Component - Aanmaken";
             vendordblist = db.Vendors.OrderBy(x => x.VendorName).ToList();
@@ -216,12 +217,13 @@ namespace ConfigMan.Controllers
 
                 if (componentVM == null)
                 {
-                    componentVM.Message.Fill("Component - Bewerken", componentVM.Message.Error, "*** ERROR *** ComponentID " + id.ToString() + " not found in database.");
+                    componentVM.Message.Fill("Component - Bewerken", componentVM.Message.Error, "*** ERROR *** ComponentID " + id.ToString() + " staat niet in de database.");
 
                 }
-                else { 
+                else
+                {
                     List<Vendor> vendordblist = db.Vendors.OrderBy(x => x.VendorName).ToList();
-                
+
                     // Set first entry on current value
                     VendorVM firstentry = new VendorVM();
                     firstentry.VendorID = componentVM.VendorID;
@@ -237,11 +239,16 @@ namespace ConfigMan.Controllers
                     }
                     componentVM.Message.Fill("Component - Bewerken", componentVM.Message.Info, "Voer wijzigingen in en klik op OPSLAAN");
                 }
+                ViewData["Title"] = "Component - Bewerken";
                 return View(componentVM);
             }
-            string m = "Contract error bij Component Bewerken (GET)";
-            string l = componentVM.Message.Error;
-            return RedirectToAction("Index", "Components", new { Message = m, MsgLevel = l });
+            else
+            {
+                ContractErrorOccurred = false;
+                string m = "Contract error bij Component Bewerken (GET)";
+                string l = componentVM.Message.Error;
+                return RedirectToAction("Index", "Components", new { Message = m, MsgLevel = l });
+            }
 
         }
 
@@ -271,8 +278,8 @@ namespace ConfigMan.Controllers
             else
             {
                 componentVM.Message.Fill("Component - Bewerken",
-                        componentVM.Message.Error, "Model ERROR for " + componentVM.ComponentName);
-                
+                        componentVM.Message.Error, "Model ERROR in " + componentVM.ComponentName);
+                ViewData["Title"] = "Component - Bewerken";
                 return View(componentVM);
             }
 
@@ -305,20 +312,24 @@ namespace ConfigMan.Controllers
                 componentVM = query.Single();
                 if (componentVM == null)
                 {
-                    componentVM.Message.Fill("Component - Verwijderen", componentVM.Message.Error, "*** ERROR *** ComponentID " + id.ToString() + " not found in database.");
-                    
+                    componentVM.Message.Fill("Component - Verwijderen", componentVM.Message.Error, "*** ERROR *** ComponentID " + id.ToString() + " staat niet in de database.");
+
                 }
                 else
                 {
                     componentVM.Message.Fill("Component - Verwijderen", componentVM.Message.Info, "Klik op VERWIJDEREN om deze component te verwijderen");
-                    
+
                 }
                 ViewData["Title"] = "Component - Verwijderen";
                 return View(componentVM);
-                }
-            string m = "Contract error bij Component Verwijderen (GET)";
-            string l = componentVM.Message.Error;
-            return RedirectToAction("Index", "Components", new { Message = m, MsgLevel = l });
+            }
+            else
+            {
+                ContractErrorOccurred = false;
+                string m = "Contract error bij Component Verwijderen (GET)";
+                string l = componentVM.Message.Error;
+                return RedirectToAction("Index", "Components", new { Message = m, MsgLevel = l });
+            }
         }
 
 
@@ -339,8 +350,9 @@ namespace ConfigMan.Controllers
                 string l = msg.Info;
                 return RedirectToAction("Index", "Components", new { Message = m, MsgLevel = l });                
             }
-            else { 
-                string m = "Contract error bij Component Verwijderen (GET)";
+            else {
+                ContractErrorOccurred = false;
+                string m = "Contract error bij Component Verwijderen (POST)";
                 string l = msg.Error;
                 return RedirectToAction("Index", "Components", new { Message = m, MsgLevel = l });
             }
@@ -373,13 +385,12 @@ namespace ConfigMan.Controllers
                         };
 
             index.ComponentLijst = query.ToList();
-
+            
             return View(index);
 
         }
         private void Contract_ContractFailed(object sender, ContractFailedEventArgs e)
         {
-            ErrorMessage = "*** ERROR *** Contract Failed.";
             ContractErrorOccurred = true;
             e.SetHandled();
             return;

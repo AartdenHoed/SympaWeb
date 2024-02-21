@@ -1,50 +1,63 @@
 ﻿<div class="controller">
-    @model IEnumerable<ConfigMan.ViewModels.ComputerVM>
-
-    @{
-        ViewBag.Title = "Index";
-    }
-
-    <h2>Computers zonder installatie</h2>
-
-
-    <div class="sympaMsg">
-        <p>@ViewBag.SympaMsg</p>
-    </div>
+    @model ConfigMan.ViewModels.ComputerIndex
+    <h2>
+        @Html.DisplayFor(model => model.Message.Title)
+    </h2>
     <p>
+        @Html.DisplayFor(model => model.Message.Tekst)
+    </p>
+    <p>
+       
         @Html.ActionLink("Terug naar Menu", "Menu", "Computers", new { @class = "sy-a" })
     </p>
+
     <table class="sy-table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ComputerName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ComputerPurchaseDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OS)
-            </th>
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model)
+        @if (Model.ComputerLijst != null)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ComputerName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ComputerPurchaseDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.OS)
-                </td>
+            var i = 0;
 
-            </tr>
+            foreach (var item in Model.ComputerLijst)
+            {
+                if (i == 0)
+                {
+                    <tr>
+                        
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.ComputerName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.ComputerPurchaseDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.OS)
+                        </th>
+
+                    </tr>
+                }
+                i = i + 1;
+
+                <tr>
+                    
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ComputerName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ComputerPurchaseDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OS)
+                    </td>
+
+                </tr>
+            }
         }
 
     </table>
+    <p>
+        *** Einde van de lijst ***
+    </p>
+
+
 
 
 </div>

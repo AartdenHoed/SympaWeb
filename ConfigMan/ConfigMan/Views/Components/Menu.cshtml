@@ -1,22 +1,20 @@
 ﻿
 <div class="controller">
+    @model ConfigMan.ViewModels.SympaMessage
 
-    @{
-        ViewBag.Title = "Component Beheer Menu";
-    }
-
-    <h2>Component Beheer Menu</h2>
-
-    <div class="sympaMsg">
-        <p>@ViewBag.SympaMsg</p>
-    </div>
+    <h2>
+        @Html.DisplayFor(model => model.Title)
+    </h2>
+    <p>
+        @Html.DisplayFor(model => model.Tekst)
+    </p>
     <ul class="menu2">
         <li>@Html.ActionLink("Bewerk Component Data ", "Index", "Components")</li>
         <li>@Html.ActionLink("Componenten Zonder Installaties", "Report01", "Components")</li>
-        
+
     </ul>
     <div>
-        @Html.ActionLink("Hoofd Menu", "Index", "Home","", new { @class = "sy-a" })
+        @Html.ActionLink("Hoofd Menu", "Index", "Home", "", new { @class = "sy-a" })
     </div>
 
 </div>

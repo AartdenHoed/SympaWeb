@@ -272,6 +272,7 @@
       <DependentUpon>ConfigModel.tt</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\Component.cs" />
+    <Compile Include="ViewModels\ComputerIndex.cs" />
     <Compile Include="ViewModels\ComponentIndex.cs" />
     <Compile Include="ViewModels\ComponentVM.cs" />
     <Compile Include="ViewModels\Computer.cs" />

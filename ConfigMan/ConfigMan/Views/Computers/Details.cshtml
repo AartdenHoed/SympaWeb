@@ -1,14 +1,12 @@
 ﻿<div class="controller">
     @model ConfigMan.ViewModels.ComputerVM
 
-    @{
-        ViewBag.Title = "Computer Details";
-    }
 
-    <h2>Details</h2>
 
     <div>
-        <h4>Computer</h4>
+        <h2>
+            @Html.DisplayFor(model => model.Message.Title)
+        </h2>
         <hr />
         <dl class="sy-dl">
             <dt class="sy-dt">
@@ -38,7 +36,10 @@
         </dl>
     </div>
     <p>
+        @Html.DisplayFor(model => model.Message.Tekst)
+    </p>
+    <p>
         @Html.ActionLink("Bewerk", "Edit", new { id = Model.ComputerID }, new { @class = "sy-a" }) |  @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-a" })
     </p>
-    
+
 </div>

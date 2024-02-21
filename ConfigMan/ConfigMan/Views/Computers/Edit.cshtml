@@ -1,22 +1,17 @@
 ﻿<div class="controller">
     @model ConfigMan.ViewModels.ComputerVM
 
-    @{
-        ViewBag.Title = "Computer Edit";
-    }
-
-    <h2>Edit</h2>
-
-
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
 
-        <div class="form-horizontal">
-            <h4>Computer</h4>
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @Html.HiddenFor(model => model.ComputerID)
+    <div class="form-horizontal">
+        <h2>
+            @Html.DisplayFor(model => model.Message.Title)
+        </h2>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ComputerID)
 
         <dl class="sy-dl">
             <dt class="sy-dt">
@@ -41,14 +36,17 @@
                 @Html.ValidationMessageFor(model => model.OS, "", new { @class = "text-danger" })
             </dd>
         </dl>
+        <p>
+            @Html.DisplayFor(model => model.Message.Tekst)
+        </p>
 
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Opslaan" class="sy-button" /> | @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-a" })
-                </div>
-                
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Opslaan" class="sy-button" /> | @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-a" })
             </div>
+
         </div>
+    </div>
     }
 
     @section Scripts {

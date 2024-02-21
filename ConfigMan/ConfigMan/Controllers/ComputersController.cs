@@ -11,6 +11,7 @@ using ConfigMan.ViewModels;
 using System.Diagnostics.Contracts;
 using ConfigMan.ActionFilters;
 using System.Diagnostics;
+using System.ComponentModel;
 
 namespace ConfigMan.Controllers { 
 
@@ -25,31 +26,37 @@ namespace ConfigMan.Controllers {
 
         public ActionResult Menu()
         {
-            ViewBag.SympaMsg = TempData["SympaMsg"];
-            return View();
+            SympaMessage msg = new SympaMessage();
+            msg.Fill("Computer - Beheer Menu", msg.Info, "Kies een optie");
+            return View(msg);
         }
 
         //
         // GET: Computers
         //
-        public ActionResult Index()
+        public ActionResult Index(string message, String msgLevel)
         {
-            if (ContractErrorOccurred) {
-                ContractErrorOccurred = false;
-                ViewBag.SympaMsg = ErrorMessage;
-                ErrorMessage = " ";
+            ComputerIndex index = new ComputerIndex();
+            index.Message.Title = "Computer - Overzicht";
+            ViewData["Title"] = "Computer - Overzicht";
+            if (message is null)
+            {
+                index.Message.Tekst = "Klik op NIEUWE COMPUTER om een computer aan te maken, of klik op een actie voor een bestaande computer";
+                index.Message.Level = msgLevel;
             }
-            else {
-                ViewBag.SympaMsg = TempData["SympaMsg"];
+            else
+            {
+                index.Message.Tekst = message;
+                index.Message.Level = msgLevel;
             }
             List<Computer> complist = db.Computers.OrderBy(x => x.ComputerName).ToList();
-            List<ComputerVM> vmlist = new List<ComputerVM>();
+            
             foreach (Computer c in complist) {
                 ComputerVM VM = new ComputerVM();
                 VM.Fill(c);
-                vmlist.Add(VM); 
+                index.ComputerLijst.Add(VM); 
             }
-            return View(vmlist);
+            return View(index);
 
         }
 
@@ -58,37 +65,47 @@ namespace ConfigMan.Controllers {
         //
         public ActionResult Details(int? id)
         {
-           
+            ComputerVM computerVM = new ComputerVM();
             Contract.ContractFailed += (Contract_ContractFailed);
             Contract.Requires(id > 0, "Contract Failed!");
 
             if (!ContractErrorOccurred) {
                 Computer computer = db.Computers.Find(id);
-                if (computer == null) {
-                    TempData["SympaMsg"] = "*** ERROR *** ID " + id.ToString() + " not found in database.";
+                if (computer == null)
+                {
+                    computerVM.Message.Fill("Computer - Bekijken", computerVM.Message.Error, "*** ERROR *** ComputerID " + id.ToString() + " staat niet in de database.");
+
                 }
-                else {
-                    ComputerVM computerVM = new ComputerVM();
-                    computerVM.Fill(computer);
-                    return View(computerVM);
+                else
+                {
+                    computerVM.Message.Fill("Component - Bekijken", computerVM.Message.Info, "Klik op BEWERK om deze computer te bewerken");
+
                 }
+                ViewData["Title"] = "Computer - Bekijken";
+                computerVM.Fill(computer);
+                return View(computerVM);
             }
-            return RedirectToAction("Index");
+            else
+            {               
+                ContractErrorOccurred = false;
+
+                string m = "Contract error bij Computer Bekijken (GET)";
+                string l = computerVM.Message.Error;
+                return RedirectToAction("Index", "Computers", new { Message = m, MsgLevel = l });
+                
+            }
         }
 
-        private void Contract_ContractFailed(object sender, ContractFailedEventArgs e) {
-            ErrorMessage = "*** ERROR *** Selected computer id is invalid.";
-            ContractErrorOccurred = true;
-            e.SetHandled();
-            return;
-        }
-
+       
         //
         // GET: Computers/Create
         //
         public ActionResult Create()
-        {    
-            return View();
+        {
+            ComputerVM computerVM = new ComputerVM();
+            computerVM.Message.Fill("Computer - Aanmaken", computerVM.Message.Info, "Klik op AANMAKEN om deze computer op te slaan");
+            ViewData["Title"] = "Computer - Aanmaken";
+            return View(computerVM);
         }
 
         // POST: Computers/Create
@@ -98,24 +115,42 @@ namespace ConfigMan.Controllers {
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ComputerID,ComputerName,ComputerPurchaseDate,OS")] ComputerVM computerVM)
         {
-            if (ModelState.IsValid)            
+            if (ModelState.IsValid)
             {
                 Computer computer = new Computer();
                 computer.Fill(computerVM);
                 bool addfailed = false;
                 db.Computers.Add(computer);
-                try {
+                try
+                {
                     db.SaveChanges();
-                    TempData["SympaMsg"] = "Computer " + computer.ComputerName + " succesfully added."; 
+                    
                 }
-                catch (DbUpdateException) {
+                catch (DbUpdateException)
+                {
                     addfailed = true;
-                    ViewBag.SympaMsg = "Computer " + computer.ComputerName + " already exists, use update function.";
+                    
                 }
-                if (addfailed) { return View(); }
-                else { return RedirectToAction("Index"); }
-            }
+                if (addfailed)
+                {
+                    computerVM.Message.Fill("Computer - Aanmaken",
+                        computerVM.Message.Error, "Computer " + computer.ComputerName + " bestaat al, gebruik de BEWERK functie.");
+                }
+                else
+                {
+                    string m = "Computer " + computer.ComputerName + " is toegevoegd";
+                    string l = computerVM.Message.Info;
+                    return RedirectToAction("Index", "Computers", new { Message = m, MsgLevel = l });
 
+                }
+            }
+            else
+            {
+                computerVM.Message.Fill("Computer - Aanmaken",
+                       computerVM.Message.Error, "Model ERROR in " + computerVM.ComputerName);
+                
+            }
+            ViewData["Title"] = "Computer - Aanmaken";
             return View(computerVM);
         }
 
@@ -124,21 +159,31 @@ namespace ConfigMan.Controllers {
         //
         public ActionResult Edit(int? id)
         {
+            ComputerVM computerVM = new ComputerVM();
             Contract.Requires((id != null) && (id > 0));
             Contract.ContractFailed += (Contract_ContractFailed);
 
             if (!ContractErrorOccurred) {
                 Computer computer = db.Computers.Find(id);
-                if (computer == null) {
-                    TempData["SympaMsg"] = "*** ERROR *** ID " + id.ToString() + " not found in database.";
+                if (computer == null)
+                {
+                    computerVM.Message.Fill("Computer - Bewerken", computerVM.Message.Error, "*** ERROR *** ComputerID " + id.ToString() + " staat niet in de database.");
                 }
-                else {
-                    ComputerVM computerVM = new ComputerVM();
+                else {                    
                     computerVM.Fill(computer);
-                    return View(computerVM);
+                    computerVM.Message.Fill("Computer - Bewerken", computerVM.Message.Info, "Voer wijzigingen in en klik op OPSLAAN");
+                    
                 }
+                ViewData["Title"] = "Computer - Bewerken";
+                return View(computerVM);
             }
-            return RedirectToAction("Index");
+            else
+            {
+                ContractErrorOccurred = false;
+                string m = "Contract error bij Computer Bewerken (GET)";
+                string l = computerVM.Message.Error;
+                return RedirectToAction("Index", "Computers", new { Message = m, MsgLevel = l });
+            }
 
         }
 
@@ -155,14 +200,19 @@ namespace ConfigMan.Controllers {
                 computer.Fill(computerVM);
                 db.Entry(computer).State = EntityState.Modified;
                 db.SaveChanges();
-                TempData["SympaMsg"] = "Computer " + computer.ComputerName + " succesfully updated.";
-                return RedirectToAction("Index");
+                
+                string m = "Computer " + computer.ComputerName + " is aangepast";
+                string l = computerVM.Message.Info;
+                return RedirectToAction("Index", "Computers", new { Message = m, MsgLevel = l });
             }
-            else {
-                TempData["SympaMsg"] = "Update failed for computer " + computerVM.ComputerName ;
+            else
+            {
+                computerVM.Message.Fill("Computer - Bewerken",
+                        computerVM.Message.Error, "Model ERROR in " + computerVM.ComputerName);
+                ViewData["Title"] = "Computer - Bewerken";
                 return View(computerVM);
             }
-            
+
         }
 
         //
@@ -170,21 +220,31 @@ namespace ConfigMan.Controllers {
         //
         public ActionResult Delete(int? id)
         {
+            ComputerVM computerVM = new ComputerVM() ;
             Contract.Requires((id != null) && (id > 0));
             Contract.ContractFailed += (Contract_ContractFailed);
 
             if (!ContractErrorOccurred) {
                 Computer computer = db.Computers.Find(id);
-                if (computer == null) {
-                    TempData["SympaMsg"] = "*** ERROR *** ID " + id.ToString() + " not found in database.";
+                if (computer == null)
+                {
+                    computerVM.Message.Fill("Computer - Verwijderen", computerVM.Message.Error, "*** ERROR *** ComputerID " + id.ToString() + " staat niet in de database.");
+
                 }
-                else {
-                    ComputerVM computerVM = new ComputerVM();
-                    computerVM.Fill(computer);
-                    return View(computerVM);
-                }
+                else
+                {
+                    computerVM.Message.Fill("Computer - Verwijderen", computerVM.Message.Info, "Klik op VERWIJDEREN om deze computer te verwijderen");
+                }                             
+                computerVM.Fill(computer);
+                return View(computerVM);                
             }
-            return RedirectToAction("Index");
+            else
+            {
+                ContractErrorOccurred = false;
+                string m = "Contract error bij Ccomputer Verwijderen (GET)";
+                string l = computerVM.Message.Error;
+                return RedirectToAction("Index", "Computers", new { Message = m, MsgLevel = l });
+            }
 
         }
         
@@ -194,29 +254,35 @@ namespace ConfigMan.Controllers {
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            SympaMessage msg = new SympaMessage();
             Contract.Requires(id > 0);
             Contract.ContractFailed += (Contract_ContractFailed);
             if (!ContractErrorOccurred) {
                 Computer computer = db.Computers.Find(id);
                 db.Computers.Remove(computer);
                 db.SaveChanges();
-                TempData["SympaMsg"] = "Computer "+ computer.ComputerName + " succesfully deleted.";
+                string m = "Computer " + computer.ComputerName + " is verwijderd.";
+                string l = msg.Info;
+                return RedirectToAction("Index", "Computers", new { Message = m, MsgLevel = l });
             }
-            return RedirectToAction("Index");
+            else
+            {
+                ContractErrorOccurred = false;
+                string m = "Contract error bij Computer Verwijderen (POST)";
+                string l = msg.Error;
+                return RedirectToAction("Index", "Computers", new { Message = m, MsgLevel = l });
+            }
+            
         }
 
         public ActionResult Report01()
         {
-            if (ContractErrorOccurred)
-            {
-                ContractErrorOccurred = false;
-                ViewBag.SympaMsg = ErrorMessage;
-                ErrorMessage = " ";
-            }
-            else
-            {
-                ViewBag.SympaMsg = TempData["SympaMsg"];
-            }
+            ComputerIndex index = new ComputerIndex();
+            index.Message.Title = "Rapport - Computers zonder installaties";
+            ViewData["Title"] = "Rapport - Computers zonder installaties";
+            index.Message.Tekst = "Overzicht van computers waar niets op geïnstalleerd staat";
+            index.Message.Level = index.Message.Info;
+
             var query = from c in db.Computers
                         where !(from i in db.Installations
                                 select i.ComputerID)
@@ -230,10 +296,18 @@ namespace ConfigMan.Controllers {
                             OS = c.OS
                         };
 
-            List<ComputerVM> complist = query.ToList();
-           
-            return View(complist);
+            index.ComputerLijst = query.ToList();
+            
+            return View(index);
 
+            
+        }
+        private void Contract_ContractFailed(object sender, ContractFailedEventArgs e)
+        {
+            ErrorMessage = "*** ERROR *** Selected computer id is invalid.";
+            ContractErrorOccurred = true;
+            e.SetHandled();
+            return;
         }
 
         protected override void Dispose(bool disposing)
