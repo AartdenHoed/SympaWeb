@@ -16,6 +16,9 @@ namespace ConfigMan.ViewModels
         public int ComputerID { get; set; }
         public int ComponentID { get; set; }
 
+        public int VendorID { get; set; }
+        public string VendorName {  get; set; } 
+
         [Required(ErrorMessage = "Release is een verplicht veld")]
         [DisplayName("Release aanduiding")]
         [MaxLength(44, ErrorMessage = "Maximaal 44 characters")]

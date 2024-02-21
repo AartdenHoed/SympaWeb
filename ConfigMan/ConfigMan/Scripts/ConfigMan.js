@@ -27,7 +27,7 @@ function initPage(how) {
         ctx.clearRect(0, 0, w, h);
 
         ctx.font = "75px Comic Sans MS";
-        ctx.fontWeight = "900";
+        ctx.fontWeight = "1200";
         ctx.textAlign = "center";
         var gradient = ctx.createLinearGradient(.1 * w, .9 * h, .9 * w, .1 * h);
         gradient.addColorStop(0, "red");

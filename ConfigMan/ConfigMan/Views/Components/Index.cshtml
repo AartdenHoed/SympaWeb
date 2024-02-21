@@ -1,53 +1,65 @@
 ﻿<div class="controller">
-    @model IEnumerable<ConfigMan.ViewModels.ComponentVM>
+    @model ConfigMan.ViewModels.ComponentIndex
 
-    @{
-        ViewBag.Title = "Index";
-    }
-
-    <h2>Index</h2>
+    <h2>
+        @Html.DisplayFor(model => model.Message.Title)
+    </h2>
+    <p>
+        @Html.DisplayFor(model => model.Message.Tekst)
+    </p>
 
     <p>
-        @Html.ActionLink("Nieuwe Component", "Create", "", new { @class = "sy-a" }) |   
+        @Html.ActionLink("Nieuwe Component", "Create", "", new { @class = "sy-a" }) |
         @Html.ActionLink("Terug naar Menu", "Menu", "Components", new { @class = "sy-a" })
     </p>
-    
-    <div class="sympaMsg">
-        <p>@ViewBag.SympaMsg</p>
-    </div>
+
     <table class="sy-table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ComponentName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VendorName)
-            </th>
-
-
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model)
+        @if (Model.ComponentLijst != null)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ComponentName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VendorName)
-                </td>
+            var i = 0;
+
+            foreach (var item in Model.ComponentLijst)
+            {
+                if (i == 0)
+                {
+                <tr>
+                    <th>Actie</th>
+                    <th>
+                        @Html.DisplayNameFor(modelItem => item.ComponentName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(modelItem => item.VendorName)
+                    </th>
 
 
-                <td>
-                    @Html.ActionLink("Bewerk", "Edit", new { id = item.ComponentID }, new { @class = "sy-a" }) |
-                    @Html.ActionLink("Bekijk", "Details", new { id = item.ComponentID }, new { @class = "sy-a" }) |
-                    @Html.ActionLink("Verwijder", "Delete", new { id = item.ComponentID }, new { @class = "sy-a" })
-                </td>
-            </tr>
+
+                </tr>
+                }
+                i = i + 1;
+    <tr>
+        <td>
+            @Html.ActionLink("Bewerk", "Edit", new { id = item.ComponentID }, new { @class = "sy-a" }) |
+            @Html.ActionLink("Bekijk", "Details", new { id = item.ComponentID }, new { @class = "sy-a" }) |
+            @Html.ActionLink("Verwijder", "Delete", new { id = item.ComponentID }, new { @class = "sy-a" })
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ComponentName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.VendorName)
+        </td>
+
+
+
+    </tr>
+            }
         }
 
-    </table>
+        </table>
+       
+    <p>
+        *** Einde van de lijst ***
+    </p>
 
 
 </div>

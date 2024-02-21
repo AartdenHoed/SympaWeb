@@ -272,12 +272,14 @@
       <DependentUpon>ConfigModel.tt</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\Component.cs" />
+    <Compile Include="ViewModels\ComponentIndex.cs" />
     <Compile Include="ViewModels\ComponentVM.cs" />
     <Compile Include="ViewModels\Computer.cs" />
     <Compile Include="ViewModels\ComputerVM.cs" />
     <Compile Include="ViewModels\ConfigMSG.cs" />
     <Compile Include="ViewModels\Installation.cs" />
     <Compile Include="ViewModels\InstallationVM.cs" />
+    <Compile Include="ViewModels\SympaMessage.cs" />
     <Compile Include="ViewModels\Vendor.cs" />
     <Compile Include="ViewModels\VendorVM.cs" />
   </ItemGroup>

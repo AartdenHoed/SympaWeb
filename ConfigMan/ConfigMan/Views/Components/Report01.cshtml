@@ -1,46 +1,61 @@
 ﻿<div class="controller">
-    @model IEnumerable<ConfigMan.ViewModels.ComponentVM>
+    @model ConfigMan.ViewModels.ComponentIndex
 
-    @{
-        ViewBag.Title = "Index";
-    }
-
-    <h2>Components zonder installaties</h2>
-
-
-    <div class="sympaMsg">
-        <p>@ViewBag.SympaMsg</p>
-    </div>
+    <h2>
+        @Html.DisplayFor(model => model.Message.Title)
+    </h2>
     <p>
+        @Html.DisplayFor(model => model.Message.Tekst)
+    </p>
+
+    <p>
+        
         @Html.ActionLink("Terug naar Menu", "Menu", "Components", new { @class = "sy-a" })
     </p>
+
     <table class="sy-table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ComponentName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VendorName)
-            </th>
-
-
-        </tr>
-
-        @foreach (var item in Model)
+        @if (Model.ComponentLijst != null)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ComponentName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VendorName)
-                </td>
+            var i = 0;
+
+            foreach (var item in Model.ComponentLijst)
+            {
+                if (i == 0)
+                {
+                    <tr>
+                        
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.ComponentName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.VendorName)
+                        </th>
 
 
-            </tr>
+
+                    </tr>
+                }
+                i = i + 1;
+                <tr>
+                    
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ComponentName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VendorName)
+                    </td>
+
+
+
+                </tr>
+            }
         }
 
     </table>
+
+    <p>
+        *** Einde van de lijst ***
+    </p>
 
 
 </div>

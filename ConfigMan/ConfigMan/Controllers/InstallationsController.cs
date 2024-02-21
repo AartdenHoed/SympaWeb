@@ -96,7 +96,10 @@ namespace ConfigMan.Controllers
                                     && (installation.Release == release) 
                                     && (installation.StartDateTime == startdatetime))
                             join component in db.Components
-                            on installation.ComponentID equals component.ComponentID into join1
+                            on installation.ComponentID equals component.ComponentID into join0                            
+                            from j0 in join0
+                            join vendor in db.Vendors
+                            on j0.VendorID equals vendor.VendorID into join1
                             from j1 in join1
                             join computer in db.Computers
                             on installation.ComputerID equals computer.ComputerID into join2
@@ -112,8 +115,10 @@ namespace ConfigMan.Controllers
                                 StartDateTime = installation.StartDateTime,
                                 EndDateTime = installation.EndDateTime,
                                 Count = installation.Count,
-                                ComponentName = j1.ComponentName,
-                                ComputerName = j2.ComputerName
+                                ComponentName = j0.ComponentName,
+                                ComputerName = j2.ComputerName,
+                                VendorID = j1.VendorID,
+                                VendorName = j1.VendorName
                             };
                 InstallationVM installationVM = query.Single();
                 if (installationVM == null)
@@ -206,7 +211,7 @@ namespace ConfigMan.Controllers
         //
         // GET: Installations/Edit/5
         //
-        public ActionResult Edit(int? computerid, int? componentid)
+        public ActionResult Edit(int? computerid, int? componentid, string release, DateTime? startdatetime)
         {
             Contract.Requires((componentid != null) && (componentid > 0) && (computerid != null) && (computerid >0));
             Contract.ContractFailed += (Contract_ContractFailed);
@@ -214,9 +219,15 @@ namespace ConfigMan.Controllers
             if (!ContractErrorOccurred)
             {
                 var query = from installation in db.Installations
-                            where ((installation.ComputerID == computerid) && (installation.ComponentID == componentid))
+                            where ((installation.ComputerID == computerid)
+                                    && (installation.ComponentID == componentid)
+                                    && (installation.Release == release)
+                                    && (installation.StartDateTime == startdatetime))
                             join component in db.Components
-                            on installation.ComponentID equals component.ComponentID into join1
+                            on installation.ComponentID equals component.ComponentID into join0
+                            from j0 in join0
+                            join vendor in db.Vendors
+                            on j0.VendorID equals vendor.VendorID into join1
                             from j1 in join1
                             join computer in db.Computers
                             on installation.ComputerID equals computer.ComputerID into join2
@@ -232,8 +243,10 @@ namespace ConfigMan.Controllers
                                 StartDateTime = installation.StartDateTime,
                                 EndDateTime = installation.EndDateTime,
                                 Count = installation.Count,
-                                ComponentName = j1.ComponentName,
-                                ComputerName = j2.ComputerName
+                                ComponentName = j0.ComponentName,
+                                ComputerName = j2.ComputerName,
+                                VendorID = j1.VendorID,
+                                VendorName = j1.VendorName
                             };
                 InstallationVM installationVM = query.Single();
                 if (installationVM == null)
