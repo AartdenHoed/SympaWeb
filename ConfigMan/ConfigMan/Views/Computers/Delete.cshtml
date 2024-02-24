@@ -1,7 +1,10 @@
 ﻿<div class="controller">
     @model ConfigMan.ViewModels.ComputerVM
+    @{
+        ViewBag.Title = Model.Message.Title;
+    }
 
-    
+
     <div>
         <h2>
             @Html.DisplayFor(model => model.Message.Title)

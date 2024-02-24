@@ -1,44 +1,60 @@
 ﻿<div class="controller">
-    @model IEnumerable<ConfigMan.ViewModels.VendorVM>
 
+    @model ConfigMan.ViewModels.VendorIndex
     @{
-        ViewBag.Title = "Index";
+        ViewBag.Title = Model.Message.Title;
     }
-
-    <h2>Vendors zonder componenten</h2>
-
-
-    <div class="sympaMsg">
-        <p>@ViewBag.SympaMsg</p>
-    </div>
+    <h2>
+        @Html.DisplayFor(model => model.Message.Title)
+    </h2>
     <p>
-        @Html.ActionLink("Terug naar Menu", "Menu", "Vendors", new { @class = "sy-a" })
+        @Html.DisplayFor(model => model.Message.Tekst)
     </p>
+
+
     <table class="sy-table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.VendorName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VendorGroup)
-            </th>
 
-        </tr>
-
-        @foreach (var item in Model)
+        @if (Model.VendorLijst != null)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VendorName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VendorGroup)
-                </td>
+            var i = 0;
 
-            </tr>
+            foreach (var item in Model.VendorLijst)
+            {
+                if (i == 0)
+                {
+                    <tr>
+
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.VendorName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.VendorGroup)
+                        </th>
+
+
+                    </tr>
+                }
+                i = i + 1;
+
+
+                <tr>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VendorName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VendorGroup)
+                    </td>
+
+
+                </tr>
+            }
         }
 
     </table>
+    <p>
+        *** Einde van de lijst ***
+    </p>
 
 
 </div>

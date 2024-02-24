@@ -24,35 +24,42 @@ namespace ConfigMan.Controllers {
     {
         private readonly DbEntities db = new DbEntities();
         private static bool ContractErrorOccurred = false;
-        private static string ErrorMessage = " ";
+      
 
         public ActionResult Menu()
         {
-            ViewBag.SympaMsg = TempData["SympaMsg"];
-            return View();
+            SympaMessage msg = new SympaMessage();
+            msg.Fill("Vendor - Beheer Menu", msg.Info, "Kies een optie");
+            return View(msg);
         }
 
         //
         // GET: Vendors
         //
-        public ActionResult Index()
+        public ActionResult Index(string message, String msgLevel)
         {
-            if (ContractErrorOccurred) {
-                ContractErrorOccurred = false;
-                ViewBag.SympaMsg = ErrorMessage;
-                ErrorMessage = " ";
+            VendorIndex index = new VendorIndex();
+            index.Message.Title = "Vendor - Overzicht";
+
+            if (message is null)
+            {
+                index.Message.Tekst = "Klik op NIEUWE VENDOR om een vendor aan te maken, of klik op een actie voor een bestaande vendor";
+                index.Message.Level = msgLevel;
             }
-            else {
-                ViewBag.SympaMsg = TempData["SympaMsg"];
+            else
+            {
+                index.Message.Tekst = message;
+                index.Message.Level = msgLevel;
             }
-            List<Vendor> complist = db.Vendors.OrderBy(x => x.VendorGroup).ToList();
-            List<VendorVM> vmlist = new List<VendorVM>();
-            foreach (Vendor c in complist) {
+            List<Vendor> vendlist = db.Vendors.OrderBy(x => x.VendorName).ToList();
+
+            foreach (Vendor v in vendlist)
+            {
                 VendorVM VM = new VendorVM();
-                VM.Fill(c);
-                vmlist.Add(VM); 
+                VM.Fill(v);
+                index.VendorLijst.Add(VM);
             }
-            return View(vmlist);
+            return View(index);
 
         }
 
@@ -61,37 +68,50 @@ namespace ConfigMan.Controllers {
         //
         public ActionResult Details(int? id)
         {
-           
+
+            VendorVM vendorVM = new VendorVM();
             Contract.ContractFailed += (Contract_ContractFailed);
             Contract.Requires(id > 0, "Contract Failed!");
 
-            if (!ContractErrorOccurred) {
+            if (!ContractErrorOccurred)
+            {
                 Vendor vendor = db.Vendors.Find(id);
-                if (vendor == null) {
-                    TempData["SympaMsg"] = "*** ERROR *** ID " + id.ToString() + " not found in database.";
+                if (vendor == null)
+                {
+                    vendorVM.Message.Fill("Vendor - Bekijken", vendorVM.Message.Error, "*** ERROR *** VendorID " + id.ToString() + " staat niet in de database.");
+
                 }
-                else {
-                    VendorVM vendorVM = new VendorVM();
-                    vendorVM.Fill(vendor);
-                    return View(vendorVM);
+                else
+                {
+                    vendorVM.Message.Fill("Vendor - Bekijken", vendorVM.Message.Info, "Klik op BEWERK om deze vendor te bewerken");
+
                 }
+                
+                vendorVM.Fill(vendor);
+                return View(vendorVM);
             }
-            return RedirectToAction("Index");
+            else
+            {
+                ContractErrorOccurred = false;
+
+                string m = "Contract error bij Vendor Bekijken (GET)";
+                string l = vendorVM.Message.Error;
+                return RedirectToAction("Index", "Vendors", new { Message = m, MsgLevel = l });
+
+            }
         }
 
-        private void Contract_ContractFailed(object sender, ContractFailedEventArgs e) {
-            ErrorMessage = "*** ERROR *** Selected vendor id is invalid.";
-            ContractErrorOccurred = true;
-            e.SetHandled();
-            return;
-        }
+           
 
         //
         // GET: Vendors/Create
         //
         public ActionResult Create()
-        {    
-            return View();
+        {
+            VendorVM vendorVM = new VendorVM();
+            vendorVM.Message.Fill("Vendor - Aanmaken", vendorVM.Message.Info, "Klik op AANMAKEN om deze vendor op te slaan");
+
+            return View(vendorVM);
         }
 
         // POST: Vendors/Create
@@ -101,22 +121,40 @@ namespace ConfigMan.Controllers {
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "VendorID,VendorName,VendorGroup")] VendorVM vendorVM)
         {
-            if (ModelState.IsValid)            
+            if (ModelState.IsValid)
             {
                 Vendor vendor = new Vendor();
                 vendor.Fill(vendorVM);
                 bool addfailed = false;
                 db.Vendors.Add(vendor);
-                try {
+                try
+                {
                     db.SaveChanges();
-                    TempData["SympaMsg"] = "Vendor " + vendor.VendorName + " succesfully added."; 
+
                 }
-                catch (DbUpdateException) {
+                catch (DbUpdateException)
+                {
                     addfailed = true;
-                    ViewBag.SympaMsg = "Vendor " + vendor.VendorName + " already exists, use update function.";
+
                 }
-                if (addfailed) { return View(); }
-                else { return RedirectToAction("Index"); }
+                if (addfailed)
+                {
+                    vendorVM.Message.Fill("Vendor - Aanmaken",
+                        vendorVM.Message.Error, "Vendor " + vendor.VendorName + " bestaat al, gebruik de BEWERK functie.");
+                }
+                else
+                {
+                    string m = "Vendor " + vendor.VendorName + " is toegevoegd";
+                    string l = vendorVM.Message.Info;
+                    return RedirectToAction("Index", "Vendors", new { Message = m, MsgLevel = l });
+
+                }
+            }
+            else
+            {
+                vendorVM.Message.Fill("Vendor - Aanmaken",
+                       vendorVM.Message.Error, "Model ERROR in " + vendorVM.VendorName);
+
             }
 
             return View(vendorVM);
@@ -127,21 +165,33 @@ namespace ConfigMan.Controllers {
         //
         public ActionResult Edit(int? id)
         {
+            VendorVM vendorVM = new VendorVM();
             Contract.Requires((id != null) && (id > 0));
             Contract.ContractFailed += (Contract_ContractFailed);
 
-            if (!ContractErrorOccurred) {
+            if (!ContractErrorOccurred)
+            {
                 Vendor vendor = db.Vendors.Find(id);
-                if (vendor == null) {
-                    TempData["SympaMsg"] = "*** ERROR *** ID " + id.ToString() + " not found in database.";
+                if (vendor == null)
+                {
+                    vendorVM.Message.Fill("Vendor - Bewerken", vendorVM.Message.Error, "*** ERROR *** VendorID " + id.ToString() + " staat niet in de database.");
                 }
-                else {
-                    VendorVM vendorVM = new VendorVM();
+                else
+                {
                     vendorVM.Fill(vendor);
-                    return View(vendorVM);
+                    vendorVM.Message.Fill("Vendor - Bewerken", vendorVM.Message.Info, "Voer wijzigingen in en klik op OPSLAAN");
+
                 }
+                
+                return View(vendorVM);
             }
-            return RedirectToAction("Index");
+            else
+            {
+                ContractErrorOccurred = false;
+                string m = "Contract error bij Vendor Bewerken (GET)";
+                string l = vendorVM.Message.Error;
+                return RedirectToAction("Index", "Vendors", new { Message = m, MsgLevel = l });
+            }
 
         }
 
@@ -158,14 +208,19 @@ namespace ConfigMan.Controllers {
                 vendor.Fill(vendorVM);
                 db.Entry(vendor).State = EntityState.Modified;
                 db.SaveChanges();
-                TempData["SympaMsg"] = "Vendor " + vendor.VendorName + " succesfully updated.";
-                return RedirectToAction("Index");
+
+                string m = "Vendor " + vendor.VendorName + " is aangepast";
+                string l = vendorVM.Message.Info;
+                return RedirectToAction("Index", "Vendors", new { Message = m, MsgLevel = l });
             }
-            else {
-                TempData["SympaMsg"] = "Update failed for vendor " + vendorVM.VendorName ;
+            else
+            {
+                vendorVM.Message.Fill("Vendor - Bewerken",
+                        vendorVM.Message.Error, "Model ERROR in " + vendorVM.VendorName);
+                
                 return View(vendorVM);
             }
-            
+
         }
 
         //
@@ -173,53 +228,73 @@ namespace ConfigMan.Controllers {
         //
         public ActionResult Delete(int? id)
         {
+            VendorVM vendorVM = new VendorVM();
             Contract.Requires((id != null) && (id > 0));
             Contract.ContractFailed += (Contract_ContractFailed);
 
-            if (!ContractErrorOccurred) {
+            if (!ContractErrorOccurred)
+            {
                 Vendor vendor = db.Vendors.Find(id);
-                if (vendor == null) {
-                    TempData["SympaMsg"] = "*** ERROR *** ID " + id.ToString() + " not found in database.";
+                if (vendor == null)
+                {
+                    vendorVM.Message.Fill("Vendor - Verwijderen", vendorVM.Message.Error, "*** ERROR *** VendorID " + id.ToString() + " staat niet in de database.");
+
                 }
-                else {
-                    VendorVM vendorVM = new VendorVM();
-                    vendorVM.Fill(vendor);
-                    return View(vendorVM);
+                else
+                {
+                    vendorVM.Message.Fill("Vendor - Verwijderen", vendorVM.Message.Info, "Klik op VERWIJDEREN om deze vendor te verwijderen");
                 }
+                vendorVM.Fill(vendor);
+                return View(vendorVM);
             }
-            return RedirectToAction("Index");
+            else
+            {
+                ContractErrorOccurred = false;
+                string m = "Contract error bij Vendor Verwijderen (GET)";
+                string l = vendorVM.Message.Error;
+                return RedirectToAction("Index", "Vendors", new { Message = m, MsgLevel = l });
+            }
 
         }
-        
+
 
         // POST: Vendors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            SympaMessage msg = new SympaMessage();
+            string m = "";
+            string l = "";
             Contract.Requires(id > 0);
             Contract.ContractFailed += (Contract_ContractFailed);
-            if (!ContractErrorOccurred) {
+            if (!ContractErrorOccurred)
+            {
                 Vendor vendor = db.Vendors.Find(id);
                 db.Vendors.Remove(vendor);
                 db.SaveChanges();
-                TempData["SympaMsg"] = "Vendor "+ vendor.VendorName + " succesfully deleted.";
+                m = "Vendor " + vendor.VendorName + " is verwijderd.";
+                l = msg.Info;
+                
             }
-            return RedirectToAction("Index");
+            else
+            {
+                ContractErrorOccurred = false;
+                m = "Contract error bij Vendor Verwijderen (POST)";
+                l = msg.Error;
+                
+            }
+            return RedirectToAction("Index", "Vendors", new { Message = m, MsgLevel = l });
+
         }
 
         public ActionResult Report01()
         {
-            if (ContractErrorOccurred)
-            {
-                ContractErrorOccurred = false;
-                ViewBag.SympaMsg = ErrorMessage;
-                ErrorMessage = " ";
-            }
-            else
-            {
-                ViewBag.SympaMsg = TempData["SympaMsg"];
-            }
+            VendorIndex index = new VendorIndex();
+            index.Message.Title = "Rapport - Vendors zonder Installaties";
+
+            index.Message.Tekst = "Overzicht van vendors waarvan geen componenten zijn geïnstalleerd";
+            index.Message.Level = index.Message.Info;
             var query = from ven in db.Vendors
                         select new VendorVM
                         {
@@ -234,26 +309,20 @@ namespace ConfigMan.Controllers {
                           join inst in db.Installations on j1.ComponentID equals inst.ComponentID
                           select v.VendorID).Contains(v1.VendorID)
                         select v1;
-             
-            List < VendorVM > venlist = query.ToList();
 
-            
-            return View(venlist);
+            index.VendorLijst = query.ToList();
+
+            return View(index);
 
         }
 
         public ActionResult Report02()
         {
-            if (ContractErrorOccurred)
-            {
-                ContractErrorOccurred = false;
-                ViewBag.SympaMsg = ErrorMessage;
-                ErrorMessage = " ";
-            }
-            else
-            {
-                ViewBag.SympaMsg = TempData["SympaMsg"];
-            }
+            VendorIndex index = new VendorIndex();
+            index.Message.Title = "Rapport - Vendors zonder Componenten";
+
+            index.Message.Tekst = "Overzicht van vendors waaraan geen componenten zijn gekoppeld";
+            index.Message.Level = index.Message.Info;
             var query = from v in db.Vendors
                         where !(from c in db.Components
                                 select c.VendorID)
@@ -266,10 +335,18 @@ namespace ConfigMan.Controllers {
                             VendorGroup = v.VendorGroup
                         };
 
-            List<VendorVM> venlist = query.ToList();
+            index.VendorLijst = query.ToList();
 
-            return View(venlist);
+            return View(index);
 
+        }
+
+        private void Contract_ContractFailed(object sender, ContractFailedEventArgs e)
+        {
+
+            ContractErrorOccurred = true;
+            e.SetHandled();
+            return;
         }
 
         protected override void Dispose(bool disposing)

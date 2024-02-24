@@ -1,54 +1,57 @@
 ﻿<div class="controller">
     @model ConfigMan.ViewModels.ComponentVM
+    @{
+        ViewBag.Title = Model.Message.Title;
+    }
 
-   
+
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <h2>
-            @Html.DisplayFor(model => model.Message.Title)
-        </h2>
+        <div class="form-horizontal">
+            <h2>
+                @Html.DisplayFor(model => model.Message.Title)
+            </h2>
 
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.ComponentID)
-        @Html.HiddenFor(model => model.VendorID)
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.ComponentID)
+            @Html.HiddenFor(model => model.VendorID)
 
-        <dl class="sy-dl">
-            <dt class="sy-dt">
-                @Html.LabelFor(model => model.ComponentName)
-            </dt>
-            <dd class="sy-dd">
-                @Html.EditorFor(model => model.ComponentName, new { htmlAttributes = new { @class = "sy-input", @autofocus = "autofocus" } })
-                @Html.ValidationMessageFor(model => model.ComponentName, "", new { @class = "text-danger" })
-            </dd>
-            <dt class="sy-dt">
-                @Html.LabelFor(model => model.VendorName)
-            </dt>
-            <dd class="sy-dd">
-                @Html.DropDownListFor(model => model.SelectedVendorIDstring, new SelectList(Model.VendorLijst, "VendorIDstring", "VendorName"),
-                                                            new { @class = "sy-field" })
-                @Html.ValidationMessageFor(model => model.SelectedVendorIDstring, "", new { @class = "text-danger" })
-            </dd>
+            <dl class="sy-dl">
+                <dt class="sy-dt">
+                    @Html.LabelFor(model => model.ComponentName)
+                </dt>
+                <dd class="sy-dd">
+                    @Html.EditorFor(model => model.ComponentName, new { htmlAttributes = new { @class = "sy-input", @autofocus = "autofocus" } })
+                    @Html.ValidationMessageFor(model => model.ComponentName, "", new { @class = "text-danger" })
+                </dd>
+                <dt class="sy-dt">
+                    @Html.LabelFor(model => model.VendorName)
+                </dt>
+                <dd class="sy-dd">
+                    @Html.DropDownListFor(model => model.SelectedVendorIDstring, new SelectList(Model.VendorLijst, "VendorIDstring", "VendorName"),
+                                                                new { @class = "sy-field" })
+                    @Html.ValidationMessageFor(model => model.SelectedVendorIDstring, "", new { @class = "text-danger" })
+                </dd>
 
 
 
-        </dl>
-        <p>
-            @Html.DisplayFor(model => model.Message.Tekst)
-        </p>
+            </dl>
+            <p>
+                @Html.DisplayFor(model => model.Message.Tekst)
+            </p>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Opslaan" class="sy-button" /> |  @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-a" })
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Opslaan" class="sy-button" /> |  @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-a" })
+                </div>
             </div>
         </div>
-    </div>
     }
 
-   
+
     @section Scripts {
         @Scripts.Render("~/bundles/jqueryval")
     }

@@ -22,8 +22,7 @@ namespace ConfigMan.Controllers {
     {
         private readonly DbEntities db = new DbEntities();
         private static bool ContractErrorOccurred = false;
-        private static string ErrorMessage = " ";
-
+        
         public ActionResult Menu()
         {
             SympaMessage msg = new SympaMessage();
@@ -38,7 +37,7 @@ namespace ConfigMan.Controllers {
         {
             ComputerIndex index = new ComputerIndex();
             index.Message.Title = "Computer - Overzicht";
-            ViewData["Title"] = "Computer - Overzicht";
+            
             if (message is null)
             {
                 index.Message.Tekst = "Klik op NIEUWE COMPUTER om een computer aan te maken, of klik op een actie voor een bestaande computer";
@@ -81,7 +80,7 @@ namespace ConfigMan.Controllers {
                     computerVM.Message.Fill("Component - Bekijken", computerVM.Message.Info, "Klik op BEWERK om deze computer te bewerken");
 
                 }
-                ViewData["Title"] = "Computer - Bekijken";
+                
                 computerVM.Fill(computer);
                 return View(computerVM);
             }
@@ -104,7 +103,7 @@ namespace ConfigMan.Controllers {
         {
             ComputerVM computerVM = new ComputerVM();
             computerVM.Message.Fill("Computer - Aanmaken", computerVM.Message.Info, "Klik op AANMAKEN om deze computer op te slaan");
-            ViewData["Title"] = "Computer - Aanmaken";
+            
             return View(computerVM);
         }
 
@@ -150,7 +149,7 @@ namespace ConfigMan.Controllers {
                        computerVM.Message.Error, "Model ERROR in " + computerVM.ComputerName);
                 
             }
-            ViewData["Title"] = "Computer - Aanmaken";
+            
             return View(computerVM);
         }
 
@@ -174,7 +173,7 @@ namespace ConfigMan.Controllers {
                     computerVM.Message.Fill("Computer - Bewerken", computerVM.Message.Info, "Voer wijzigingen in en klik op OPSLAAN");
                     
                 }
-                ViewData["Title"] = "Computer - Bewerken";
+                
                 return View(computerVM);
             }
             else
@@ -209,7 +208,7 @@ namespace ConfigMan.Controllers {
             {
                 computerVM.Message.Fill("Computer - Bewerken",
                         computerVM.Message.Error, "Model ERROR in " + computerVM.ComputerName);
-                ViewData["Title"] = "Computer - Bewerken";
+                
                 return View(computerVM);
             }
 
@@ -255,31 +254,34 @@ namespace ConfigMan.Controllers {
         public ActionResult DeleteConfirmed(int id)
         {
             SympaMessage msg = new SympaMessage();
+            string m = "";
+            string l = "";
             Contract.Requires(id > 0);
             Contract.ContractFailed += (Contract_ContractFailed);
             if (!ContractErrorOccurred) {
                 Computer computer = db.Computers.Find(id);
                 db.Computers.Remove(computer);
                 db.SaveChanges();
-                string m = "Computer " + computer.ComputerName + " is verwijderd.";
-                string l = msg.Info;
-                return RedirectToAction("Index", "Computers", new { Message = m, MsgLevel = l });
+                m = "Computer " + computer.ComputerName + " is verwijderd.";
+                l = msg.Info;
+                
             }
             else
             {
                 ContractErrorOccurred = false;
-                string m = "Contract error bij Computer Verwijderen (POST)";
-                string l = msg.Error;
-                return RedirectToAction("Index", "Computers", new { Message = m, MsgLevel = l });
+                m = "Contract error bij Computer Verwijderen (POST)";
+                l = msg.Error;
+                
             }
-            
+            return RedirectToAction("Index", "Computers", new { Message = m, MsgLevel = l });
+
         }
 
         public ActionResult Report01()
         {
             ComputerIndex index = new ComputerIndex();
             index.Message.Title = "Rapport - Computers zonder installaties";
-            ViewData["Title"] = "Rapport - Computers zonder installaties";
+            
             index.Message.Tekst = "Overzicht van computers waar niets op geïnstalleerd staat";
             index.Message.Level = index.Message.Info;
 
@@ -304,7 +306,6 @@ namespace ConfigMan.Controllers {
         }
         private void Contract_ContractFailed(object sender, ContractFailedEventArgs e)
         {
-            ErrorMessage = "*** ERROR *** Selected computer id is invalid.";
             ContractErrorOccurred = true;
             e.SetHandled();
             return;

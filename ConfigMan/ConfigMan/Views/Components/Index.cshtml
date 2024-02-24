@@ -1,5 +1,8 @@
 ﻿<div class="controller">
     @model ConfigMan.ViewModels.ComponentIndex
+    @{
+        ViewBag.Title = Model.Message.Title;
+    }
 
     <h2>
         @Html.DisplayFor(model => model.Message.Title)
@@ -22,41 +25,41 @@
             {
                 if (i == 0)
                 {
+                    <tr>
+                        <th>Actie</th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.ComponentName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.VendorName)
+                        </th>
+
+
+
+                    </tr>
+                }
+                i = i + 1;
                 <tr>
-                    <th>Actie</th>
-                    <th>
-                        @Html.DisplayNameFor(modelItem => item.ComponentName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(modelItem => item.VendorName)
-                    </th>
+                    <td>
+                        @Html.ActionLink("Bewerk", "Edit", new { id = item.ComponentID }, new { @class = "sy-a" }) |
+                        @Html.ActionLink("Bekijk", "Details", new { id = item.ComponentID }, new { @class = "sy-a" }) |
+                        @Html.ActionLink("Verwijder", "Delete", new { id = item.ComponentID }, new { @class = "sy-a" })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ComponentName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VendorName)
+                    </td>
 
 
 
                 </tr>
-                }
-                i = i + 1;
-    <tr>
-        <td>
-            @Html.ActionLink("Bewerk", "Edit", new { id = item.ComponentID }, new { @class = "sy-a" }) |
-            @Html.ActionLink("Bekijk", "Details", new { id = item.ComponentID }, new { @class = "sy-a" }) |
-            @Html.ActionLink("Verwijder", "Delete", new { id = item.ComponentID }, new { @class = "sy-a" })
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ComponentName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.VendorName)
-        </td>
-
-
-
-    </tr>
             }
         }
 
-        </table>
-       
+    </table>
+
     <p>
         *** Einde van de lijst ***
     </p>

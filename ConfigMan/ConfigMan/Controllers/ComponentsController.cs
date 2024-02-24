@@ -26,7 +26,7 @@ namespace ConfigMan.Controllers
         {
             SympaMessage msg = new SympaMessage();
             msg.Fill("Component - Beheer Menu", msg.Info, "Kies een optie");
-            ViewData["Title"] = "Component - Beheer Menu";
+           
             return View(msg);
         }
 
@@ -37,7 +37,7 @@ namespace ConfigMan.Controllers
         {
             ComponentIndex index = new ComponentIndex();
             index.Message.Title = "Component - Overzicht";
-            ViewData["Title"] = "Component - Overzicht";
+            
             if (message is null)
             {
                 index.Message.Tekst = "Klik op NIEUWE COMPONENT om een component aan te maken, of klik op een actie voor een bestaande component"; 
@@ -104,7 +104,7 @@ namespace ConfigMan.Controllers
                     componentVM.Message.Fill("Component - Bekijken", componentVM.Message.Info, "Klik op BEWERK om deze component te bewerken");
 
                 }
-                ViewData["Title"] = "Component - Bekijken";
+                
                 return View(componentVM);
             }
             else
@@ -133,7 +133,7 @@ namespace ConfigMan.Controllers
                 componentVM.VendorLijst.Add(VM);
             }
             componentVM.Message.Fill("Component - Aanmaken", componentVM.Message.Info, "Klik op AANMAKEN om deze component op te slaan");
-            ViewData["Title"] = "Component - Aanmaken";
+            
             return View(componentVM);
             
         }
@@ -178,7 +178,7 @@ namespace ConfigMan.Controllers
                 componentVM.Message.Fill("Component - Aanmaken",
                         componentVM.Message.Error, "Model ERROR in " + componentVM.ComponentName);
             }
-            ViewData["Title"] = "Component - Aanmaken";
+            
             vendordblist = db.Vendors.OrderBy(x => x.VendorName).ToList();
             foreach (Vendor v in vendordblist)
                 {
@@ -225,9 +225,11 @@ namespace ConfigMan.Controllers
                     List<Vendor> vendordblist = db.Vendors.OrderBy(x => x.VendorName).ToList();
 
                     // Set first entry on current value
-                    VendorVM firstentry = new VendorVM();
-                    firstentry.VendorID = componentVM.VendorID;
-                    firstentry.VendorName = componentVM.VendorName;
+                    VendorVM firstentry = new VendorVM()
+                    {
+                        VendorID = componentVM.VendorID,
+                        VendorName = componentVM.VendorName
+                    };
                     componentVM.VendorLijst.Add(firstentry);
 
                     // add entries form Vendor db
@@ -239,7 +241,7 @@ namespace ConfigMan.Controllers
                     }
                     componentVM.Message.Fill("Component - Bewerken", componentVM.Message.Info, "Voer wijzigingen in en klik op OPSLAAN");
                 }
-                ViewData["Title"] = "Component - Bewerken";
+                
                 return View(componentVM);
             }
             else
@@ -279,7 +281,7 @@ namespace ConfigMan.Controllers
             {
                 componentVM.Message.Fill("Component - Bewerken",
                         componentVM.Message.Error, "Model ERROR in " + componentVM.ComponentName);
-                ViewData["Title"] = "Component - Bewerken";
+                
                 return View(componentVM);
             }
 
@@ -320,7 +322,7 @@ namespace ConfigMan.Controllers
                     componentVM.Message.Fill("Component - Verwijderen", componentVM.Message.Info, "Klik op VERWIJDEREN om deze component te verwijderen");
 
                 }
-                ViewData["Title"] = "Component - Verwijderen";
+               
                 return View(componentVM);
             }
             else
@@ -339,6 +341,8 @@ namespace ConfigMan.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             SympaMessage msg = new SympaMessage();
+            string m = "";
+            string l = "";
             Contract.Requires(id > 0);
             Contract.ContractFailed += (Contract_ContractFailed);
             if (!ContractErrorOccurred)
@@ -346,23 +350,24 @@ namespace ConfigMan.Controllers
                 Component component = db.Components.Find(id);
                 db.Components.Remove(component);
                 db.SaveChanges();
-                string m = "Component " + component.ComponentName + " is verwijderd.";
-                string l = msg.Info;
-                return RedirectToAction("Index", "Components", new { Message = m, MsgLevel = l });                
+                m = "Component " + component.ComponentName + " is verwijderd.";
+                l = msg.Info;
+                      
             }
             else {
                 ContractErrorOccurred = false;
-                string m = "Contract error bij Component Verwijderen (POST)";
-                string l = msg.Error;
-                return RedirectToAction("Index", "Components", new { Message = m, MsgLevel = l });
+                m = "Contract error bij Component Verwijderen (POST)";
+                l = msg.Error;
+                
             }
+            return RedirectToAction("Index", "Components", new { Message = m, MsgLevel = l });
         }
 
         public ActionResult Report01()
         {
             ComponentIndex index = new ComponentIndex();
             index.Message.Title = "Rapport - Componenten zonder installaties";
-            ViewData["Title"] = "Rapport - Componenten zonder installaties";
+            
             index.Message.Tekst = "Overzicht van componenten die nergens geïnstalleerd zijn";
             index.Message.Level = index.Message.Info;
             

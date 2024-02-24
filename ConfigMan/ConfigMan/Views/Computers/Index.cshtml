@@ -1,5 +1,8 @@
 ﻿<div class="controller">
     @model ConfigMan.ViewModels.ComputerIndex
+    @{
+        ViewBag.Title = Model.Message.Title;
+    }
     <h2>
         @Html.DisplayFor(model => model.Message.Title)
     </h2>

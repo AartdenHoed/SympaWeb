@@ -1,15 +1,13 @@
 ﻿<div class="controller">
     @model ConfigMan.ViewModels.VendorVM
-
     @{
-        ViewBag.Title = "Vendor Delete";
+        ViewBag.Title = Model.Message.Title;
     }
 
-    <h2>Delete</h2>
-
-    <h3>Are you sure you want to delete this?</h3>
     <div>
-        <h4>Vendor</h4>
+        <h2>
+            @Html.DisplayFor(model => model.Message.Title)
+        </h2>
         <hr />
         <dl class="sy-dl">
             <dt class="sy-dt">
@@ -29,6 +27,9 @@
             </dd>
 
         </dl>
+        <p>
+            @Html.DisplayFor(model => model.Message.Tekst)
+        </p>
 
         @using (Html.BeginForm())
         {
@@ -39,6 +40,6 @@
 
             </div>
         }
-       
+
     </div>
 </div>

@@ -1,6 +1,9 @@
 ﻿
 <div class="controller">
     @model ConfigMan.ViewModels.SympaMessage
+    @{
+        ViewBag.Title = Model.Title;
+    }
 
     <h2>
         @Html.DisplayFor(model => model.Title)

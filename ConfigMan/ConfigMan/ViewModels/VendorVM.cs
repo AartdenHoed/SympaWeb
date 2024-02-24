@@ -9,6 +9,7 @@ namespace ConfigMan.ViewModels
 {
     public class VendorVM
     {
+        public SympaMessage Message = new SympaMessage();
         public int VendorID { get; set; }
         public string VendorIDstring { get { return VendorID.ToString();}}
 

@@ -2,21 +2,21 @@
     @model ConfigMan.ViewModels.VendorVM
 
     @{
-        ViewBag.Title = "Vendor Edit";
+        ViewBag.Title = Model.Message.Title;
     }
-
-    <h2>Edit</h2>
 
 
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
 
-        <div class="form-horizontal">
-            <h4>Vendor</h4>
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @Html.HiddenFor(model => model.VendorID)
+    <div class="form-horizontal">
+        <h2>
+            @Html.DisplayFor(model => model.Message.Title)
+        </h2>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.VendorID)
 
         <dl class="sy-dl">
             <dt class="sy-dt">
@@ -33,15 +33,18 @@
                 @Html.EditorFor(model => model.VendorGroup, new { htmlAttributes = new { @class = "sy-input40" } })
                 @Html.ValidationMessageFor(model => model.VendorGroup, "", new { @class = "text-danger" })
             </dd>
-            
-        </dl>
 
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Opslaan" class="sy-button" /> | @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-a" })
-                </div>
+        </dl>
+        <p>
+            @Html.DisplayFor(model => model.Message.Tekst)
+        </p>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Opslaan" class="sy-button" /> | @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-a" })
             </div>
         </div>
+    </div>
     }
 
    @section Scripts {
