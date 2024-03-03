@@ -1,100 +1,98 @@
 ﻿<div class="controller">
     @model ConfigMan.ViewModels.InstallationVM
-   
+
     @{
-        ViewBag.Title = "Installation Add";
+        ViewBag.Title = Model.Message.Title;
     }
-
-    <h2>Nieuwe</h2>
-
-
 
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
-    <h4>Installation</h4>
-    <div class="sympaMsg">
-        <p>@ViewBag.SympaMsg</p>
-    </div>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-<dl class="sy-dl">
-    <dt class="sy-dt">
-        @Html.LabelFor(model => model.ComputerName)
-    </dt>
-    <dd class="sy-dd">
-        @Html.DropDownListFor(model => model.SelectedComputerIDstring, new SelectList(Model.ComputerLijst, "ComputerIDstring", "ComputerName"),
-                                                    new { @class = "sy-field" })
-        @Html.ValidationMessageFor(model => model.SelectedComputerIDstring, "", new { @class = "text-danger" })
-    </dd>
-    <dt class="sy-dt">
-        @Html.LabelFor(model => model.ComponentName)
-    </dt>
-    <dd class="sy-dd">
-        @Html.DropDownListFor(model => model.SelectedComponentIDstring, new SelectList(Model.ComponentLijst, "ComponentIDstring", "ComponentName"),
-                                                    new { @class = "sy-field" })
-        @Html.ValidationMessageFor(model => model.SelectedComponentIDstring, "", new { @class = "text-danger" })
-    </dd>
-    <dt class="sy-dt">
-        @Html.LabelFor(model => model.Release)
-    </dt>
-    <dd class="sy-dd">
-        @Html.EditorFor(model => model.Release, new { htmlAttributes = new { @class = "sy-input" } })
-        @Html.ValidationMessageFor(model => model.Release, "", new { @class = "text-danger" })
-    </dd>
-    <dt class="sy-dt">
-        @Html.LabelFor(model => model.StartDateTime)
-    </dt>
-    <dd class="sy-dd">
-        @Html.EditorFor(model => model.StartDateTime, new { htmlAttributes = new { @class = "sy-input" } })
-        @Html.ValidationMessageFor(model => model.StartDateTime, "", new { @class = "text-danger" })
-    </dd>
-    <dt class="sy-dt">
-        @Html.LabelFor(model => model.EndDateTime)
-    </dt>
-    <dd class="sy-dd">
-        @Html.EditorFor(model => model.EndDateTime, new { htmlAttributes = new { @class = "sy-input" } })
-        @Html.ValidationMessageFor(model => model.EndDateTime, "", new { @class = "text-danger" })
-    </dd>
-    <dt class="sy-dt">
-        @Html.LabelFor(model => model.MeasuredDateTime)
-    </dt>
-    <dd class="sy-dd">
-        @Html.EditorFor(model => model.MeasuredDateTime, new { htmlAttributes = new { @class = "sy-input" } })
-        @Html.ValidationMessageFor(model => model.MeasuredDateTime, "", new { @class = "text-danger" })
-    </dd>
-    <dt class="sy-dt">
-        @Html.LabelFor(model => model.InstallDate)
-    </dt>
-    <dd class="sy-dd">
-        @Html.EditorFor(model => model.InstallDate, new { htmlAttributes = new { @class = "sy-input" } })
-        @Html.ValidationMessageFor(model => model.InstallDate, "", new { @class = "text-danger" })
-    </dd>
-    <dt class="sy-dt">
-        @Html.LabelFor(model => model.Location)
-    </dt>
-    <dd class="sy-dd">
-        @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "sy-input" } })
-        @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-danger" })
-    </dd>
-    <dt class="sy-dt">
-        @Html.LabelFor(model => model.Count)
-    </dt>
-    <dd class="sy-dd">
-        @Html.EditorFor(model => model.Count, new { htmlAttributes = new { @class = "sy-input" } })
-        @Html.ValidationMessageFor(model => model.Count, "", new { @class = "text-danger" })
-    </dd>
+    <div class="form-horizontal">
+        <h2>
+            @Html.DisplayFor(model => model.Message.Title)
+        </h2>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <dl class="sy-dl">
+            <dt class="sy-dt">
+                @Html.LabelFor(model => model.ComputerName)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DropDownListFor(model => model.SelectedComputerIDstring, new SelectList(Model.ComputerLijst, "ComputerIDstring", "ComputerName"),
+                                                            new { @class = "sy-field" })
+                @Html.ValidationMessageFor(model => model.SelectedComputerIDstring, "", new { @class = "text-danger" })
+            </dd>
+            <dt class="sy-dt">
+                @Html.LabelFor(model => model.ComponentName)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DropDownListFor(model => model.SelectedComponentIDstring, new SelectList(Model.ComponentLijst, "ComponentIDstring", "ComponentName"),
+                                                            new { @class = "sy-field" })
+                @Html.ValidationMessageFor(model => model.SelectedComponentIDstring, "", new { @class = "text-danger" })
+            </dd>
+            <dt class="sy-dt">
+                @Html.LabelFor(model => model.Release)
+            </dt>
+            <dd class="sy-dd">
+                @Html.EditorFor(model => model.Release, new { htmlAttributes = new { @class = "sy-input" } })
+                @Html.ValidationMessageFor(model => model.Release, "", new { @class = "text-danger" })
+            </dd>
+            <dt class="sy-dt">
+                @Html.LabelFor(model => model.StartDateTime)
+            </dt>
+            <dd class="sy-dd">
+                @Html.EditorFor(model => model.StartDateTime, new { htmlAttributes = new { @class = "sy-input" } })
+                @Html.ValidationMessageFor(model => model.StartDateTime, "", new { @class = "text-danger" })
+            </dd>
+            <dt class="sy-dt">
+                @Html.LabelFor(model => model.EndDateTime)
+            </dt>
+            <dd class="sy-dd">
+                @Html.EditorFor(model => model.EndDateTime, new { htmlAttributes = new { @class = "sy-input" } })
+                @Html.ValidationMessageFor(model => model.EndDateTime, "", new { @class = "text-danger" })
+            </dd>
+            <dt class="sy-dt">
+                @Html.LabelFor(model => model.MeasuredDateTime)
+            </dt>
+            <dd class="sy-dd">
+                @Html.EditorFor(model => model.MeasuredDateTime, new { htmlAttributes = new { @class = "sy-input" } })
+                @Html.ValidationMessageFor(model => model.MeasuredDateTime, "", new { @class = "text-danger" })
+            </dd>
+            <dt class="sy-dt">
+                @Html.LabelFor(model => model.InstallDate)
+            </dt>
+            <dd class="sy-dd">
+                @Html.EditorFor(model => model.InstallDate, new { htmlAttributes = new { @class = "sy-input" } })
+                @Html.ValidationMessageFor(model => model.InstallDate, "", new { @class = "text-danger" })
+            </dd>
+            <dt class="sy-dt">
+                @Html.LabelFor(model => model.Location)
+            </dt>
+            <dd class="sy-dd">
+                @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "sy-input" } })
+                @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-danger" })
+            </dd>
+            <dt class="sy-dt">
+                @Html.LabelFor(model => model.Count)
+            </dt>
+            <dd class="sy-dd">
+                @Html.EditorFor(model => model.Count, new { htmlAttributes = new { @class = "sy-input" } })
+                @Html.ValidationMessageFor(model => model.Count, "", new { @class = "text-danger" })
+            </dd>
 
-</dl>
+        </dl>
+        <p>
+            @Html.DisplayFor(model => model.Message.Tekst)
+        </p>
 
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Aanmaken" class="sy-button" /> |  @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-a" })
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Aanmaken" class="sy-button" /> |  @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-a" })
+            </div>
         </div>
     </div>
-</div>
     }
 
 

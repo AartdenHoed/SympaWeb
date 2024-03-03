@@ -4,13 +4,19 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.Linq;
 using System.Web;
+using System.Globalization;
+using Newtonsoft.Json.Linq;
+using ConfigMan.Models;
 
 namespace ConfigMan.ViewModels
 {
     public class InstallationVM
     {
+        public SympaMessage Message = new SympaMessage();
+
         public List<ComputerVM> ComputerLijst = new List<ComputerVM>();
         public string SelectedComputerIDstring { get; set; }
+
         public List<ComponentVM> ComponentLijst = new List<ComponentVM>();
         public string SelectedComponentIDstring { get; set; }
         public int ComputerID { get; set; }
@@ -44,8 +50,12 @@ namespace ConfigMan.ViewModels
         [DisplayName("Installatie Start")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm:ss}", ApplyFormatInEditMode = true)]
         [DataType(DataType.DateTime)]
+        public System.DateTime StartDateTime { get { if ((HiddenStartDateTime == "") | (HiddenStartDateTime is null)) return DateTime.MinValue;
+                else { return DateTime.ParseExact(HiddenStartDateTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture); } }
+                                               set { HiddenStartDateTime = value.ToString("yyyy-MM-dd HH:mm:ss"); } }
 
-        public System.DateTime StartDateTime { get; set; }
+        // We need the hidden string because "hidden fields" turn out wrong with datetimes (when we edit an installation)
+        public string HiddenStartDateTime { get; set; } 
 
         [DisplayName("Installatie Einde")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd HH:mm:ss}", ApplyFormatInEditMode = true)]

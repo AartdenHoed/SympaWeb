@@ -14,6 +14,8 @@ using System.Diagnostics;
 using ConfigMan.Models;
 using System.Runtime.Remoting.Lifetime;
 using System.ComponentModel;
+using Microsoft.Ajax.Utilities;
+using System.Globalization;
 
 namespace ConfigMan.Controllers
 {
@@ -25,28 +27,31 @@ namespace ConfigMan.Controllers
     {
         private readonly DbEntities db = new DbEntities();
         private static bool ContractErrorOccurred = false;
-        private static string ErrorMessage = " ";
-
+        
         public ActionResult Menu()
         {
-            ViewBag.SympaMsg = TempData["SympaMsg"];
-            return View();
+            SympaMessage msg = new SympaMessage();
+            msg.Fill("Installatie - Beheer Menu", msg.Info, "Kies een optie");
+            return View(msg);
         }
 
         //
         // GET: Installations
         //
-        public ActionResult Index()
+        public ActionResult Index(string message, String msgLevel)
         {
-            if (ContractErrorOccurred)
+            InstallationIndex index = new InstallationIndex();
+            index.Message.Title = "Installatie - Overzicht";
+
+            if (message is null)
             {
-                ContractErrorOccurred = false;
-                ViewBag.SympaMsg = ErrorMessage;
-                ErrorMessage = " ";
+                index.Message.Tekst = "Klik op NIEUWE INSTALLATIE om een installatie aan te maken, of klik op een actie voor een bestaande installatie";
+                index.Message.Level = msgLevel;
             }
             else
             {
-                ViewBag.SympaMsg = TempData["SympaMsg"];
+                index.Message.Tekst = message;
+                index.Message.Level = msgLevel;
             }
             var query = from installation in db.Installations
                         join component in db.Components 
@@ -70,9 +75,9 @@ namespace ConfigMan.Controllers
                             ComponentName = j1.ComponentName,
                             ComputerName = j2.ComputerName
                         };
-            List <InstallationVM> vmlist = query.ToList();
+            index.InstallationLijst = query.ToList();
             
-            return View(vmlist);
+            return View(index);
 
         }
 
@@ -81,7 +86,7 @@ namespace ConfigMan.Controllers
         //
         public ActionResult Details(int? computerid, int? componentid, string release, DateTime? startdatetime)
         {
-
+            InstallationVM installationVM = new InstallationVM();
             Contract.ContractFailed += (Contract_ContractFailed);
             Contract.Requires(computerid > 0, "Contract Failed (computerid)!");
             Contract.Requires(componentid > 0, "Contract Failed (componentid)!");
@@ -120,25 +125,30 @@ namespace ConfigMan.Controllers
                                 VendorID = j1.VendorID,
                                 VendorName = j1.VendorName
                             };
-                InstallationVM installationVM = query.Single();
-                if (installationVM == null)
+                installationVM = query.Single();
+                if (installationVM == null)                
                 {
-                    TempData["SympaMsg"] = "*** ERROR *** Record not found in database.";
+                    installationVM.Message.Fill("Installation - Bekijken", installationVM.Message.Error, "*** ERROR *** Deze installatie staat niet in de database.");
+
                 }
                 else
                 {
-                    return View(installationVM);
-                }
-            }
-            return RedirectToAction("Index");
-        }
+                    installationVM.Message.Fill("Installation - Bekijken", installationVM.Message.Info, "Klik op BEWERK om deze installatie te bewerken");
 
-        private void Contract_ContractFailed(object sender, ContractFailedEventArgs e)
-        {
-            ErrorMessage = "*** ERROR *** Selected installation id is invalid.";
-            ContractErrorOccurred = true;
-            e.SetHandled();
-            return;
+                }
+
+                return View(installationVM);
+
+            }
+            else
+            {
+                ContractErrorOccurred = false;
+
+                string m = "Contract error bij Installatie Bekijken (GET)";
+                string l = installationVM.Message.Error;
+                return RedirectToAction("Index", "VendorInstallations", new { Message = m, MsgLevel = l });
+            }
+            
         }
 
         //
@@ -146,8 +156,8 @@ namespace ConfigMan.Controllers
         //
         public ActionResult Create()
         {
-            // Create vendor drop down list
             InstallationVM installationVM = new InstallationVM();
+
             // fill selectlist with computers
             List<Computer> computerdblist = db.Computers.OrderBy(x => x.ComputerName).ToList();
             foreach (Computer c in computerdblist)
@@ -156,6 +166,7 @@ namespace ConfigMan.Controllers
                 cVM.Fill(c);
                 installationVM.ComputerLijst.Add(cVM);
             }
+
             // fill selectlist with components
             List<Component> componentdblist = db.Components.OrderBy(x => x.ComponentName).ToList();
             foreach (Component o in componentdblist)
@@ -164,6 +175,7 @@ namespace ConfigMan.Controllers
                 oVM.Fill(o);
                 installationVM.ComponentLijst.Add(oVM);
             }
+            installationVM.Message.Fill("Installatie - Aanmaken", installationVM.Message.Info, "Klik op AANMAKEN om deze installatie op te slaan");
             return View(installationVM);
         }
 
@@ -194,18 +206,53 @@ namespace ConfigMan.Controllers
                 try
                 {
                     db.SaveChanges();
-                    TempData["SympaMsg"] = "Installation " + installation.Release + " succesfully added.";
                 }
                 catch (DbUpdateException)
                 {
                     addfailed = true;
-                    ViewBag.SympaMsg = "Installation " + installation.Release + " already exists, use update function.";
+
                 }
-                if (addfailed) { return View(); }
-                else { return RedirectToAction("Index"); }
+                if (addfailed)
+                {
+                   installationVM.Message.Fill("Installatie - Aanmaken",
+                        installationVM.Message.Error, "Installatie " + installation.Release + " bestaat al, gebruik de BEWERK functie.");
+                }
+                else
+                {
+                    string m = "Installatie " + installation.Release.TrimEnd() + " is toegevoegd";
+                    string l = installationVM.Message.Info;
+                    return RedirectToAction("Index", "Installations", new { Message = m, MsgLevel = l });
+
+                }
+               
+            }
+            else
+            {
+                installationVM.Message.Fill("Installatie - Aanmaken",
+                        installationVM.Message.Error, "Model ERROR in " + installationVM.Release.TrimEnd());
+            }
+
+            // fill selectlist with computers
+            List<Computer> computerdblist = db.Computers.OrderBy(x => x.ComputerName).ToList();
+            foreach (Computer c in computerdblist)
+            {
+                ComputerVM cVM = new ComputerVM();
+                cVM.Fill(c);
+                installationVM.ComputerLijst.Add(cVM);
+            }
+
+            // fill selectlist with components
+            List<Component> componentdblist = db.Components.OrderBy(x => x.ComponentName).ToList();
+            foreach (Component o in componentdblist)
+            {
+                ComponentVM oVM = new ComponentVM();
+                oVM.Fill(o);
+                installationVM.ComponentLijst.Add(oVM);
             }
 
             return View(installationVM);
+
+            
         }
 
         //
@@ -213,6 +260,7 @@ namespace ConfigMan.Controllers
         //
         public ActionResult Edit(int? computerid, int? componentid, string release, DateTime? startdatetime)
         {
+            InstallationVM installationVM = new InstallationVM();
             Contract.Requires((componentid != null) && (componentid > 0) && (computerid != null) && (computerid >0));
             Contract.ContractFailed += (Contract_ContractFailed);
 
@@ -248,17 +296,26 @@ namespace ConfigMan.Controllers
                                 VendorID = j1.VendorID,
                                 VendorName = j1.VendorName
                             };
-                InstallationVM installationVM = query.Single();
+                installationVM = query.Single();
                 if (installationVM == null)
                 {
-                    TempData["SympaMsg"] = "*** ERROR *** Record not found in database.";
+                    installationVM.Message.Fill("Installatie - Bewerken", installationVM.Message.Error, "*** ERROR *** Deze installatie staat niet in de database.");
                 }
                 else
                 {
-                    return View(installationVM);
+                    installationVM.Message.Fill("Installatie - Bewerken", installationVM.Message.Info, "Voer wijzigingen in en klik op OPSLAAN");
+
                 }
+
+                return View(installationVM);
             }
-            return RedirectToAction("Index");
+            else
+            {
+                ContractErrorOccurred = false;
+                string m = "Contract error bij Component Bewerken (GET)";
+                string l = installationVM.Message.Error;
+                return RedirectToAction("Index", "Components", new { Message = m, MsgLevel = l });
+            }
 
         }
 
@@ -267,7 +324,7 @@ namespace ConfigMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ComputerID,ComponentID,Release,Location,InstallDate,MeasuredDateTime,StartDateTime,EndDateTime,Count")] InstallationVM installationVM)
+        public ActionResult Edit([Bind(Include = "ComputerID,ComponentID,Release,HiddenStartDateTime,Location,InstallDate,MeasuredDateTime,EndDateTime,Count")] InstallationVM installationVM)
         {
             if (ModelState.IsValid)
             {
@@ -275,12 +332,16 @@ namespace ConfigMan.Controllers
                 installation.Fill(installationVM);
                 db.Entry(installation).State = EntityState.Modified;
                 db.SaveChanges();
-                TempData["SympaMsg"] = "Installation " + installation.Release + " succesfully updated.";
-                return RedirectToAction("Index");
+                string m = "Installatie " + installationVM.Release.TrimEnd() + " is aangepast";
+                string l = installationVM.Message.Info;
+                return RedirectToAction("Index", "Installations", new { Message = m, MsgLevel = l });
             }
             else
             {
-                TempData["SympaMsg"] = "Update failed for installation " + installationVM.Release;
+                installationVM.Message.Fill("Installatie - Bewerken",
+                        installationVM.Message.Error, "Model ERROR in " + installationVM.Release.TrimEnd());
+
+                
                 return View(installationVM);
             }
 
@@ -291,6 +352,7 @@ namespace ConfigMan.Controllers
         //
         public ActionResult Delete(int? computerid, int? componentid, string release, DateTime startdatetime)
         {
+            InstallationVM installationVM = new InstallationVM();
             Contract.ContractFailed += (Contract_ContractFailed);
             Contract.Requires(computerid > 0, "Contract Failed (computerid)!");
             Contract.Requires(componentid > 0, "Contract Failed (componentid)!");
@@ -305,7 +367,10 @@ namespace ConfigMan.Controllers
                                     && (installation.Release == release)
                                     && (installation.StartDateTime == startdatetime))
                             join component in db.Components
-                            on installation.ComponentID equals component.ComponentID into join1
+                            on installation.ComponentID equals component.ComponentID into join0
+                            from j0 in join0
+                            join vendor in db.Vendors
+                            on j0.VendorID equals vendor.VendorID into join1
                             from j1 in join1
                             join computer in db.Computers
                             on installation.ComputerID equals computer.ComputerID into join2
@@ -321,21 +386,31 @@ namespace ConfigMan.Controllers
                                 StartDateTime = installation.StartDateTime,
                                 EndDateTime = installation.EndDateTime,
                                 Count = installation.Count,
-                                ComponentName = j1.ComponentName,
-                                ComputerName = j2.ComputerName
+                                ComponentName = j0.ComponentName,
+                                ComputerName = j2.ComputerName,
+                                VendorID = j1.VendorID,
+                                VendorName = j1.VendorName
                             };
-                InstallationVM installationVM = query.Single();
+                installationVM = query.Single();
                 if (installationVM == null)
                 {
-                    TempData["SympaMsg"] = "*** ERROR *** Record not found in database.";
+                    installationVM.Message.Fill("Installatie - Verwijderen", installationVM.Message.Error, "*** ERROR *** Deze installatie staat niet in de database.");
+
                 }
                 else
                 {
-                    return View(installationVM);
+                    installationVM.Message.Fill("Installatie - Verwijderen", installationVM.Message.Info, "Klik op VERWIJDEREN om deze installatie te verwijderen");
                 }
+                
+                return View(installationVM);
             }
-            return RedirectToAction("Index");
-
+            else
+            {
+                ContractErrorOccurred = false;
+                string m = "Contract error bij Installatie Verwijderen (GET)";
+                string l = installationVM.Message.Error;
+                return RedirectToAction("Index", "Installations", new { Message = m, MsgLevel = l });
+            }
         }
 
 
@@ -344,6 +419,9 @@ namespace ConfigMan.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int? computerid, int? componentid, string release, DateTime startdatetime)
         {
+            SympaMessage msg = new SympaMessage();
+            string m = "";
+            string l = "";
             Contract.ContractFailed += (Contract_ContractFailed);
             Contract.Requires(computerid > 0, "Contract Failed (computerid)!");
             Contract.Requires(componentid > 0, "Contract Failed (componentid)!");
@@ -356,30 +434,62 @@ namespace ConfigMan.Controllers
                 Installation installation = db.Installations.Find(computerid,componentid,release,startdatetime);
                 db.Installations.Remove(installation);
                 db.SaveChanges();
-                TempData["SympaMsg"] = "Installation " + installation.Release + " succesfully deleted.";
+                m = "Installation " + installation.Release.TrimEnd() + " is verwijderd.";
+                l = msg.Info;
             }
-            return RedirectToAction("Index");
+            else
+            {
+                ContractErrorOccurred = false;
+                m = "Contract error bij Installatie Verwijderen (POST)";
+                l = msg.Error;
+
+            }
+            return RedirectToAction("Index", "Installations", new { Message = m, MsgLevel = l });
         }
 
         public ActionResult Report01()
         {
-            if (ContractErrorOccurred)
-            {
-                ContractErrorOccurred = false;
-                ViewBag.SympaMsg = ErrorMessage;
-                ErrorMessage = " ";
-            }
-            else
-            {
-                ViewBag.SympaMsg = TempData["SympaMsg"];
-            }
-            var query = from c in db.Installations
-                        select new Installation();
+            InstallationIndex index = new InstallationIndex();
+            index.Message.Title = "Rapport - Installaties met een Count > 1";
 
-            List < Installation > instlist = query.ToList();
+            index.Message.Tekst = "Installaties die meer dan één keer aanwezig zijn op een computer";
+            index.Message.Level = index.Message.Info;
 
-            return View(instlist);
+            var query = from installation in db.Installations
+                        join component in db.Components
+                        on installation.ComponentID equals component.ComponentID into join1
+                        from j1 in join1
+                        join computer in db.Computers
+                        on installation.ComputerID equals computer.ComputerID into join2
+                        from j2 in join2
+                        where installation.Count > 1
+                        orderby j2.ComputerName, j1.ComponentName, installation.StartDateTime, installation.EndDateTime
+                        select new InstallationVM                       
+                        {
+                            ComputerID = installation.ComputerID,
+                            ComponentID = installation.ComponentID,
+                            Release = installation.Release.TrimEnd(),
+                            Location = installation.Location.TrimEnd(),
+                            InstallDate = installation.InstallDate,
+                            MeasuredDateTime = installation.MeasuredDateTime,
+                            StartDateTime = installation.StartDateTime,
+                            EndDateTime = installation.EndDateTime,
+                            Count = installation.Count,
+                            ComponentName = j1.ComponentName,
+                            ComputerName = j2.ComputerName
+                        };
+            index.InstallationLijst = query.ToList();
 
+            return View(index);
+
+
+        }
+
+        private void Contract_ContractFailed(object sender, ContractFailedEventArgs e)
+        {
+            ContractErrorOccurred = true;
+            e.SetHandled();
+            return;
         }
 
         protected override void Dispose(bool disposing)

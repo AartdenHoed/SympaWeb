@@ -140,11 +140,11 @@ namespace ConfigMan.Controllers {
                 if (addfailed)
                 {
                     vendorVM.Message.Fill("Vendor - Aanmaken",
-                        vendorVM.Message.Error, "Vendor " + vendor.VendorName + " bestaat al, gebruik de BEWERK functie.");
+                        vendorVM.Message.Error, "Vendor " + vendor.VendorName.TrimEnd() + " bestaat al, gebruik de BEWERK functie.");
                 }
                 else
                 {
-                    string m = "Vendor " + vendor.VendorName + " is toegevoegd";
+                    string m = "Vendor " + vendor.VendorName.TrimEnd() + " is toegevoegd";
                     string l = vendorVM.Message.Info;
                     return RedirectToAction("Index", "Vendors", new { Message = m, MsgLevel = l });
 
@@ -273,7 +273,7 @@ namespace ConfigMan.Controllers {
                 Vendor vendor = db.Vendors.Find(id);
                 db.Vendors.Remove(vendor);
                 db.SaveChanges();
-                m = "Vendor " + vendor.VendorName + " is verwijderd.";
+                m = "Vendor " + vendor.VendorName.TrimEnd() + " is verwijderd.";
                 l = msg.Info;
                 
             }

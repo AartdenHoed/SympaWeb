@@ -2,14 +2,14 @@
     @model ConfigMan.ViewModels.InstallationVM
 
     @{
-        ViewBag.Title = "Installation Delete";
+        ViewBag.Title = Model.Message.Title;
     }
 
-    <h2>Delete</h2>
 
-    <h3>Are you sure you want to delete this?</h3>
     <div>
-        <h4>Installation</h4>
+        <h2>
+            @Html.DisplayFor(model => model.Message.Title)
+        </h2>
         <hr />
         <dl class="sy-dl">
             <dt class="sy-dt">
@@ -39,7 +39,7 @@
                 @Html.DisplayNameFor(model => model.VendorName)
             </dt>
             <dd class="sy-dd">
-                @Html.DisplayFor(model => model.VendorName)
+                @Html.DisplayFor(model => model.VendorName) &nbsp;
             </dd>
             <dt class="sy-dt">
                 @Html.DisplayNameFor(model => model.MeasuredDateTime)
@@ -72,7 +72,7 @@
 
 
             <dt class="sy-dt">
-                @Html.DisplayNameFor(model => model.Location)
+                @Html.DisplayNameFor(model => model.Location) &nbsp;
             </dt>
 
             <dd class="sy-dd">
@@ -87,6 +87,10 @@
             </dd>
 
         </dl>
+
+        <p>
+            @Html.DisplayFor(model => model.Message.Tekst)
+        </p>
 
         @using (Html.BeginForm())
         {

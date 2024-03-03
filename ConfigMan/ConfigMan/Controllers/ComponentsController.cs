@@ -168,7 +168,7 @@ namespace ConfigMan.Controllers
                 }
                 else
                 {
-                    string m = "Component " + component.ComponentName + " is toegevoegd";
+                    string m = "Component " + component.ComponentName.TrimEnd() + " is toegevoegd";
                     string l = componentVM.Message.Info;
                     return RedirectToAction("Index", "Components", new { Message = m, MsgLevel = l });
 
@@ -273,7 +273,7 @@ namespace ConfigMan.Controllers
                 db.Entry(component).State = EntityState.Modified;
                 db.SaveChanges();
         
-                string m = "Component " + component.ComponentName + " is aangepast";
+                string m = "Component " + component.ComponentName.TrimEnd() + " is aangepast";
                 string l = componentVM.Message.Info;
                 return RedirectToAction("Index", "Components", new { Message = m, MsgLevel = l });
             }
@@ -350,7 +350,7 @@ namespace ConfigMan.Controllers
                 Component component = db.Components.Find(id);
                 db.Components.Remove(component);
                 db.SaveChanges();
-                m = "Component " + component.ComponentName + " is verwijderd.";
+                m = "Component " + component.ComponentName.TrimEnd() + " is verwijderd.";
                 l = msg.Info;
                       
             }
