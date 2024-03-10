@@ -272,7 +272,16 @@ namespace ConfigMan.Controllers {
             {
                 Vendor vendor = db.Vendors.Find(id);
                 db.Vendors.Remove(vendor);
+                try {
                 db.SaveChanges();
+                }
+                catch (DbUpdateException exc)
+                {
+                    VendorVM vendorVM = new VendorVM();
+                    vendorVM.Message.Fill("Vendor - Verwijderen", vendorVM.Message.Warning, "Vendor " + vendor.VendorName + " kan niet worden verwijderd. Verwijder eerst alle Componenten *** (" + exc.Message + ")");
+                    vendorVM.Fill(vendor);
+                    return View(vendorVM);
+                }
                 m = "Vendor " + vendor.VendorName.TrimEnd() + " is verwijderd.";
                 l = msg.Info;
                 

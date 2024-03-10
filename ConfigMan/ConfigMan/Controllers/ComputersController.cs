@@ -261,7 +261,18 @@ namespace ConfigMan.Controllers {
             if (!ContractErrorOccurred) {
                 Computer computer = db.Computers.Find(id);
                 db.Computers.Remove(computer);
-                db.SaveChanges();
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (DbUpdateException exc)
+                {
+                    ComputerVM computerVM = new ComputerVM();
+                    computerVM.Message.Fill("Computer - Verwijderen", computerVM.Message.Warning, "Computer " + computer.ComputerName + " kan niet worden verwijderd. Verwijder eerst alle Installaties, Licenties en Services *** (" + exc.Message + ")");
+                    computerVM.Fill(computer);
+                    return View(computerVM);
+                }
+
                 m = "Computer " + computer.ComputerName + " is verwijderd.";
                 l = msg.Info;
                 

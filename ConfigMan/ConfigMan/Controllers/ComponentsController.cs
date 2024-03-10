@@ -349,7 +349,17 @@ namespace ConfigMan.Controllers
             {
                 Component component = db.Components.Find(id);
                 db.Components.Remove(component);
-                db.SaveChanges();
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (DbUpdateException exc)
+                {
+                    ComponentVM componentVM = new ComponentVM();
+                    componentVM.Message.Fill("Component - Verwijderen", componentVM.Message.Warning, "Component " + component.ComponentName + " kan niet worden verwijderd. Verwijder eerst alle Installaties, Services en Documentatie *** (" + exc.Message + ")");
+                    componentVM.Fill(component);
+                    return View(componentVM);
+                }
                 m = "Component " + component.ComponentName.TrimEnd() + " is verwijderd.";
                 l = msg.Info;
                       
