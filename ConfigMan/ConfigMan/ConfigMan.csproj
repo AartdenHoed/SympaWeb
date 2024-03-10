@@ -272,6 +272,7 @@
       <DependentUpon>ConfigModel.tt</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\Component.cs" />
+    <Compile Include="ViewModels\InstallationCompare.cs" />
     <Compile Include="ViewModels\InstallationIndex.cs" />
     <Compile Include="ViewModels\VendorIndex.cs" />
     <Compile Include="ViewModels\ComputerIndex.cs" />
@@ -440,6 +441,11 @@
     <Content Include="Views\Installations\Index.cshtml" />
     <Content Include="Views\Installations\Menu.cshtml" />
     <Content Include="Views\Installations\Report01.cshtml" />
+    <Content Include="Views\Installations\Report02.cshtml" />
+    <Content Include="Views\Installations\Report03.cshtml" />
+    <Content Include="Views\Installations\Report04.cshtml" />
+    <Content Include="Views\Installations\Report05.cshtml" />
+    <Content Include="Views\Installations\Report06.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

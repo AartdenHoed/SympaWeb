@@ -1,0 +1,81 @@
+﻿<div class="controller">
+    @model ConfigMan.ViewModels.InstallationCompare
+    @{
+        ViewBag.Title = Model.Message.Title;
+    }
+    <h2>
+        @Html.DisplayFor(model => model.Message.Title)
+    </h2>
+    <p>
+        @Html.DisplayFor(model => model.Message.Tekst)
+    </p>
+
+    <p>
+
+        @Html.ActionLink("Terug naar Menu", "Menu", "Installations", new { @class = "sy-a" })
+    </p>
+
+    <table class="sy-table">
+
+        @if (Model.InstallationReport != null)
+        {
+            var i = 0;
+
+            foreach (var item in Model.InstallationReport)
+            {
+                if (i == 0)
+                {
+                    <tr>
+
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.VendorName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.ComponentName)
+                        </th>
+                        @foreach (var item1 in Model.ComputerLijst)
+                        {
+
+                            <th>
+                                @Html.DisplayFor(modelItem => item1.ComputerName)
+                            </th>
+                        }
+
+
+
+                    </tr>
+                }
+
+
+    <tr>
+
+
+        <td>
+            @Html.DisplayFor(modelItem => item.VendorName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ComponentName)
+        </td>
+        @foreach (var item2 in item.Indicator)
+        {
+
+            <td>
+                @Html.DisplayFor(modelItem => item2)
+            </td>
+        }
+
+
+
+
+    </tr>
+                i = i + 1;
+            }
+        }
+
+    </table>
+
+    <p>
+        *** Einde van de lijst ***
+    </p>
+
+</div>

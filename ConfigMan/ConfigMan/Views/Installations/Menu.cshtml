@@ -11,14 +11,29 @@
     <p>
         @Html.DisplayFor(model => model.Tekst)
     </p>
-   
 
-    <ul class="menu2">
-        <li>@Html.ActionLink("Bewerk Installatie Data ", "Index", "Installations")</li>
-        <li>@Html.ActionLink("Installaties met Count > 1", "Report01", "Installations")</li>
-    </ul>
-    <div>
-        @Html.ActionLink("Hoofd Menu", "Index", "Home", "", new { @class = "sy-a" })
+    <div class="moremenu">
+        <ul class="menu3">
+            <li>@Html.ActionLink("Bewerk Installatie Data ", "Index", "Installations")</li>
+            <li>@Html.ActionLink("Installaties met Count > 1", "Report01", "Installations")</li>
+            <li>@Html.ActionLink("Installaties met gedeelde locatie", "Report02", "Installations")</li>
+            <li>@Html.ActionLink("Installaties met recente einddatum", "Report03", "Installations")</li>
+            <li>@Html.ActionLink("Installaties met recente startdatum", "Report04", "Installations")</li>
+
+        </ul>
+        <div class="below2">
+            @Html.ActionLink("Hoofd Menu", "Index", "Home", "", new { @class = "sy-a" })
+        </div>
     </div>
+    <div class="moremenu">
+        <ul class="menu3">
+
+
+            <li>@Html.ActionLink("Componenten die ontbreken", "Report06", "Installations")</li>
+            <li>@Html.ActionLink("Installaties met release verschillen", "Report05", "Installations")</li>
+
+        </ul>
+    </div>
+
 
 </div>

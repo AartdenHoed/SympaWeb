@@ -174,12 +174,18 @@ h2, h3 {
     display: none;
     background-image: url(/Images/Button.png);
 }
+.moremenu {
+    display: block;
+    float: left;
+    width: 25%;
+    height: 75%;
+}
 .menu2 {
     display: block;
     padding: 0.5%;
     margin: 0.5%;
     width: 25%;
-    height: 60%;
+    height: 75%;
     border: solid 2px #000000;
     border-radius: 12px;
     box-shadow: 4px 4px 4px Black;
@@ -191,7 +197,7 @@ h2, h3 {
     padding: 3%;
     text-align: center;
     width: 95%;
-    height: 25%;
+    height: 15%;
     list-style: none; 
     border: solid 1px #000000;
     border-radius: 8px;
@@ -211,6 +217,51 @@ h2, h3 {
     background-color: lightseagreen;
     font-weight: bold;
     font-size: smaller;
+}
+.menu3{
+    display: block;
+    padding: 0.5%;
+    margin: 0.5%;
+    width: 95%;
+    height: 95%;
+    border: solid 2px #000000;
+    border-radius: 12px;
+    box-shadow: 4px 4px 4px Black;
+    background-color: lightskyblue;
+}
+.menu3 > li {
+    display: block;
+    margin: 3%;
+    padding: 3%;
+    text-align: center;
+    width: 95%;
+    height: 15%;
+    list-style: none;
+    border: solid 1px #000000;
+    border-radius: 8px;
+    box-shadow: 4px 4px 4px 0px#000000;
+    background-color: blue;
+}
+
+.menu3 > li > a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    height: 95%;
+    width: 95%;
+    border: none;
+}
+
+.menu3 > li:hover {
+    box-shadow: 4px 4px 4px 0px #000000 inset;
+    background-color: lightseagreen;
+    font-weight: bold;
+    font-size: smaller;
+}
+.below2 {
+    height: 5%;
+    display: block;
+    float: none;
 }
 #loadfile {
     width: 80%;

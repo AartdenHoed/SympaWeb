@@ -16,6 +16,8 @@ using System.Runtime.Remoting.Lifetime;
 using System.ComponentModel;
 using Microsoft.Ajax.Utilities;
 using System.Globalization;
+using System.ComponentModel.Design.Serialization;
+using System.Drawing;
 
 namespace ConfigMan.Controllers
 {
@@ -55,12 +57,10 @@ namespace ConfigMan.Controllers
             }
             var query = from installation in db.Installations
                         join component in db.Components 
-                        on installation.ComponentID equals component.ComponentID into join1
-                        from j1 in join1
+                        on installation.ComponentID equals component.ComponentID 
                         join computer in db.Computers
-                        on installation.ComputerID equals computer.ComputerID into join2
-                        from j2 in join2
-                        orderby j2.ComputerName,j1.ComponentName,installation.StartDateTime,installation.EndDateTime
+                        on installation.ComputerID equals computer.ComputerID 
+                        orderby computer.ComputerName,component.ComponentName,installation.StartDateTime,installation.EndDateTime
                         select new InstallationVM
                         {
                             ComputerID = installation.ComputerID,
@@ -72,8 +72,8 @@ namespace ConfigMan.Controllers
                             StartDateTime = installation.StartDateTime,
                             EndDateTime = installation.EndDateTime,
                             Count = installation.Count,
-                            ComponentName = j1.ComponentName,
-                            ComputerName = j2.ComputerName
+                            ComponentName = component.ComponentName,
+                            ComputerName = computer.ComputerName
                         };
             index.InstallationLijst = query.ToList();
             
@@ -101,14 +101,11 @@ namespace ConfigMan.Controllers
                                     && (installation.Release == release) 
                                     && (installation.StartDateTime == startdatetime))
                             join component in db.Components
-                            on installation.ComponentID equals component.ComponentID into join0                            
-                            from j0 in join0
+                            on installation.ComponentID equals component.ComponentID 
                             join vendor in db.Vendors
-                            on j0.VendorID equals vendor.VendorID into join1
-                            from j1 in join1
+                            on component.VendorID equals vendor.VendorID 
                             join computer in db.Computers
-                            on installation.ComputerID equals computer.ComputerID into join2
-                            from j2 in join2
+                            on installation.ComputerID equals computer.ComputerID 
                             select new InstallationVM
                             {
                                 ComputerID = installation.ComputerID,
@@ -120,10 +117,10 @@ namespace ConfigMan.Controllers
                                 StartDateTime = installation.StartDateTime,
                                 EndDateTime = installation.EndDateTime,
                                 Count = installation.Count,
-                                ComponentName = j0.ComponentName,
-                                ComputerName = j2.ComputerName,
-                                VendorID = j1.VendorID,
-                                VendorName = j1.VendorName
+                                ComponentName = component.ComponentName,
+                                ComputerName = computer.ComputerName,
+                                VendorID = vendor.VendorID,
+                                VendorName = vendor.VendorName
                             };
                 installationVM = query.Single();
                 if (installationVM == null)                
@@ -272,14 +269,11 @@ namespace ConfigMan.Controllers
                                     && (installation.Release == release)
                                     && (installation.StartDateTime == startdatetime))
                             join component in db.Components
-                            on installation.ComponentID equals component.ComponentID into join0
-                            from j0 in join0
+                            on installation.ComponentID equals component.ComponentID 
                             join vendor in db.Vendors
-                            on j0.VendorID equals vendor.VendorID into join1
-                            from j1 in join1
+                            on component.VendorID equals vendor.VendorID 
                             join computer in db.Computers
-                            on installation.ComputerID equals computer.ComputerID into join2
-                            from j2 in join2
+                            on installation.ComputerID equals computer.ComputerID 
                             select new InstallationVM
                             {
                                 ComputerID = installation.ComputerID,
@@ -291,10 +285,10 @@ namespace ConfigMan.Controllers
                                 StartDateTime = installation.StartDateTime,
                                 EndDateTime = installation.EndDateTime,
                                 Count = installation.Count,
-                                ComponentName = j0.ComponentName,
-                                ComputerName = j2.ComputerName,
-                                VendorID = j1.VendorID,
-                                VendorName = j1.VendorName
+                                ComponentName = component.ComponentName,
+                                ComputerName = computer.ComputerName,
+                                VendorID = vendor.VendorID,
+                                VendorName = vendor.VendorName
                             };
                 installationVM = query.Single();
                 if (installationVM == null)
@@ -367,14 +361,11 @@ namespace ConfigMan.Controllers
                                     && (installation.Release == release)
                                     && (installation.StartDateTime == startdatetime))
                             join component in db.Components
-                            on installation.ComponentID equals component.ComponentID into join0
-                            from j0 in join0
+                            on installation.ComponentID equals component.ComponentID 
                             join vendor in db.Vendors
-                            on j0.VendorID equals vendor.VendorID into join1
-                            from j1 in join1
+                            on component.VendorID equals vendor.VendorID 
                             join computer in db.Computers
-                            on installation.ComputerID equals computer.ComputerID into join2
-                            from j2 in join2
+                            on installation.ComputerID equals computer.ComputerID 
                             select new InstallationVM
                             {
                                 ComputerID = installation.ComputerID,
@@ -386,10 +377,10 @@ namespace ConfigMan.Controllers
                                 StartDateTime = installation.StartDateTime,
                                 EndDateTime = installation.EndDateTime,
                                 Count = installation.Count,
-                                ComponentName = j0.ComponentName,
-                                ComputerName = j2.ComputerName,
-                                VendorID = j1.VendorID,
-                                VendorName = j1.VendorName
+                                ComponentName = component.ComponentName,
+                                ComputerName = computer.ComputerName,
+                                VendorID = vendor.VendorID,
+                                VendorName = vendor.VendorName
                             };
                 installationVM = query.Single();
                 if (installationVM == null)
@@ -457,13 +448,11 @@ namespace ConfigMan.Controllers
 
             var query = from installation in db.Installations
                         join component in db.Components
-                        on installation.ComponentID equals component.ComponentID into join1
-                        from j1 in join1
+                        on installation.ComponentID equals component.ComponentID 
                         join computer in db.Computers
-                        on installation.ComputerID equals computer.ComputerID into join2
-                        from j2 in join2
+                        on installation.ComputerID equals computer.ComputerID 
                         where installation.Count > 1
-                        orderby j2.ComputerName, j1.ComponentName, installation.StartDateTime, installation.EndDateTime
+                        orderby computer.ComputerName, component.ComponentName, installation.StartDateTime, installation.EndDateTime
                         select new InstallationVM                       
                         {
                             ComputerID = installation.ComputerID,
@@ -475,14 +464,404 @@ namespace ConfigMan.Controllers
                             StartDateTime = installation.StartDateTime,
                             EndDateTime = installation.EndDateTime,
                             Count = installation.Count,
-                            ComponentName = j1.ComponentName,
-                            ComputerName = j2.ComputerName
+                            ComponentName = component.ComponentName,
+                            ComputerName = computer.ComputerName
                         };
             index.InstallationLijst = query.ToList();
 
             return View(index);
 
 
+        }
+        public ActionResult Report02()
+        {
+            {
+                InstallationIndex index = new InstallationIndex();
+                index.Message.Title = "Rapport - Installaties met een gedeelde locatie";
+
+                index.Message.Tekst = "Installaties die dezelfde installatielocatie hebben";
+                index.Message.Level = index.Message.Info;
+
+                var query = from installation in db.Installations
+                            where installation.EndDateTime == null && installation.Location != null && installation.Location != ""
+                            join component in db.Components
+                            on installation.ComponentID equals component.ComponentID 
+                            join computer in db.Computers
+                            on installation.ComputerID equals computer.ComputerID 
+                            where (from i in db.Installations
+                                   where i.ComputerID == installation.ComputerID && i.EndDateTime == null 
+                                                    && i.Location != null && i.Location != ""
+                                   group i by i.Location into grp
+                                   where grp.Count() > 1
+                                   select grp.Key)
+                                   .Contains(installation.Location)
+                            orderby installation.ComputerID, installation.Location
+                            select new InstallationVM
+                            {
+                            ComputerID = installation.ComputerID,
+                            ComponentID = installation.ComponentID,
+                            Release = installation.Release.TrimEnd(),
+                            Location = installation.Location.TrimEnd(),
+                            InstallDate = installation.InstallDate,
+                            MeasuredDateTime = installation.MeasuredDateTime,
+                            StartDateTime = installation.StartDateTime,
+                            EndDateTime = installation.EndDateTime,
+                            Count = installation.Count,
+                            ComponentName = component.ComponentName,
+                            ComputerName = computer.ComputerName
+                            };
+                         
+                index.InstallationLijst = query.ToList();
+                return View(index);
+            }
+        }
+
+        public ActionResult Report03()
+        {
+            {
+                InstallationIndex index = new InstallationIndex();
+                index.Message.Title = "Rapport - Installaties met recente einddatum";
+
+                index.Message.Tekst = "Installaties die recentelijk zijn verdwenen van het systeem";
+                index.Message.Level = index.Message.Info;
+
+                DateTime dt = DateTime.Now.AddDays(-100);
+
+                var query = from installation in db.Installations
+                            where installation.EndDateTime != null && installation.EndDateTime > dt                            
+                            join component in db.Components
+                            on installation.ComponentID equals component.ComponentID 
+                            join computer in db.Computers
+                            on installation.ComputerID equals computer.ComputerID 
+                            orderby computer.ComputerName, installation.EndDateTime descending, component.ComponentName
+                            select new InstallationVM
+                            {
+                                ComputerID = installation.ComputerID,
+                                ComponentID = installation.ComponentID,
+                                Release = installation.Release.TrimEnd(),
+                                Location = installation.Location.TrimEnd(),
+                                InstallDate = installation.InstallDate,
+                                MeasuredDateTime = installation.MeasuredDateTime,
+                                StartDateTime = installation.StartDateTime,
+                                EndDateTime = installation.EndDateTime,
+                                Count = installation.Count,
+                                ComponentName = component.ComponentName,
+                                ComputerName = computer.ComputerName
+                            }
+                            
+                            ;
+
+                index.InstallationLijst = query.ToList();
+                return View(index);
+            }
+        }
+
+        public ActionResult Report04()
+        {
+            {
+                InstallationIndex index = new InstallationIndex();
+                index.Message.Title = "Rapport - Installaties met recente startdatum";
+
+                index.Message.Tekst = "Installaties die recentelijk zijn verschenen op het systeem";
+                index.Message.Level = index.Message.Info;
+
+                DateTime dt = DateTime.Now.AddDays(-100);
+
+                var query = from installation in db.Installations
+                            where installation.StartDateTime > dt
+                            join component in db.Components
+                            on installation.ComponentID equals component.ComponentID 
+                            join computer in db.Computers
+                            on installation.ComputerID equals computer.ComputerID 
+                            orderby computer.ComputerName, installation.StartDateTime descending, component.ComponentName
+                            select new InstallationVM
+                            {
+                                ComputerID = installation.ComputerID,
+                                ComponentID = installation.ComponentID,
+                                Release = installation.Release.TrimEnd(),
+                                Location = installation.Location.TrimEnd(),
+                                InstallDate = installation.InstallDate,
+                                MeasuredDateTime = installation.MeasuredDateTime,
+                                StartDateTime = installation.StartDateTime,
+                                EndDateTime = installation.EndDateTime,
+                                Count = installation.Count,
+                                ComponentName = component.ComponentName,
+                                ComputerName = computer.ComputerName
+                            }
+
+                            ;
+
+                index.InstallationLijst = query.ToList();
+                return View(index);
+            }
+        }
+        public ActionResult Report05()
+        {
+            {
+                InstallationCompare index = new InstallationCompare();
+                index.Message.Title = "Rapport - Installaties met verschillende releases";
+
+                index.Message.Tekst = "Releases die op één of meer systemen verschillen van elkaar";
+                index.Message.Level = index.Message.Info;
+
+                InstallationData idata = new InstallationData();
+
+                // Determine unique computers
+                var query1 = from i in db.Installations
+                             group i by new { i.ComputerID } into grp
+
+                             join computer in db.Computers
+                             on grp.Key.ComputerID equals computer.ComputerID
+                             select new ComputerVM
+                             {
+                                 ComputerID = grp.Key.ComputerID,
+                                 ComputerName = computer.ComputerName
+                             };
+                index.ComputerLijst = query1.ToList();
+
+                // Determine unique installed components
+                var query2 = from i in db.Installations
+                             where i.EndDateTime == null
+                             group i by new { i.ComponentID, i.Release } into grp
+
+                             join component in db.Components
+                             on grp.Key.ComponentID equals component.ComponentID
+                             select new
+                             {
+                                 grp.Key.ComponentID,
+                                 component.ComponentName,
+                                 grp.Key.Release,
+                                 component.VendorID
+
+                             } into join1
+                             join vendor in db.Vendors
+                             on join1.VendorID equals vendor.VendorID
+                             orderby vendor.VendorName, join1.ComponentName
+                             select new InstallationRelease
+                             {
+                                 ComponentID = join1.ComponentID,
+                                 ComponentName = join1.ComponentName,
+                                 Release = join1.Release,
+                                 VendorName = vendor.VendorName,
+                                 Matched = false
+
+                             };
+                idata.ComponentLijst = query2.ToList();
+
+                // Get component/releaselist for each computer
+                foreach (ComputerVM comp in index.ComputerLijst)
+                {
+                    int currentcomp = comp.ComputerID;
+                    var query3 = from i in db.Installations
+
+                                 where i.ComputerID == currentcomp && i.EndDateTime == null
+                                 group i by new { i.ComponentID, i.Release } into grp
+
+                                 select new InstallationRelease
+                                 {
+                                     ComponentID = grp.Key.ComponentID,
+                                     Release = grp.Key.Release
+
+                                 }
+                                 ;
+                    List<InstallationRelease> thislist = new List<InstallationRelease>();
+                    thislist = query3.ToList();
+                    idata.InstallationReleaseOverview.Add(thislist);
+                }
+
+                // first exclude all release that are the same on all systems
+                int aantalcomputers = idata.InstallationReleaseOverview.Count;               
+
+                foreach (InstallationRelease installationrelease in idata.ComponentLijst)
+                {
+                    int matchcounter = 0;
+                    foreach (List<InstallationRelease> installationReleaseLijst in idata.InstallationReleaseOverview)
+                    {
+                        var findrelease = installationReleaseLijst.Find(x => x.ComponentID == installationrelease.ComponentID &&
+                                                                                x.Release == installationrelease.Release);
+                        if (findrelease != null) {
+                            matchcounter ++;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    if (matchcounter == aantalcomputers)
+                    {
+                        installationrelease.Matched = true;                  // all computers have this release installed
+                    }
+                }
+
+                // now handle all releases that are NOT present on all systems
+
+                int currentid = 0;
+                foreach (InstallationRelease installationrelease in idata.ComponentLijst)
+                {
+                   
+                    if (installationrelease.Matched)
+                    {
+                        continue;               // Skip already matched releases
+                    }
+                    
+                    if (installationrelease.ComponentID == currentid) {
+                        continue;               // proces each component just one time
+                    }
+                    else
+                    {
+                        currentid = installationrelease.ComponentID;
+                    }
+                    InstallationReportLine irl = new InstallationReportLine();
+                    int aantalreleases = 0;                    
+                    bool firstrelease = false;
+                    bool mismatchfound = false;
+                    string comparerelease = null;
+                    foreach (List<InstallationRelease> installationReleaseLijst in idata.InstallationReleaseOverview)
+                    {
+                        var findcomponent = installationReleaseLijst.Find(x => x.ComponentID == installationrelease.ComponentID);
+
+                        if (findcomponent == null) {
+                            irl.Indicator.Add("n/a");
+                        }
+                        else {
+                            aantalreleases++;
+                            if (firstrelease)
+                            {
+                                comparerelease = findcomponent.Release;
+                            }
+                            if (comparerelease != findcomponent.Release) { 
+                                mismatchfound = true;
+                            }
+                            irl.Indicator.Add(findcomponent.Release);
+                        }
+                    }
+                    if ((aantalreleases > 1) && mismatchfound)
+                    {
+                        irl.ComponentName = installationrelease.ComponentName;
+                        irl.VendorName = installationrelease.VendorName;
+                        index.InstallationReport.Add(irl);
+                    }
+
+
+                }
+                                    
+                return View(index);
+            }
+        }
+
+        public ActionResult Report06()
+        {
+            {
+                InstallationCompare index = new InstallationCompare();
+                index.Message.Title = "Rapport - Componenten die ontbreken";
+
+                index.Message.Tekst = "Componenten die op één of meer systemen niet aanwezig zijn";
+                index.Message.Level = index.Message.Info;
+
+                InstallationData idata = new InstallationData();    
+
+                // Determine unique computers
+                var query1 = from i in db.Installations
+                            group i by new { i.ComputerID } into grp
+
+                            join computer in db.Computers
+                            on grp.Key.ComputerID equals computer.ComputerID
+                            select new ComputerVM
+                            {
+                                ComputerID = grp.Key.ComputerID,
+                                ComputerName = computer.ComputerName
+                            }; 
+                index.ComputerLijst = query1.ToList();
+
+                // Determine unique installed components
+                var query2 = from i in db.Installations
+                             where i.EndDateTime == null
+                             group i by new { i.ComponentID, i.Release} into grp
+
+                             join component in db.Components
+                             on grp.Key.ComponentID equals component.ComponentID
+                             select new 
+                             {
+                                 grp.Key.ComponentID,
+                                 component.ComponentName,
+                                 grp.Key.Release,
+                                 component.VendorID
+
+                             } into join1
+                             join vendor in db.Vendors
+                             on join1.VendorID equals vendor.VendorID
+                             orderby vendor.VendorName, join1.ComponentName
+                             select new InstallationRelease
+                             {
+                                 ComponentID = join1.ComponentID,
+                                 ComponentName = join1.ComponentName,
+                                 Release = join1.Release,
+                                 VendorName = vendor.VendorName
+
+                             };
+                idata.ComponentLijst = query2.ToList();
+
+                // Get component/releaselist for each computer
+                foreach (ComputerVM comp in index.ComputerLijst)
+                {
+                    int currentid = comp.ComputerID;
+                    var query3 = from i in db.Installations
+                                 where i.EndDateTime == null
+                                 where i.ComputerID == currentid
+                                 group i by new { i.ComponentID, i.Release } into grp
+
+                                 select new InstallationRelease
+                                 {
+                                     ComponentID = grp.Key.ComponentID,
+                                     Release = grp.Key.Release
+
+                                 } 
+                                 ;
+                    List<InstallationRelease> thislist = new List<InstallationRelease>();
+                    thislist = query3.ToList();
+                    idata.InstallationReleaseOverview.Add(thislist);
+                }
+
+                foreach (InstallationRelease installationrelease in idata.ComponentLijst)
+                {
+                    InstallationReportLine irl = new InstallationReportLine();
+                    Boolean nullfound = false;
+                    
+                    foreach (List<InstallationRelease> installationReleaseLijst in idata.InstallationReleaseOverview)
+                    {
+                        
+                        var findcomponent = installationReleaseLijst.Find(x => x.ComponentID == installationrelease.ComponentID);
+
+                        if (findcomponent == null)
+                        {
+                            nullfound = true;
+                            irl.Indicator.Add("n/a");
+                        }
+                        else
+                        {
+                            irl.Indicator.Add(findcomponent.Release); 
+                        }
+                    }
+                    if (nullfound)
+                    {
+                        irl.ComponentName = installationrelease.ComponentName;
+                        irl.VendorName = installationrelease.VendorName;
+                        index.InstallationReport.Add( irl );
+                    }
+                                     
+
+                }
+
+                //InstallationReportLine test = new InstallationReportLine();
+                //test.ComponentID = 1;
+                //test.ComponentName = "poep";
+                //test.VendorName = "ME";
+                //test.Indicator.Add("rel1");
+                //test.Indicator.Add("rel2");
+                //index.InstallationReport.Add(test);           
+
+                return View(index);
+            }
         }
 
         private void Contract_ContractFailed(object sender, ContractFailedEventArgs e)

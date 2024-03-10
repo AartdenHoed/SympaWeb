@@ -1,0 +1,86 @@
+﻿<div class="controller">
+    @model ConfigMan.ViewModels.InstallationIndex
+    @{
+        ViewBag.Title = Model.Message.Title;
+    }
+    <h2>
+        @Html.DisplayFor(model => model.Message.Title)
+    </h2>
+    <p>
+        @Html.DisplayFor(model => model.Message.Tekst)
+    </p>
+
+    <p>
+        
+        @Html.ActionLink("Terug naar Menu", "Menu", "Installations", new { @class = "sy-a" })
+    </p>
+
+    <table class="sy-table">
+
+        @if (Model.InstallationLijst != null)
+        {
+            var i = 0;
+
+            foreach (var item in Model.InstallationLijst)
+            {
+                if (i == 0)
+                {
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.ComputerName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.ComponentName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.Release)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.Count)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.StartDateTime)
+                        </th>
+
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.EndDateTime)
+                        </th>
+
+
+                    </tr>
+                }
+                i = i + 1;
+
+    <tr>
+
+        <td>
+            @Html.DisplayFor(modelItem => item.ComputerName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ComponentName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Release)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Count)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StartDateTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EndDateTime)
+        </td>
+        
+
+    </tr>
+            }
+        }
+
+    </table>
+
+    <p>
+        *** Einde van de lijst ***
+    </p>
+
+</div>
