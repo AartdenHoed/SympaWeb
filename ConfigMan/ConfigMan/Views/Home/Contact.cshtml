@@ -1,9 +1,15 @@
-﻿@{
-    ViewBag.Title = "Contactgegevens";
-}
-<div class="controller">
-    <h2>@ViewBag.Title.</h2>
-    <h3>@ViewBag.Message</h3>
+﻿<div class="controller">
+    @model ConfigMan.ViewModels.SympaMessage
+    @{
+        ViewBag.Title = Model.Title;
+    }
+
+    <h2>
+        @Html.DisplayFor(model => model.Title)
+    </h2>
+    <p>
+        @Html.DisplayFor(model => model.Tekst)
+    </p>
 
     <address>
 
