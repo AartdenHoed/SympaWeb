@@ -54,7 +54,7 @@ namespace ConfigMan.Controllers
                         join vendor in db.Vendors
                         on component.VendorID equals vendor.VendorID into join1
                         from j1 in join1
-                        orderby component.ComponentName
+                        orderby j1.VendorGroup, j1.VendorName, component.ComponentName
                         select new ComponentVM
                         {
                             ComponentID = component.ComponentID,
@@ -388,9 +388,9 @@ namespace ConfigMan.Controllers
                                .Contains(c.ComponentID)
                         join vendor in db.Vendors
                             on c.VendorID equals vendor.VendorID into join1
-                        orderby c.ComponentName
                         from j1 in join1
-                        select new ComponentVM
+                        orderby j1.VendorGroup, j1.VendorName, c.ComponentName
+                        select new ComponentVM                       
                         {
                             ComponentID = c.ComponentID,
                             ComponentName = c.ComponentName,

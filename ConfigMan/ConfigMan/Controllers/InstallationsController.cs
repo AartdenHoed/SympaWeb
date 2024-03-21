@@ -59,8 +59,10 @@ namespace ConfigMan.Controllers
                         join component in db.Components 
                         on installation.ComponentID equals component.ComponentID 
                         join computer in db.Computers
-                        on installation.ComputerID equals computer.ComputerID 
-                        orderby computer.ComputerName,component.ComponentName,installation.StartDateTime,installation.EndDateTime
+                        on installation.ComputerID equals computer.ComputerID
+                        join vendor in db.Vendors
+                        on component.VendorID equals vendor.VendorID
+                        orderby computer.ComputerName,vendor.VendorGroup,vendor.VendorName,component.ComponentName,installation.StartDateTime,installation.EndDateTime
                         select new InstallationVM
                         {
                             ComputerID = installation.ComputerID,
@@ -450,9 +452,11 @@ namespace ConfigMan.Controllers
                         join component in db.Components
                         on installation.ComponentID equals component.ComponentID 
                         join computer in db.Computers
-                        on installation.ComputerID equals computer.ComputerID 
+                        on installation.ComputerID equals computer.ComputerID
+                        join vendor in db.Vendors
+                        on component.VendorID equals vendor.VendorID
                         where installation.Count > 1
-                        orderby computer.ComputerName, component.ComponentName, installation.StartDateTime, installation.EndDateTime
+                        orderby computer.ComputerName,vendor.VendorGroup,vendor.VendorName,component.ComponentName, installation.StartDateTime, installation.EndDateTime
                         select new InstallationVM                       
                         {
                             ComputerID = installation.ComputerID,
@@ -636,7 +640,7 @@ namespace ConfigMan.Controllers
                              } into join1
                              join vendor in db.Vendors
                              on join1.VendorID equals vendor.VendorID
-                             orderby vendor.VendorName, join1.ComponentName
+                             orderby vendor.VendorGroup, vendor.VendorName, join1.ComponentName
                              select new InstallationRelease
                              {
                                  ComponentID = join1.ComponentID,
@@ -713,7 +717,7 @@ namespace ConfigMan.Controllers
                     }
                     InstallationReportLine irl = new InstallationReportLine();
                     int aantalreleases = 0;                    
-                    bool firstrelease = false;
+                    bool firstrelease = true;
                     bool mismatchfound = false;
                     string comparerelease = null;
                     foreach (List<InstallationRelease> installationReleaseLijst in idata.InstallationReleaseOverview)
@@ -728,6 +732,7 @@ namespace ConfigMan.Controllers
                             if (firstrelease)
                             {
                                 comparerelease = findcomponent.Release;
+                                firstrelease = false;
                             }
                             if (comparerelease != findcomponent.Release) { 
                                 mismatchfound = true;
@@ -790,7 +795,7 @@ namespace ConfigMan.Controllers
                              } into join1
                              join vendor in db.Vendors
                              on join1.VendorID equals vendor.VendorID
-                             orderby vendor.VendorName, join1.ComponentName
+                             orderby vendor.VendorGroup, vendor.VendorName, join1.ComponentName
                              select new InstallationRelease
                              {
                                  ComponentID = join1.ComponentID,
@@ -852,17 +857,11 @@ namespace ConfigMan.Controllers
 
                 }
 
-                //InstallationReportLine test = new InstallationReportLine();
-                //test.ComponentID = 1;
-                //test.ComponentName = "poep";
-                //test.VendorName = "ME";
-                //test.Indicator.Add("rel1");
-                //test.Indicator.Add("rel2");
-                //index.InstallationReport.Add(test);           
-
                 return View(index);
             }
         }
+
+       
 
         private void Contract_ContractFailed(object sender, ContractFailedEventArgs e)
         {

@@ -51,7 +51,7 @@ namespace ConfigMan.Controllers {
                 index.Message.Tekst = message;
                 index.Message.Level = msgLevel;
             }
-            List<Vendor> vendlist = db.Vendors.OrderBy(x => x.VendorName).ToList();
+            List<Vendor> vendlist = db.Vendors.OrderBy(x => x.VendorGroup).ThenBy(x => x.VendorName).ToList();
 
             foreach (Vendor v in vendlist)
             {
@@ -311,6 +311,7 @@ namespace ConfigMan.Controllers {
                             VendorName = ven.VendorName,
                             VendorGroup = ven.VendorGroup
                         } into v1
+                        orderby v1.VendorGroup, v1.VendorName
                         where
                         !(from v in db.Vendors
                           join c in db.Components on v.VendorID equals c.VendorID into join1
@@ -336,7 +337,7 @@ namespace ConfigMan.Controllers {
                         where !(from c in db.Components
                                 select c.VendorID)
                                .Contains(v.VendorID)
-                        orderby v.VendorGroup
+                        orderby v.VendorGroup, v.VendorName
                         select new VendorVM
                         {
                             VendorID = v.VendorID,
