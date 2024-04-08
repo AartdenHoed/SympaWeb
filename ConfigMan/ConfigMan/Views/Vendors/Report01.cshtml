@@ -10,8 +10,12 @@
     <p>
         @Html.DisplayFor(model => model.Message.Tekst)
     </p>
+    <p>
 
-    
+        @Html.ActionLink("Terug naar Menu", "Menu", "Vendors", new { @class = "sy-a" })
+    </p>
+
+
     <table class="sy-table">
 
         @if (Model.VendorLijst != null)
@@ -23,7 +27,7 @@
                 if (i == 0)
                 {
                     <tr>
-                       
+
                         <th>
                             @Html.DisplayNameFor(modelItem => item.VendorName)
                         </th>
@@ -38,7 +42,7 @@
 
 
                 <tr>
-                    
+
                     <td>
                         @Html.DisplayFor(modelItem => item.VendorName)
                     </td>
