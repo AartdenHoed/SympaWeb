@@ -62,11 +62,12 @@ namespace ConfigMan.Controllers
                         on installation.ComputerID equals computer.ComputerID
                         join vendor in db.Vendors
                         on component.VendorID equals vendor.VendorID
-                        orderby computer.ComputerName,vendor.VendorGroup,vendor.VendorName,component.ComponentName,installation.StartDateTime,installation.EndDateTime
+                        orderby computer.ComputerName,vendor.VendorGroup,vendor.VendorName,component.ComponentNameTemplate,installation.StartDateTime,installation.EndDateTime
                         select new InstallationVM
                         {
                             ComputerID = installation.ComputerID,
                             ComponentID = installation.ComponentID,
+                            ComponentName = installation.ComponentName,
                             Release = installation.Release.TrimEnd(),
                             Location = installation.Location.TrimEnd(),
                             InstallDate = installation.InstallDate,
@@ -74,7 +75,7 @@ namespace ConfigMan.Controllers
                             StartDateTime = installation.StartDateTime,
                             EndDateTime = installation.EndDateTime,
                             Count = installation.Count,
-                            ComponentName = component.ComponentName,
+                            ComponentNameTemplate = component.ComponentNameTemplate,
                             ComputerName = computer.ComputerName
                         };
             index.InstallationLijst = query.ToList();
@@ -112,6 +113,7 @@ namespace ConfigMan.Controllers
                             {
                                 ComputerID = installation.ComputerID,
                                 ComponentID = installation.ComponentID,
+                                ComponentName = installation.ComponentName,
                                 Release = installation.Release.TrimEnd(),
                                 Location = installation.Location.TrimEnd(),
                                 InstallDate = installation.InstallDate,
@@ -119,7 +121,7 @@ namespace ConfigMan.Controllers
                                 StartDateTime = installation.StartDateTime,
                                 EndDateTime = installation.EndDateTime,
                                 Count = installation.Count,
-                                ComponentName = component.ComponentName,
+                                ComponentNameTemplate = component.ComponentNameTemplate,
                                 ComputerName = computer.ComputerName,
                                 VendorID = vendor.VendorID,
                                 VendorName = vendor.VendorName
@@ -167,7 +169,7 @@ namespace ConfigMan.Controllers
             }
 
             // fill selectlist with components
-            List<Component> componentdblist = db.Components.OrderBy(x => x.ComponentName).ToList();
+            List<Component> componentdblist = db.Components.OrderBy(x => x.ComponentNameTemplate).ToList();
             foreach (Component o in componentdblist)
             {
                 ComponentVM oVM = new ComponentVM();
@@ -241,7 +243,7 @@ namespace ConfigMan.Controllers
             }
 
             // fill selectlist with components
-            List<Component> componentdblist = db.Components.OrderBy(x => x.ComponentName).ToList();
+            List<Component> componentdblist = db.Components.OrderBy(x => x.ComponentNameTemplate).ToList();
             foreach (Component o in componentdblist)
             {
                 ComponentVM oVM = new ComponentVM();
@@ -280,6 +282,7 @@ namespace ConfigMan.Controllers
                             {
                                 ComputerID = installation.ComputerID,
                                 ComponentID = installation.ComponentID,
+                                ComponentName = installation.ComponentName,
                                 Release = installation.Release.TrimEnd(),
                                 Location = installation.Location.TrimEnd(),
                                 InstallDate = installation.InstallDate,
@@ -287,7 +290,7 @@ namespace ConfigMan.Controllers
                                 StartDateTime = installation.StartDateTime,
                                 EndDateTime = installation.EndDateTime,
                                 Count = installation.Count,
-                                ComponentName = component.ComponentName,
+                                ComponentNameTemplate = component.ComponentNameTemplate,
                                 ComputerName = computer.ComputerName,
                                 VendorID = vendor.VendorID,
                                 VendorName = vendor.VendorName
@@ -372,6 +375,7 @@ namespace ConfigMan.Controllers
                             {
                                 ComputerID = installation.ComputerID,
                                 ComponentID = installation.ComponentID,
+                                ComponentName = installation.ComponentName,
                                 Release = installation.Release.TrimEnd(),
                                 Location = installation.Location.TrimEnd(),
                                 InstallDate = installation.InstallDate,
@@ -379,7 +383,7 @@ namespace ConfigMan.Controllers
                                 StartDateTime = installation.StartDateTime,
                                 EndDateTime = installation.EndDateTime,
                                 Count = installation.Count,
-                                ComponentName = component.ComponentName,
+                                ComponentNameTemplate = component.ComponentNameTemplate,
                                 ComputerName = computer.ComputerName,
                                 VendorID = vendor.VendorID,
                                 VendorName = vendor.VendorName
@@ -456,11 +460,12 @@ namespace ConfigMan.Controllers
                         join vendor in db.Vendors
                         on component.VendorID equals vendor.VendorID
                         where installation.Count > 1
-                        orderby computer.ComputerName,vendor.VendorGroup,vendor.VendorName,component.ComponentName, installation.StartDateTime, installation.EndDateTime
+                        orderby computer.ComputerName,vendor.VendorGroup,vendor.VendorName,component.ComponentNameTemplate, installation.StartDateTime, installation.EndDateTime
                         select new InstallationVM                       
                         {
                             ComputerID = installation.ComputerID,
                             ComponentID = installation.ComponentID,
+                            ComponentName = installation.ComponentName,
                             Release = installation.Release.TrimEnd(),
                             Location = installation.Location.TrimEnd(),
                             InstallDate = installation.InstallDate,
@@ -468,7 +473,7 @@ namespace ConfigMan.Controllers
                             StartDateTime = installation.StartDateTime,
                             EndDateTime = installation.EndDateTime,
                             Count = installation.Count,
-                            ComponentName = component.ComponentName,
+                            ComponentNameTemplate = component.ComponentNameTemplate,
                             ComputerName = computer.ComputerName
                         };
             index.InstallationLijst = query.ToList();
@@ -504,6 +509,7 @@ namespace ConfigMan.Controllers
                             {
                             ComputerID = installation.ComputerID,
                             ComponentID = installation.ComponentID,
+                            ComponentName = installation.ComponentName,
                             Release = installation.Release.TrimEnd(),
                             Location = installation.Location.TrimEnd(),
                             InstallDate = installation.InstallDate,
@@ -511,7 +517,7 @@ namespace ConfigMan.Controllers
                             StartDateTime = installation.StartDateTime,
                             EndDateTime = installation.EndDateTime,
                             Count = installation.Count,
-                            ComponentName = component.ComponentName,
+                            ComponentNameTemplate = component.ComponentNameTemplate,
                             ComputerName = computer.ComputerName
                             };
                          
@@ -537,11 +543,12 @@ namespace ConfigMan.Controllers
                             on installation.ComponentID equals component.ComponentID 
                             join computer in db.Computers
                             on installation.ComputerID equals computer.ComputerID 
-                            orderby computer.ComputerName, installation.EndDateTime descending, component.ComponentName
+                            orderby computer.ComputerName, installation.EndDateTime descending, component.ComponentNameTemplate
                             select new InstallationVM
                             {
                                 ComputerID = installation.ComputerID,
                                 ComponentID = installation.ComponentID,
+                                ComponentName = installation.ComponentName,
                                 Release = installation.Release.TrimEnd(),
                                 Location = installation.Location.TrimEnd(),
                                 InstallDate = installation.InstallDate,
@@ -549,7 +556,7 @@ namespace ConfigMan.Controllers
                                 StartDateTime = installation.StartDateTime,
                                 EndDateTime = installation.EndDateTime,
                                 Count = installation.Count,
-                                ComponentName = component.ComponentName,
+                                ComponentNameTemplate = component.ComponentNameTemplate,
                                 ComputerName = computer.ComputerName
                             }
                             
@@ -577,11 +584,12 @@ namespace ConfigMan.Controllers
                             on installation.ComponentID equals component.ComponentID 
                             join computer in db.Computers
                             on installation.ComputerID equals computer.ComputerID 
-                            orderby computer.ComputerName, installation.StartDateTime descending, component.ComponentName
+                            orderby computer.ComputerName, installation.StartDateTime descending, component.ComponentNameTemplate
                             select new InstallationVM
                             {
                                 ComputerID = installation.ComputerID,
                                 ComponentID = installation.ComponentID,
+                                ComponentName = installation.ComponentName,
                                 Release = installation.Release.TrimEnd(),
                                 Location = installation.Location.TrimEnd(),
                                 InstallDate = installation.InstallDate,
@@ -589,7 +597,7 @@ namespace ConfigMan.Controllers
                                 StartDateTime = installation.StartDateTime,
                                 EndDateTime = installation.EndDateTime,
                                 Count = installation.Count,
-                                ComponentName = component.ComponentName,
+                                ComponentNameTemplate = component.ComponentNameTemplate,
                                 ComputerName = computer.ComputerName
                             }
 
@@ -633,18 +641,18 @@ namespace ConfigMan.Controllers
                              select new
                              {
                                  grp.Key.ComponentID,
-                                 component.ComponentName,
+                                 component.ComponentNameTemplate,
                                  grp.Key.Release,
                                  component.VendorID
 
                              } into join1
                              join vendor in db.Vendors
                              on join1.VendorID equals vendor.VendorID
-                             orderby vendor.VendorGroup, vendor.VendorName, join1.ComponentName
+                             orderby vendor.VendorGroup, vendor.VendorName, join1.ComponentNameTemplate
                              select new InstallationRelease
                              {
                                  ComponentID = join1.ComponentID,
-                                 ComponentName = join1.ComponentName,
+                                 ComponentNameTemplate = join1.ComponentNameTemplate,
                                  Release = join1.Release,
                                  VendorName = vendor.VendorName,
                                  Matched = false
@@ -742,7 +750,7 @@ namespace ConfigMan.Controllers
                     }
                     if ((aantalreleases > 1) && mismatchfound)
                     {
-                        irl.ComponentName = installationrelease.ComponentName;
+                        irl.ComponentNameTemplate = installationrelease.ComponentNameTemplate;
                         irl.VendorName = installationrelease.VendorName;
                         index.InstallationReport.Add(irl);
                     }
@@ -788,18 +796,18 @@ namespace ConfigMan.Controllers
                              select new 
                              {
                                  grp.Key.ComponentID,
-                                 component.ComponentName,
+                                 component.ComponentNameTemplate,
                                  grp.Key.Release,
                                  component.VendorID
 
                              } into join1
                              join vendor in db.Vendors
                              on join1.VendorID equals vendor.VendorID
-                             orderby vendor.VendorGroup, vendor.VendorName, join1.ComponentName
+                             orderby vendor.VendorGroup, vendor.VendorName, join1.ComponentNameTemplate
                              select new InstallationRelease
                              {
                                  ComponentID = join1.ComponentID,
-                                 ComponentName = join1.ComponentName,
+                                 ComponentNameTemplate = join1.ComponentNameTemplate,
                                  Release = join1.Release,
                                  VendorName = vendor.VendorName
 
@@ -849,7 +857,7 @@ namespace ConfigMan.Controllers
                     }
                     if (nullfound)
                     {
-                        irl.ComponentName = installationrelease.ComponentName;
+                        irl.ComponentNameTemplate = installationrelease.ComponentNameTemplate;
                         irl.VendorName = installationrelease.VendorName;
                         index.InstallationReport.Add( irl );
                     }

@@ -25,6 +25,7 @@ namespace ConfigMan.ViewModels
     {
         public int ComponentID { get; set; }
         public string ComponentName { get; set; }
+        public string ComponentNameTemplate { get; set; }
 
         public string VendorName { get; set; }
 
@@ -44,7 +45,8 @@ namespace ConfigMan.ViewModels
     public class InstallationRelease
     {
         public int ComponentID { get; set; }
-        public string ComponentName { get; set; } 
+        public string ComponentName { get; set; }
+        public string ComponentNameTemplate { get; set; }
         public string Release { get; set; }
         public string VendorName { get; set; }  
         public Boolean Matched { get; set; }

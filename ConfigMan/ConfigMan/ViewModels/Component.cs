@@ -11,7 +11,7 @@ namespace ConfigMan
     {
         public void Fill(ComponentVM componentVM)
         {
-            this.ComponentName = componentVM.ComponentName.TrimEnd();
+            this.ComponentNameTemplate = componentVM.ComponentNameTemplate.TrimEnd();
             this.ComponentID = componentVM.ComponentID;
             
             if ((componentVM.SelectedVendorIDstring != null) && (componentVM.SelectedVendorIDstring != "")) {

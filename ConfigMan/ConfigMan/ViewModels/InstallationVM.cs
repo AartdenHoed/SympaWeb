@@ -21,7 +21,7 @@ namespace ConfigMan.ViewModels
         public string SelectedComponentIDstring { get; set; }
         public int ComputerID { get; set; }
         public int ComponentID { get; set; }
-
+        public string ComponentName { get; set; }   
         public int VendorID { get; set; }
         public string VendorName {  get; set; } 
 
@@ -67,13 +67,14 @@ namespace ConfigMan.ViewModels
         [Range(1, 999, ErrorMessage = "Minimaal 1, maximaal 999")]
         public int Count { get; set; }
 
-        public string ComponentName { get; set;}
+        public string ComponentNameTemplate { get; set;}
         public string ComputerName { get; set;}
 
         public void Fill(Installation installation)
         {
             this.ComputerID = installation.ComputerID;
             this.ComponentID = installation.ComponentID;
+            this.ComponentName = installation.ComponentName;
             if (installation.Release == null) {
                 this.Release = installation.Release;
             }

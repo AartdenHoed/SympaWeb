@@ -11,7 +11,7 @@
           </Key>
           <Property Name="ComponentID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="VendorID" Type="int" Nullable="false" />
-          <Property Name="ComponentName" Type="char" MaxLength="120" Nullable="false" />
+          <Property Name="ComponentNameTemplate" Type="char" MaxLength="120" Nullable="false" />
         </EntityType>
         <EntityType Name="Computer">
           <Key>
@@ -40,6 +40,7 @@
           </Key>
           <Property Name="ComputerID" Type="int" Nullable="false" />
           <Property Name="ComponentID" Type="int" Nullable="false" />
+          <Property Name="ComponentName" Type="char" MaxLength="120" />
           <Property Name="Release" Type="char" MaxLength="44" Nullable="false" />
           <Property Name="Location" Type="char" MaxLength="120" />
           <Property Name="InstallDate" Type="date" />
@@ -134,30 +135,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Installation_Component">
-          <End Role="Component" Type="Self.Component" Multiplicity="1" />
-          <End Role="Installation" Type="Self.Installation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Component">
-              <PropertyRef Name="ComponentID" />
-            </Principal>
-            <Dependent Role="Installation">
-              <PropertyRef Name="ComponentID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Installation_Computer">
-          <End Role="Computer" Type="Self.Computer" Multiplicity="1" />
-          <End Role="Installation" Type="Self.Installation" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Computer">
-              <PropertyRef Name="ComputerID" />
-            </Principal>
-            <Dependent Role="Installation">
-              <PropertyRef Name="ComputerID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_License_Component">
           <End Role="Component" Type="Self.Component" Multiplicity="1" />
           <End Role="License" Type="Self.License" Multiplicity="*" />
@@ -223,14 +200,6 @@
             <End Role="Component" EntitySet="Component" />
             <End Role="Documentation" EntitySet="Documentation" />
           </AssociationSet>
-          <AssociationSet Name="FK_Installation_Component" Association="Self.FK_Installation_Component">
-            <End Role="Component" EntitySet="Component" />
-            <End Role="Installation" EntitySet="Installation" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Installation_Computer" Association="Self.FK_Installation_Computer">
-            <End Role="Computer" EntitySet="Computer" />
-            <End Role="Installation" EntitySet="Installation" />
-          </AssociationSet>
           <AssociationSet Name="FK_License_Component" Association="Self.FK_License_Component">
             <End Role="Component" EntitySet="Component" />
             <End Role="License" EntitySet="License" />
@@ -258,12 +227,12 @@
           </Key>
           <Property Name="ComponentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="VendorID" Type="Int32" Nullable="false" />
-          <Property Name="ComponentName" Type="String" MaxLength="120" FixedLength="true" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Vendor" Relationship="Self.FK_Component_Vendor" FromRole="Component" ToRole="Vendor" />
           <NavigationProperty Name="Documentations" Relationship="Self.FK_Documentation_Component" FromRole="Component" ToRole="Documentation" />
           <NavigationProperty Name="Installations" Relationship="Self.FK_Installation_Component" FromRole="Component" ToRole="Installation" />
           <NavigationProperty Name="Licenses" Relationship="Self.FK_License_Component" FromRole="Component" ToRole="License" />
           <NavigationProperty Name="Services" Relationship="SympaModel.FK_Service_Component" FromRole="Component" ToRole="Service" />
+          <Property Name="ComponentNameTemplate" Type="String" Nullable="false" MaxLength="120" FixedLength="true" Unicode="false" />
         </EntityType>
         <EntityType Name="Computer">
           <Key>
@@ -305,6 +274,7 @@
           <Property Name="StartDateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="EndDateTime" Type="DateTime" Precision="3" />
           <Property Name="Count" Type="Int32" Nullable="false" />
+          <Property Name="ComponentName" Type="String" MaxLength="120" FixedLength="true" Unicode="false" />
         </EntityType>
         <EntityType Name="License">
           <Key>
@@ -520,9 +490,9 @@
           <EntitySetMapping Name="Components">
             <EntityTypeMapping TypeName="SympaModel.Component">
               <MappingFragment StoreEntitySet="Component">
+                <ScalarProperty Name="ComponentNameTemplate" ColumnName="ComponentNameTemplate" />
                 <ScalarProperty Name="ComponentID" ColumnName="ComponentID" />
                 <ScalarProperty Name="VendorID" ColumnName="VendorID" />
-                <ScalarProperty Name="ComponentName" ColumnName="ComponentName" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -549,6 +519,7 @@
           <EntitySetMapping Name="Installations">
             <EntityTypeMapping TypeName="SympaModel.Installation">
               <MappingFragment StoreEntitySet="Installation">
+                <ScalarProperty Name="ComponentName" ColumnName="ComponentName" />
                 <ScalarProperty Name="Count" ColumnName="Count" />
                 <ScalarProperty Name="EndDateTime" ColumnName="EndDateTime" />
                 <ScalarProperty Name="StartDateTime" ColumnName="StartDateTime" />

@@ -54,11 +54,11 @@ namespace ConfigMan.Controllers
                         join vendor in db.Vendors
                         on component.VendorID equals vendor.VendorID into join1
                         from j1 in join1
-                        orderby j1.VendorGroup, j1.VendorName, component.ComponentName
+                        orderby j1.VendorGroup, j1.VendorName, component.ComponentNameTemplate
                         select new ComponentVM
                         {
                             ComponentID = component.ComponentID,
-                            ComponentName = component.ComponentName,
+                            ComponentNameTemplate = component.ComponentNameTemplate,
                             VendorID = j1.VendorID,
                             VendorName = j1.VendorName,
                         };
@@ -84,11 +84,11 @@ namespace ConfigMan.Controllers
                             join vendor in db.Vendors
                             on component.VendorID equals vendor.VendorID into join1
                             from j1 in join1
-                            orderby component.ComponentName
+                            orderby component.ComponentNameTemplate
                             select new ComponentVM
                             {
                                 ComponentID = component.ComponentID,
-                                ComponentName = component.ComponentName,
+                                ComponentNameTemplate = component.ComponentNameTemplate,
                                 VendorID = j1.VendorID,
                                 VendorName = j1.VendorName,
                             };
@@ -143,7 +143,7 @@ namespace ConfigMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ComponentID,VendorID,ComponentName,SelectedVendorIDstring")] ComponentVM componentVM)
+        public ActionResult Create([Bind(Include = "ComponentID,VendorID,ComponentNameTemplate,SelectedVendorIDstring")] ComponentVM componentVM)
         {
             List<Vendor> vendordblist = new List<Vendor>();
             if (ModelState.IsValid)
@@ -164,11 +164,11 @@ namespace ConfigMan.Controllers
                 if (addfailed)
                 {
                     componentVM.Message.Fill("Component - Aanmaken",
-                        componentVM.Message.Error, "Component " + component.ComponentName + " bestaat al, gebruik de BEWERK functie.");
+                        componentVM.Message.Error, "Component " + component.ComponentNameTemplate + " bestaat al, gebruik de BEWERK functie.");
                 }
                 else
                 {
-                    string m = "Component " + component.ComponentName.TrimEnd() + " is toegevoegd";
+                    string m = "Component " + component.ComponentNameTemplate.TrimEnd() + " is toegevoegd";
                     string l = componentVM.Message.Info;
                     return RedirectToAction("Index", "Components", new { Message = m, MsgLevel = l });
 
@@ -176,7 +176,7 @@ namespace ConfigMan.Controllers
             }
             else { 
                 componentVM.Message.Fill("Component - Aanmaken",
-                        componentVM.Message.Error, "Model ERROR in " + componentVM.ComponentName);
+                        componentVM.Message.Error, "Model ERROR in " + componentVM.ComponentNameTemplate);
             }
             
             vendordblist = db.Vendors.OrderBy(x => x.VendorName).ToList();
@@ -205,11 +205,11 @@ namespace ConfigMan.Controllers
                             join vendor in db.Vendors
                             on component.VendorID equals vendor.VendorID into join1
                             from j1 in join1
-                            orderby component.ComponentName
+                            orderby component.ComponentNameTemplate
                             select new ComponentVM
                             {
                                 ComponentID = component.ComponentID,
-                                ComponentName = component.ComponentName,
+                                ComponentNameTemplate = component.ComponentNameTemplate,
                                 VendorID = j1.VendorID,
                                 VendorName = j1.VendorName,
                             };
@@ -259,7 +259,7 @@ namespace ConfigMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ComponentID,VendorID,ComponentName,SelectedVendorIDstring")] ComponentVM componentVM)
+        public ActionResult Edit([Bind(Include = "ComponentID,VendorID,ComponentNameTemplate,SelectedVendorIDstring")] ComponentVM componentVM)
         {
             if (ModelState.IsValid)
             {
@@ -273,14 +273,14 @@ namespace ConfigMan.Controllers
                 db.Entry(component).State = EntityState.Modified;
                 db.SaveChanges();
         
-                string m = "Component " + component.ComponentName.TrimEnd() + " is aangepast";
+                string m = "Component " + component.ComponentNameTemplate.TrimEnd() + " is aangepast";
                 string l = componentVM.Message.Info;
                 return RedirectToAction("Index", "Components", new { Message = m, MsgLevel = l });
             }
             else
             {
                 componentVM.Message.Fill("Component - Bewerken",
-                        componentVM.Message.Error, "Model ERROR in " + componentVM.ComponentName);
+                        componentVM.Message.Error, "Model ERROR in " + componentVM.ComponentNameTemplate);
                 
                 return View(componentVM);
             }
@@ -303,11 +303,11 @@ namespace ConfigMan.Controllers
                             join vendor in db.Vendors
                             on component.VendorID equals vendor.VendorID into join1
                             from j1 in join1
-                            orderby component.ComponentName
+                            orderby component.ComponentNameTemplate
                             select new ComponentVM
                             {
                                 ComponentID = component.ComponentID,
-                                ComponentName = component.ComponentName,
+                                ComponentNameTemplate = component.ComponentNameTemplate,
                                 VendorID = j1.VendorID,
                                 VendorName = j1.VendorName,
                             };
@@ -356,11 +356,11 @@ namespace ConfigMan.Controllers
                 catch (DbUpdateException exc)
                 {
                     ComponentVM componentVM = new ComponentVM();
-                    componentVM.Message.Fill("Component - Verwijderen", componentVM.Message.Warning, "Component " + component.ComponentName + " kan niet worden verwijderd. Verwijder eerst alle Installaties, Services en Documentatie *** (" + exc.Message + ")");
+                    componentVM.Message.Fill("Component - Verwijderen", componentVM.Message.Warning, "Component " + component.ComponentNameTemplate + " kan niet worden verwijderd. Verwijder eerst alle Installaties, Services en Documentatie *** (" + exc.Message + ")");
                     componentVM.Fill(component);
                     return View(componentVM);
                 }
-                m = "Component " + component.ComponentName.TrimEnd() + " is verwijderd.";
+                m = "Component " + component.ComponentNameTemplate.TrimEnd() + " is verwijderd.";
                 l = msg.Info;
                       
             }
@@ -389,11 +389,11 @@ namespace ConfigMan.Controllers
                         join vendor in db.Vendors
                             on c.VendorID equals vendor.VendorID into join1
                         from j1 in join1
-                        orderby j1.VendorGroup, j1.VendorName, c.ComponentName
+                        orderby j1.VendorGroup, j1.VendorName, c.ComponentNameTemplate
                         select new ComponentVM                       
                         {
                             ComponentID = c.ComponentID,
-                            ComponentName = c.ComponentName,
+                            ComponentNameTemplate = c.ComponentNameTemplate,
                             VendorID = c.VendorID,
                             VendorName = j1.VendorName
                             

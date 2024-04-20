@@ -12,6 +12,7 @@ namespace ConfigMan
         {
             this.ComputerID = installationVM.ComputerID;
             this.ComponentID = installationVM.ComponentID;
+            this.ComponentName = installationVM.ComponentName;
             if (installationVM.Release == null)
             {
                 this.Release = installationVM.Release;

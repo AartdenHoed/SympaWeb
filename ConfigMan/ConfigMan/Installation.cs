@@ -23,6 +23,7 @@ namespace ConfigMan
         public System.DateTime StartDateTime { get; set; }
         public Nullable<System.DateTime> EndDateTime { get; set; }
         public int Count { get; set; }
+        public string ComponentName { get; set; }
     
         public virtual Component Component { get; set; }
         public virtual Computer Computer { get; set; }

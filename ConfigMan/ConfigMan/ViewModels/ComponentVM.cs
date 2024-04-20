@@ -24,17 +24,17 @@ namespace ConfigMan.ViewModels
         [DisplayName("Unieke Vendor Naam")]
         public string VendorName { get; set; }
 
-        private string _ComponentName = "";
+        private string _ComponentNameTemplate = "";
 
         [Required(ErrorMessage = "Componentnaam is een verplicht veld")]
         [DisplayName("Unieke Component Naam")]
         [MaxLength(120, ErrorMessage = "Maximaal 120 characters")]       
-        public string ComponentName { get { return _ComponentName.TrimEnd(); }  set { _ComponentName = value.TrimEnd(); } }
+        public string ComponentNameTemplate { get { return _ComponentNameTemplate.TrimEnd(); }  set { _ComponentNameTemplate = value.TrimEnd(); } }
 
        
         public void Fill(Component component)
         {
-            this.ComponentName = component.ComponentName.TrimEnd();
+            this.ComponentNameTemplate = component.ComponentNameTemplate.TrimEnd();
             this.ComponentID = component.ComponentID;
             this.VendorID = component.VendorID;
 
