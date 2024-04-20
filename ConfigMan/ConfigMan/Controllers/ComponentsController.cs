@@ -378,7 +378,7 @@ namespace ConfigMan.Controllers
             ComponentIndex index = new ComponentIndex();
             index.Message.Title = "Rapport - Componenten zonder installaties";
             
-            index.Message.Tekst = "Overzicht van componenten die nergens geïnstalleerd zijn";
+            index.Message.Tekst = "Overzicht van componenten zonder installaties";
             index.Message.Level = index.Message.Info;
             
 
@@ -401,6 +401,39 @@ namespace ConfigMan.Controllers
 
             index.ComponentLijst = query.ToList();
             
+            return View(index);
+
+        }
+
+        public ActionResult Report02()
+        {
+            ComponentIndex index = new ComponentIndex();
+            index.Message.Title = "Rapport - Componenten zonder actieve installaties";
+
+            index.Message.Tekst = "Overzicht van componenten zonder actieve installaties";
+            index.Message.Level = index.Message.Info;
+
+
+            var query = from c in db.Components
+                        where !(from i in db.Installations
+                                where i.EndDateTime == null
+                                select i.ComponentID)
+                               .Contains(c.ComponentID)
+                        join vendor in db.Vendors
+                            on c.VendorID equals vendor.VendorID into join1
+                        from j1 in join1
+                        orderby j1.VendorGroup, j1.VendorName, c.ComponentNameTemplate
+                        select new ComponentVM
+                        {
+                            ComponentID = c.ComponentID,
+                            ComponentNameTemplate = c.ComponentNameTemplate,
+                            VendorID = c.VendorID,
+                            VendorName = j1.VendorName
+
+                        };
+
+            index.ComponentLijst = query.ToList();
+
             return View(index);
 
         }

@@ -1,0 +1,64 @@
+﻿<div class="controller">
+
+    @model ConfigMan.ViewModels.VendorIndex
+    @{
+        ViewBag.Title = Model.Message.Title;
+    }
+    <h2>
+        @Html.DisplayFor(model => model.Message.Title)
+    </h2>
+    <p>
+        @Html.DisplayFor(model => model.Message.Tekst)
+    </p>
+    <p>
+
+        @Html.ActionLink("Terug naar Menu", "Menu", "Vendors", new { @class = "sy-a" })
+    </p>
+
+
+    <table class="sy-table">
+
+        @if (Model.VendorLijst != null)
+        {
+            var i = 0;
+
+            foreach (var item in Model.VendorLijst)
+            {
+                if (i == 0)
+                {
+                    <tr>
+
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.VendorName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.VendorGroup)
+                        </th>
+
+
+                    </tr>
+                }
+                i = i + 1;
+
+
+                <tr>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VendorName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VendorGroup)
+                    </td>
+
+
+                </tr>
+            }
+        }
+
+    </table>
+    <p>
+        *** Einde van de lijst ***
+    </p>
+
+
+</div>

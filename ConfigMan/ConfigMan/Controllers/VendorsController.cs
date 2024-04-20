@@ -300,7 +300,7 @@ namespace ConfigMan.Controllers {
         public ActionResult Report01()
         {
             VendorIndex index = new VendorIndex();
-            index.Message.Title = "Rapport - Vendors zonder Installaties";
+            index.Message.Title = "Rapport - Vendors zonder installaties";
 
             index.Message.Tekst = "Overzicht van vendors waarvan geen componenten zijn geïnstalleerd";
             index.Message.Level = index.Message.Info;
@@ -329,7 +329,7 @@ namespace ConfigMan.Controllers {
         public ActionResult Report02()
         {
             VendorIndex index = new VendorIndex();
-            index.Message.Title = "Rapport - Vendors zonder Componenten";
+            index.Message.Title = "Rapport - Vendors zonder componenten";
 
             index.Message.Tekst = "Overzicht van vendors waaraan geen componenten zijn gekoppeld";
             index.Message.Level = index.Message.Info;
@@ -344,6 +344,36 @@ namespace ConfigMan.Controllers {
                             VendorName = v.VendorName,
                             VendorGroup = v.VendorGroup
                         };
+
+            index.VendorLijst = query.ToList();
+
+            return View(index);
+
+        }
+
+        public ActionResult Report03()
+        {
+            VendorIndex index = new VendorIndex();
+            index.Message.Title = "Rapport - Vendors zonder actieve installaties";
+
+            index.Message.Tekst = "Overzicht van vendors zonder actieve installaties";
+            index.Message.Level = index.Message.Info;
+            var query = from ven in db.Vendors
+                        select new VendorVM
+                        {
+                            VendorID = ven.VendorID,
+                            VendorName = ven.VendorName,
+                            VendorGroup = ven.VendorGroup
+                        } into v1
+                        orderby v1.VendorGroup, v1.VendorName
+                        where
+                        !(from v in db.Vendors
+                          join c in db.Components on v.VendorID equals c.VendorID into join1
+                          from j1 in join1
+                          join inst in db.Installations on j1.ComponentID equals inst.ComponentID
+                          where inst.EndDateTime == null
+                          select v.VendorID).Contains(v1.VendorID)
+                        select v1;
 
             index.VendorLijst = query.ToList();
 

@@ -446,6 +446,8 @@
     <Content Include="Views\Installations\Report04.cshtml" />
     <Content Include="Views\Installations\Report05.cshtml" />
     <Content Include="Views\Installations\Report06.cshtml" />
+    <Content Include="Views\Components\Report02.cshtml" />
+    <Content Include="Views\Vendors\Report03.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
