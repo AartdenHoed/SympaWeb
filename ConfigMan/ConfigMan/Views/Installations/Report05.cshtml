@@ -31,7 +31,8 @@
                             @Html.DisplayNameFor(modelItem => item.VendorName)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(modelItem => item.ComponentName)
+                            @Html.DisplayNameFor(modelItem => item.ComponentNameTemplateV)
+
                         </th>
                         @foreach (var item1 in Model.ComputerLijst)
                         {
@@ -44,30 +45,28 @@
 
 
                     </tr>
+                    
                 }
 
 
-                <tr>
+    <tr>
 
 
-                    <td>
-                        @Html.DisplayFor(modelItem => item.VendorName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ComponentName)
-                    </td>
-                    @foreach (var item2 in item.Indicator)
-                    {
+        <td>
+            @Html.DisplayFor(modelItem => item.VendorName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ComponentNameTemplateV)
+        </td>
+        @foreach (var item2 in item.Indicator)
+        {
 
-                        <td>
-                            @Html.DisplayFor(modelItem => item2)
-                        </td>
-                    }
-
-
-
-
-                </tr>
+            <td>
+                @Html.DisplayFor(modelItem => item2)
+            </td>
+        }
+    </tr>
+    
                 i = i + 1;
             }
         }

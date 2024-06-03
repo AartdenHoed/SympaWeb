@@ -631,10 +631,10 @@ namespace ConfigMan.Controllers
                              };
                 index.ComputerLijst = query1.ToList();
 
-                // Determine unique installed components
+                // Determine unique installed components (OVERALL)
                 var query2 = from i in db.Installations
                              where i.EndDateTime == null
-                             group i by new { i.ComponentID, i.Release } into grp
+                             group i by new { i.ComponentID, i.ComponentName, i.Release } into grp
 
                              join component in db.Components
                              on grp.Key.ComponentID equals component.ComponentID
@@ -642,6 +642,7 @@ namespace ConfigMan.Controllers
                              {
                                  grp.Key.ComponentID,
                                  component.ComponentNameTemplate,
+                                 grp.Key.ComponentName,
                                  grp.Key.Release,
                                  component.VendorID
 
@@ -653,6 +654,7 @@ namespace ConfigMan.Controllers
                              {
                                  ComponentID = join1.ComponentID,
                                  ComponentNameTemplate = join1.ComponentNameTemplate,
+                                 ComponentName = join1.ComponentName,
                                  Release = join1.Release,
                                  VendorName = vendor.VendorName,
                                  Matched = false
@@ -660,18 +662,19 @@ namespace ConfigMan.Controllers
                              };
                 idata.ComponentLijst = query2.ToList();
 
-                // Get component/releaselist for each computer
+                // Get active component/releaselist for each computer
                 foreach (ComputerVM comp in index.ComputerLijst)
                 {
                     int currentcomp = comp.ComputerID;
                     var query3 = from i in db.Installations
 
                                  where i.ComputerID == currentcomp && i.EndDateTime == null
-                                 group i by new { i.ComponentID, i.Release } into grp
+                                 group i by new { i.ComponentID, i.ComponentName,i.Release } into grp
 
                                  select new InstallationRelease
                                  {
                                      ComponentID = grp.Key.ComponentID,
+                                     ComponentName = grp.Key.ComponentName,
                                      Release = grp.Key.Release
 
                                  }
@@ -681,7 +684,7 @@ namespace ConfigMan.Controllers
                     idata.InstallationReleaseOverview.Add(thislist);
                 }
 
-                // first exclude all release that are the same on all systems
+                // first exclude all release that are the same on all computers
                 int aantalcomputers = idata.InstallationReleaseOverview.Count;               
 
                 foreach (InstallationRelease installationrelease in idata.ComponentLijst)
@@ -690,6 +693,7 @@ namespace ConfigMan.Controllers
                     foreach (List<InstallationRelease> installationReleaseLijst in idata.InstallationReleaseOverview)
                     {
                         var findrelease = installationReleaseLijst.Find(x => x.ComponentID == installationrelease.ComponentID &&
+                                                                                x.ComponentName == installationrelease.ComponentName &&
                                                                                 x.Release == installationrelease.Release);
                         if (findrelease != null) {
                             matchcounter ++;
@@ -705,9 +709,12 @@ namespace ConfigMan.Controllers
                     }
                 }
 
-                // now handle all releases that are NOT present on all systems
+                // now handle all releases that are NOT present on all systems 
 
                 int currentid = 0;
+                string currentrelease = "###";
+                bool addheader = false;
+                bool compgroup = false;
                 foreach (InstallationRelease installationrelease in idata.ComponentLijst)
                 {
                    
@@ -716,44 +723,129 @@ namespace ConfigMan.Controllers
                         continue;               // Skip already matched releases
                     }
                     
-                    if (installationrelease.ComponentID == currentid) {
-                        continue;               // proces each component just one time
+                    if (installationrelease.ComponentID == currentid)
+                    {
+                        if (installationrelease.ComponentName == installationrelease.ComponentNameTemplate)
+                        {
+                            continue;
+                        }
+                        if (installationrelease.Release == currentrelease)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            currentrelease = installationrelease.Release;
+                        }
                     }
-                    else
+                    else // new component starts
                     {
                         currentid = installationrelease.ComponentID;
+                        currentrelease = installationrelease.Release;
+                        if (installationrelease.ComponentName != installationrelease.ComponentNameTemplate)
+                        {
+                            addheader = true;
+                            compgroup = true;                            
+                        }
+                        else
+                        {
+                            compgroup = false; 
+                        }
                     }
+                    
                     InstallationReportLine irl = new InstallationReportLine();
+                    InstallationReportLine irlH = new InstallationReportLine();
+                    if (addheader)
+                    {
+                        irlH.ComponentNameTemplate = installationrelease.ComponentNameTemplate;
+                        irlH.ComponentName = installationrelease.ComponentName;
+                        irlH.VendorName = installationrelease.VendorName;
+                    }
                     int aantalreleases = 0;                    
                     bool firstrelease = true;
                     bool mismatchfound = false;
                     string comparerelease = null;
+                    int compnumber = 0;
                     foreach (List<InstallationRelease> installationReleaseLijst in idata.InstallationReleaseOverview)
                     {
-                        var findcomponent = installationReleaseLijst.Find(x => x.ComponentID == installationrelease.ComponentID);
-
-                        if (findcomponent == null) {
-                            irl.Indicator.Add("n/a");
+                        if (addheader)
+                        {
+                            irlH.Indicator.Add("========");                            
                         }
-                        else {
-                            aantalreleases++;
-                            if (firstrelease)
+                        var findcomponent = installationReleaseLijst.Find(x => x.ComponentID == installationrelease.ComponentID);
+                        var findcomponent2 = installationReleaseLijst.Find(x => x.ComponentName == installationrelease.ComponentName);
+
+                        if (compgroup)
+                        {
+                            if (findcomponent != null)
                             {
-                                comparerelease = findcomponent.Release;
-                                firstrelease = false;
+                                compnumber++; 
                             }
-                            if (comparerelease != findcomponent.Release) { 
+                            if (findcomponent2 == null)
+                            {
+                                irl.Indicator.Add("n/a");
                                 mismatchfound = true;
                             }
-                            irl.Indicator.Add(findcomponent.Release);
+                            else
+                            {
+                                aantalreleases++;
+                                if (firstrelease)
+                                {
+                                    comparerelease = findcomponent2.Release;
+                                    firstrelease = false;
+                                }
+                                if (comparerelease != findcomponent2.Release)
+                                {
+                                    mismatchfound = true;
+                                }
+                                irl.Indicator.Add(findcomponent2.Release);
+                            }                          
+
+                        }
+                        else
+                        {
+                            if (findcomponent == null)
+                            {
+                                irl.Indicator.Add("n/a");
+                            }
+                            else
+                            {
+                                aantalreleases++;
+                                compnumber++;
+                                if (firstrelease)
+                                {
+                                    comparerelease = findcomponent.Release;
+                                    firstrelease = false;
+                                }
+                                if (comparerelease != findcomponent.Release)
+                                {
+                                    mismatchfound = true;
+                                }
+                                irl.Indicator.Add(findcomponent.Release);
+                            }
                         }
                     }
-                    if ((aantalreleases > 1) && mismatchfound)
+                    
+                    if (((aantalreleases > 1) || (compgroup)) && mismatchfound && (compnumber > 1))
                     {
-                        irl.ComponentNameTemplate = installationrelease.ComponentNameTemplate;
+                        if (addheader)
+                        {
+                            index.InstallationReport.Add(irlH);
+                            
+                        }
+                        if (compgroup)
+                        {
+                            irl.ComponentNameTemplate = "......... " + installationrelease.ComponentName;
+                        } 
+                        else
+                        {
+                            irl.ComponentNameTemplate = installationrelease.ComponentNameTemplate;
+                        }
+                        irl.ComponentName = installationrelease.ComponentName;
                         irl.VendorName = installationrelease.VendorName;
                         index.InstallationReport.Add(irl);
                     }
+                    addheader = false;
 
 
                 }
@@ -817,10 +909,10 @@ namespace ConfigMan.Controllers
                 // Get component/releaselist for each computer
                 foreach (ComputerVM comp in index.ComputerLijst)
                 {
-                    int currentid = comp.ComputerID;
+                    int currentcomp = comp.ComputerID;
                     var query3 = from i in db.Installations
                                  where i.EndDateTime == null
-                                 where i.ComputerID == currentid
+                                 where i.ComputerID == currentcomp
                                  group i by new { i.ComponentID, i.Release } into grp
 
                                  select new InstallationRelease
@@ -835,8 +927,17 @@ namespace ConfigMan.Controllers
                     idata.InstallationReleaseOverview.Add(thislist);
                 }
 
+                int currentid = 0;
                 foreach (InstallationRelease installationrelease in idata.ComponentLijst)
                 {
+                    if (currentid == installationrelease.ComponentID)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        currentid = installationrelease.ComponentID;
+                    }
                     InstallationReportLine irl = new InstallationReportLine();
                     Boolean nullfound = false;
                     

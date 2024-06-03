@@ -31,6 +31,8 @@ namespace ConfigMan.ViewModels
         [MaxLength(120, ErrorMessage = "Maximaal 120 characters")]       
         public string ComponentNameTemplate { get { return _ComponentNameTemplate.TrimEnd(); }  set { _ComponentNameTemplate = value.TrimEnd(); } }
 
+        public string ComponentNameTemplateV 
+        { get { return ComponentNameTemplate.Replace("\\.", ".").Replace("\\d+", "#").Replace("\\(", "(").Replace("\\)", ")"); }}
        
         public void Fill(Component component)
         {

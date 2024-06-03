@@ -9,9 +9,12 @@ namespace ConfigMan
 {
     public partial class Component
     {
+        public string ComponentNameTemplateV 
+        { get { return ComponentNameTemplate.Replace("\\.", ".").Replace("\\d+", "#").Replace("\\(", "(").Replace("\\)", ")"); } }
         public void Fill(ComponentVM componentVM)
         {
             this.ComponentNameTemplate = componentVM.ComponentNameTemplate.TrimEnd();
+            
             this.ComponentID = componentVM.ComponentID;
             
             if ((componentVM.SelectedVendorIDstring != null) && (componentVM.SelectedVendorIDstring != "")) {

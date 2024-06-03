@@ -27,6 +27,10 @@ namespace ConfigMan.ViewModels
         public string ComponentName { get; set; }
         public string ComponentNameTemplate { get; set; }
 
+        [DisplayName("Component Naam (Template)")]
+        public string ComponentNameTemplateV
+        { get { return ComponentNameTemplate.Replace("\\d+", "#").Replace("\\", ""); } }
+
         public string VendorName { get; set; }
 
         public List<string> Indicator = new List<string>(); // As many entries as computers
@@ -46,7 +50,7 @@ namespace ConfigMan.ViewModels
     {
         public int ComponentID { get; set; }
         public string ComponentName { get; set; }
-        public string ComponentNameTemplate { get; set; }
+        public string ComponentNameTemplate { get; set; }        
         public string Release { get; set; }
         public string VendorName { get; set; }  
         public Boolean Matched { get; set; }

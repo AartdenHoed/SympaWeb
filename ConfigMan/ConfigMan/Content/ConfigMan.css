@@ -400,9 +400,9 @@ select[readonly='readonly'] {
 
 .sy-table th {
     background-color: lightblue;
-    text-align: center;
+    text-align: left;
 }
 
 .sy-table td {
-    text-align: center;
+    text-align: left;
 }
