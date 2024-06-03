@@ -40,7 +40,7 @@ namespace ConfigMan.Controllers
         //
         // GET: Installations
         //
-        public ActionResult Index(string message, String msgLevel)
+        public ActionResult Index(string message, string msgLevel)
         {
             InstallationIndex index = new InstallationIndex();
             index.Message.Title = "Installatie - Overzicht";
@@ -62,7 +62,7 @@ namespace ConfigMan.Controllers
                         on installation.ComputerID equals computer.ComputerID
                         join vendor in db.Vendors
                         on component.VendorID equals vendor.VendorID
-                        orderby computer.ComputerName,vendor.VendorGroup,vendor.VendorName,component.ComponentNameTemplate,installation.StartDateTime,installation.EndDateTime
+                        orderby computer.ComputerName,vendor.VendorGroup,vendor.VendorName,component.ComponentNameTemplate,installation.ComponentName,installation.StartDateTime,installation.EndDateTime
                         select new InstallationVM
                         {
                             ComputerID = installation.ComputerID,
@@ -970,7 +970,45 @@ namespace ConfigMan.Controllers
             }
         }
 
-       
+        public ActionResult Report07()
+        {
+            {
+                InstallationIndex index = new InstallationIndex();
+                index.Message.Title = "Rapport - Inactieve installaties";
+
+                index.Message.Tekst = "Installaties die inmiddels zijn verdwenen van het betreffende systeem";
+                index.Message.Level = index.Message.Info;
+
+                var query = from installation in db.Installations
+                            where installation.EndDateTime != null
+                            join component in db.Components
+                            on installation.ComponentID equals component.ComponentID
+                            join computer in db.Computers
+                            on installation.ComputerID equals computer.ComputerID
+                            orderby computer.ComputerName, installation.StartDateTime descending, component.ComponentNameTemplate
+                            select new InstallationVM
+                            {
+                                ComputerID = installation.ComputerID,
+                                ComponentID = installation.ComponentID,
+                                ComponentName = installation.ComponentName,
+                                Release = installation.Release.TrimEnd(),
+                                Location = installation.Location.TrimEnd(),
+                                InstallDate = installation.InstallDate,
+                                MeasuredDateTime = installation.MeasuredDateTime,
+                                StartDateTime = installation.StartDateTime,
+                                EndDateTime = installation.EndDateTime,
+                                Count = installation.Count,
+                                ComponentNameTemplate = component.ComponentNameTemplate,
+                                ComputerName = computer.ComputerName
+                            }
+
+                            ;
+
+                index.InstallationLijst = query.ToList();
+                return View(index);
+            }
+        }
+
 
         private void Contract_ContractFailed(object sender, ContractFailedEventArgs e)
         {
