@@ -1009,6 +1009,45 @@ namespace ConfigMan.Controllers
             }
         }
 
+        public ActionResult Report08()
+        {
+            {
+                InstallationIndex index = new InstallationIndex();
+                index.Message.Title = "Rapport - Actieve installaties";
+
+                index.Message.Tekst = "Installaties die nu geïnstalleerd zijn op het betreffende systeem";
+                index.Message.Level = index.Message.Info;
+
+                var query = from installation in db.Installations
+                            where installation.EndDateTime == null
+                            join component in db.Components
+                            on installation.ComponentID equals component.ComponentID
+                            join computer in db.Computers
+                            on installation.ComputerID equals computer.ComputerID
+                            orderby computer.ComputerName, installation.StartDateTime descending, component.ComponentNameTemplate
+                            select new InstallationVM
+                            {
+                                ComputerID = installation.ComputerID,
+                                ComponentID = installation.ComponentID,
+                                ComponentName = installation.ComponentName,
+                                Release = installation.Release.TrimEnd(),
+                                Location = installation.Location.TrimEnd(),
+                                InstallDate = installation.InstallDate,
+                                MeasuredDateTime = installation.MeasuredDateTime,
+                                StartDateTime = installation.StartDateTime,
+                                EndDateTime = installation.EndDateTime,
+                                Count = installation.Count,
+                                ComponentNameTemplate = component.ComponentNameTemplate,
+                                ComputerName = computer.ComputerName
+                            }
+
+                            ;
+
+                index.InstallationLijst = query.ToList();
+                return View(index);
+            }
+        }
+
 
         private void Contract_ContractFailed(object sender, ContractFailedEventArgs e)
         {
