@@ -14,6 +14,7 @@ namespace ConfigMan
         public void Fill(ComponentVM componentVM)
         {
             this.ComponentNameTemplate = componentVM.ComponentNameTemplate.TrimEnd();
+            this.Authorized = componentVM.Authorized;
             
             this.ComponentID = componentVM.ComponentID;
             

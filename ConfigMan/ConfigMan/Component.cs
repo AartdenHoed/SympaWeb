@@ -26,6 +26,7 @@ namespace ConfigMan
         public int ComponentID { get; set; }
         public int VendorID { get; set; }
         public string ComponentNameTemplate { get; set; }
+        public string Authorized { get; set; }
     
         public virtual Vendor Vendor { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

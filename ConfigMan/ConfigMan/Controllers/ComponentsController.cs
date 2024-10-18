@@ -59,8 +59,9 @@ namespace ConfigMan.Controllers
                         {
                             ComponentID = component.ComponentID,
                             ComponentNameTemplate = component.ComponentNameTemplate,
+                            Authorized = component.Authorized,
                             VendorID = j1.VendorID,
-                            VendorName = j1.VendorName,
+                            VendorName = j1.VendorName                            
                         };
             index.ComponentLijst = query.ToList();
                  
@@ -89,6 +90,7 @@ namespace ConfigMan.Controllers
                             {
                                 ComponentID = component.ComponentID,
                                 ComponentNameTemplate = component.ComponentNameTemplate,
+                                Authorized = component.Authorized,
                                 VendorID = j1.VendorID,
                                 VendorName = j1.VendorName,
                             };
@@ -143,7 +145,7 @@ namespace ConfigMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ComponentID,VendorID,ComponentNameTemplate,SelectedVendorIDstring")] ComponentVM componentVM)
+        public ActionResult Create([Bind(Include = "ComponentID,VendorID,ComponentNameTemplate,Authorized,SelectedVendorIDstring")] ComponentVM componentVM)
         {
             List<Vendor> vendordblist = new List<Vendor>();
             if (ModelState.IsValid)
@@ -210,6 +212,7 @@ namespace ConfigMan.Controllers
                             {
                                 ComponentID = component.ComponentID,
                                 ComponentNameTemplate = component.ComponentNameTemplate,
+                                Authorized = component.Authorized,
                                 VendorID = j1.VendorID,
                                 VendorName = j1.VendorName,
                             };
@@ -259,7 +262,7 @@ namespace ConfigMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ComponentID,VendorID,ComponentNameTemplate,SelectedVendorIDstring")] ComponentVM componentVM)
+        public ActionResult Edit([Bind(Include = "ComponentID,VendorID,ComponentNameTemplate,Authorized,SelectedVendorIDstring")] ComponentVM componentVM)
         {
             if (ModelState.IsValid)
             {
@@ -308,6 +311,7 @@ namespace ConfigMan.Controllers
                             {
                                 ComponentID = component.ComponentID,
                                 ComponentNameTemplate = component.ComponentNameTemplate,
+                                Authorized = component.Authorized, 
                                 VendorID = j1.VendorID,
                                 VendorName = j1.VendorName,
                             };
@@ -394,6 +398,7 @@ namespace ConfigMan.Controllers
                         {
                             ComponentID = c.ComponentID,
                             ComponentNameTemplate = c.ComponentNameTemplate,
+                            Authorized = c.Authorized,
                             VendorID = c.VendorID,
                             VendorName = j1.VendorName
                             
@@ -427,6 +432,7 @@ namespace ConfigMan.Controllers
                         {
                             ComponentID = c.ComponentID,
                             ComponentNameTemplate = c.ComponentNameTemplate,
+                            Authorized = c.Authorized,
                             VendorID = c.VendorID,
                             VendorName = j1.VendorName
 

@@ -33,12 +33,15 @@ namespace ConfigMan.ViewModels
 
         public string ComponentNameTemplateV 
         { get { return ComponentNameTemplate.Replace("\\.", ".").Replace("\\d+", "#").Replace("\\(", "(").Replace("\\)", ")"); }}
+
+        public string Authorized {  get; set; } 
        
         public void Fill(Component component)
         {
             this.ComponentNameTemplate = component.ComponentNameTemplate.TrimEnd();
             this.ComponentID = component.ComponentID;
             this.VendorID = component.VendorID;
+            this.Authorized = component.Authorized;
 
         }
     }
