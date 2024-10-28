@@ -33,7 +33,7 @@ namespace ConfigMan.Controllers {
         //
         // GET: Computers
         //
-        public ActionResult Index(string message, String msgLevel)
+        public ActionResult Index(string message, string msgLevel)
         {
             ComputerIndex index = new ComputerIndex();
             index.Message.Title = "Computer - Overzicht";

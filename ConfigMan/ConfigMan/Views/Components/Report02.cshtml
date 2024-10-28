@@ -31,6 +31,9 @@
                             @Html.DisplayNameFor(modelItem => item.ComponentNameTemplate)
                         </th>
                         <th>
+                            @Html.DisplayNameFor(modelItem => item.Authorized)
+                        </th>
+                        <th>
                             @Html.DisplayNameFor(modelItem => item.VendorName)
                         </th>
 
@@ -39,18 +42,21 @@
                     </tr>
                 }
                 i = i + 1;
-                <tr>
+    <tr>
 
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ComponentNameTemplate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.VendorName)
-                    </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ComponentNameTemplate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Authorized)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.VendorName)
+        </td>
 
 
 
-                </tr>
+    </tr>
             }
         }
 

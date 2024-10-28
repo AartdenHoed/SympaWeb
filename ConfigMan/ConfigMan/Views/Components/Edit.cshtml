@@ -19,26 +19,33 @@
             @Html.HiddenFor(model => model.ComponentID)
             @Html.HiddenFor(model => model.VendorID)
 
-            <dl class="sy-dl">
-                <dt class="sy-dt">
-                    @Html.LabelFor(model => model.ComponentNameTemplate)
-                </dt>
-                <dd class="sy-dd">
-                    @Html.EditorFor(model => model.ComponentNameTemplate, new { htmlAttributes = new { @class = "sy-input", @autofocus = "autofocus" } })
-                    @Html.ValidationMessageFor(model => model.ComponentNameTemplate, "", new { @class = "text-danger" })
-                </dd>
-                <dt class="sy-dt">
-                    @Html.LabelFor(model => model.VendorName)
-                </dt>
-                <dd class="sy-dd">
-                    @Html.DropDownListFor(model => model.SelectedVendorIDstring, new SelectList(Model.VendorLijst, "VendorIDstring", "VendorName"),
-                                                                new { @class = "sy-field" })
-                    @Html.ValidationMessageFor(model => model.SelectedVendorIDstring, "", new { @class = "text-danger" })
-                </dd>
+        <dl class="sy-dl">
+            <dt class="sy-dt">
+                @Html.LabelFor(model => model.ComponentNameTemplate)
+            </dt>
+            <dd class="sy-dd">
+                @Html.EditorFor(model => model.ComponentNameTemplate, new { htmlAttributes = new { @class = "sy-input", @autofocus = "autofocus" } })
+                @Html.ValidationMessageFor(model => model.ComponentNameTemplate, "", new { @class = "text-danger" })
+            </dd>
+            <dt class="sy-dt">
+                @Html.LabelFor(model => model.Authorized)
+            </dt>
+            <dd class="sy-dd">
+                @Html.EditorFor(model => model.Authorized, new { htmlAttributes = new { @class = "sy-input", @autofocus = "autofocus" } })
+                @Html.ValidationMessageFor(model => model.Authorized, "", new { @class = "text-danger" })
+            </dd>
+            <dt class="sy-dt">
+                @Html.LabelFor(model => model.VendorName)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DropDownListFor(model => model.SelectedVendorIDstring, new SelectList(Model.VendorLijst, "VendorIDstring", "VendorName"),
+                                                            new { @class = "sy-field" })
+                @Html.ValidationMessageFor(model => model.SelectedVendorIDstring, "", new { @class = "text-danger" })
+            </dd>
 
 
 
-            </dl>
+        </dl>
             <p>
                 @Html.DisplayFor(model => model.Message.Tekst)
             </p>

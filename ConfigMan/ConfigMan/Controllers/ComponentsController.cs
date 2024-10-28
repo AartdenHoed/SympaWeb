@@ -9,6 +9,10 @@ using System.Web.Mvc;
 using ConfigMan.ViewModels;
 using System.Diagnostics.Contracts;
 using ConfigMan.ActionFilters;
+using System.ComponentModel;
+using System.Diagnostics.Eventing.Reader;
+using System.Security.Policy;
+using System.Reflection;
 
 
 namespace ConfigMan.Controllers
@@ -33,15 +37,14 @@ namespace ConfigMan.Controllers
         //
         // GET: Components
         //
-        public ActionResult Index(string message, String msgLevel)
+        public ActionResult Index(string message, string msgLevel)
         {
             ComponentIndex index = new ComponentIndex();
-            index.Message.Title = "Component - Overzicht";
-            
+                                    
             if (message is null)
             {
                 index.Message.Tekst = "Klik op NIEUWE COMPONENT om een component aan te maken, of klik op een actie voor een bestaande component"; 
-                index.Message.Level = msgLevel;
+                index.Message.Level = index.Message.Info;
             }
             else
             {
@@ -66,6 +69,73 @@ namespace ConfigMan.Controllers
             index.ComponentLijst = query.ToList();
                  
             return View(index);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index([Bind(Include = "ComponentFilter,AuthFilter,VendorFilter")] ComponentIndex componentindex)
+        {
+            componentindex.Message.Tekst = "Klik op NIEUWE COMPONENT om een component aan te maken, of klik op een actie voor een bestaande component (LIJST IS GEFILTERD)";
+            componentindex.Message.Level = componentindex.Message.Info;
+            componentindex.Filter = true;
+
+            List<ComponentVM> list1 = new List<ComponentVM>();
+            List<ComponentVM> list2 = new List<ComponentVM>();
+            List<ComponentVM> list3 = new List<ComponentVM>();
+            List<ComponentVM> list4 = new List<ComponentVM>();
+            var query1 = from component in db.Components
+                        join vendor in db.Vendors
+                        on component.VendorID equals vendor.VendorID into join1
+                        from j1 in join1
+                        orderby j1.VendorGroup, j1.VendorName, component.ComponentNameTemplate
+                        select new ComponentVM
+                        {
+                            ComponentID = component.ComponentID,
+                            ComponentNameTemplate = component.ComponentNameTemplate,
+                            Authorized = component.Authorized,
+                            VendorID = j1.VendorID,
+                            VendorName = j1.VendorName
+                        };
+            list1 = query1.ToList();
+
+            if (!string.IsNullOrEmpty(componentindex.ComponentFilter))
+            {
+                var query2 = from cm in list1
+                        where cm.ComponentNameTemplate.ToUpper().Contains(componentindex.ComponentFilter.ToUpper())
+                        select cm;
+                list2 = query2.ToList();
+            }
+            else list2 = list1;
+
+            if ((!string.IsNullOrEmpty(componentindex.VendorFilter)) && (list2.Count > 0))  
+            {
+                var query3 = from cm in list2
+                             where cm.VendorName.ToUpper().Contains(componentindex.VendorFilter.ToUpper())
+                             select cm;
+                list3 = query3.ToList();
+            }
+            else list3 = list2;
+
+            if ((!string.IsNullOrEmpty(componentindex.AuthFilter)) && (list3.Count > 0))
+            {
+                var query4 = from cm in list3
+                             where cm.Authorized.ToUpper().Contains(componentindex.AuthFilter.ToUpper())
+                             select cm;
+                list4 = query4.ToList();
+            }
+            else list4 = list3;
+
+            if (list4.Count == 0)
+            {
+                componentindex.Message.Tekst = "Geen enkele component voldoet aan de ingegeven filterwaarden ";
+                componentindex.Message.Level = componentindex.Message.Warning;
+
+            }
+
+            componentindex.ComponentLijst = list4;
+
+            return View(componentindex);
 
         }
 
@@ -115,7 +185,7 @@ namespace ConfigMan.Controllers
 
                 string m = "Contract error bij Component Bekijken (GET)";
                 string l = componentVM.Message.Error;
-                return RedirectToAction("Index", "Components", new { Message = m, MsgLevel = l });
+                return RedirectToAction("Index", "Components", new {Message = m, MsgLevel = l });
             }
            
         }
@@ -172,7 +242,7 @@ namespace ConfigMan.Controllers
                 {
                     string m = "Component " + component.ComponentNameTemplate.TrimEnd() + " is toegevoegd";
                     string l = componentVM.Message.Info;
-                    return RedirectToAction("Index", "Components", new { Message = m, MsgLevel = l });
+                    return RedirectToAction("Index", "Components", new {Message = m, MsgLevel = l });
 
                 }
             }
@@ -252,7 +322,7 @@ namespace ConfigMan.Controllers
                 ContractErrorOccurred = false;
                 string m = "Contract error bij Component Bewerken (GET)";
                 string l = componentVM.Message.Error;
-                return RedirectToAction("Index", "Components", new { Message = m, MsgLevel = l });
+                return RedirectToAction("Index", "Components", new {Message = m, MsgLevel = l });
             }
 
         }
@@ -262,7 +332,7 @@ namespace ConfigMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ComponentID,VendorID,ComponentNameTemplate,Authorized,SelectedVendorIDstring")] ComponentVM componentVM)
+        public ActionResult Edit([Bind(Include = "ComponentID,VendorID,VendorName,ComponentNameTemplate,Authorized,SelectedVendorIDstring")] ComponentVM componentVM)
         {
             if (ModelState.IsValid)
             {
@@ -278,10 +348,28 @@ namespace ConfigMan.Controllers
         
                 string m = "Component " + component.ComponentNameTemplate.TrimEnd() + " is aangepast";
                 string l = componentVM.Message.Info;
-                return RedirectToAction("Index", "Components", new { Message = m, MsgLevel = l });
+                return RedirectToAction("Index", "Components", new {Message = m, MsgLevel = l });
             }
             else
             {
+                List<Vendor> vendordblist = db.Vendors.OrderBy(x => x.VendorName).ToList();
+
+                // Set first entry on current value
+                VendorVM firstentry = new VendorVM()
+                {
+                    VendorID = componentVM.VendorID,
+                    VendorName = db.Vendors.Find(componentVM.VendorID).VendorName
+                };
+                componentVM.VendorLijst.Add(firstentry);
+
+                // add entries form Vendor db
+                foreach (Vendor v in vendordblist)
+                {
+                    VendorVM VM = new VendorVM();
+                    VM.Fill(v);
+                    componentVM.VendorLijst.Add(VM);
+                }
+
                 componentVM.Message.Fill("Component - Bewerken",
                         componentVM.Message.Error, "Model ERROR in " + componentVM.ComponentNameTemplate);
                 
@@ -334,7 +422,7 @@ namespace ConfigMan.Controllers
                 ContractErrorOccurred = false;
                 string m = "Contract error bij Component Verwijderen (GET)";
                 string l = componentVM.Message.Error;
-                return RedirectToAction("Index", "Components", new { Message = m, MsgLevel = l });
+                return RedirectToAction("Index", "Components", new {Message = m, MsgLevel = l });
             }
         }
 
@@ -374,7 +462,7 @@ namespace ConfigMan.Controllers
                 l = msg.Error;
                 
             }
-            return RedirectToAction("Index", "Components", new { Message = m, MsgLevel = l });
+            return RedirectToAction("Index", "Components", new {Message = m, MsgLevel = l });
         }
 
         public ActionResult Report01()

@@ -15,6 +15,19 @@ namespace ConfigMan {
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
+            routes.MapRoute(
+                name: "Default2",
+                url: "{controller}/{action}/{msg}/{lvl}",
+                defaults: new
+                {
+                    controller = "Component",
+                    action = "Index",
+                    msg = UrlParameter.Optional,
+                    lvl = UrlParameter.Optional                   
+                }
+
+
+            );
         }
     }
 }

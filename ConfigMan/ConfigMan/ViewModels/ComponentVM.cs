@@ -34,6 +34,10 @@ namespace ConfigMan.ViewModels
         public string ComponentNameTemplateV 
         { get { return ComponentNameTemplate.Replace("\\.", ".").Replace("\\d+", "#").Replace("\\(", "(").Replace("\\)", ")"); }}
 
+        [Required(ErrorMessage = "Autorisatie (Y/N) is een verplicht veld")]
+        [DisplayName("Component geautoriseerd (Y/N)")]
+        [MaxLength(1, ErrorMessage = "Lengte = 1 (Y of N)")]
+        [StringRange(AllowableValues = new[] { "Y", "N"}, ErrorMessage = "Specificeer Y (geautoriseerd) of N (niet geautoriseerd)")]
         public string Authorized {  get; set; } 
        
         public void Fill(Component component)
@@ -43,6 +47,23 @@ namespace ConfigMan.ViewModels
             this.VendorID = component.VendorID;
             this.Authorized = component.Authorized;
 
+        }
+
+        public class StringRangeAttribute : ValidationAttribute
+        {
+            public string[] AllowableValues { get; set; }
+
+            protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+            {
+
+                if (AllowableValues?.Contains(value?.ToString()) == true)
+                {
+                    return ValidationResult.Success;
+                }
+
+                var msg = $"Enter een geldige waarde: {string.Join(", ", (AllowableValues ?? new string[] { "No allowable values found" }))}.";
+                return new ValidationResult(msg);
+            }
         }
     }
 }

@@ -1,12 +1,10 @@
-﻿
-
-$(window).on("orientationchange", function (event) { initPage("orient") });
-$(document).ready(function (event) { initPage("ready") });
-
+﻿$(window).on("orientationchange", function () { initPage("orient") });
+$(document).ready(function () { initPage("ready") });
 function initPage(how) {
     // alert(how);
     $(".menu>li>a").on("click", function () { lightButton(this) });
     $(".menu2>li>a").on("click", function () { lightButton(this) });
+    
 
     var setWidth = window.innerWidth;
     var setHeight = window.innerHeight;
@@ -57,4 +55,17 @@ function lightButton(e) {
     
     setTimeout(function () { var x = 1; }, 1000);
 }
-  
+
+function valueChanged()
+{
+    // alert("yes");
+    var x = document.querySelector('.sy-switch').checked
+    // alert(x);
+
+    if (x) {
+        $(".sy-filter").show();
+    }
+    else {
+        $(".sy-filter").hide();
+    }
+}

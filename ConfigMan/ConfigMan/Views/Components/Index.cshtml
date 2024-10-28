@@ -3,7 +3,7 @@
     @{
         ViewBag.Title = Model.Message.Title;
     }
-
+    
     <h2>
         @Html.DisplayFor(model => model.Message.Title)
     </h2>
@@ -11,34 +11,61 @@
         @Html.DisplayFor(model => model.Message.Tekst)
     </p>
 
-    <p>
+    <div class="sy-div">
+
         @Html.ActionLink("Nieuwe Component", "Create", "", new { @class = "sy-a" }) |
         @Html.ActionLink("Terug naar Menu", "Menu", "Components", new { @class = "sy-a" })
-    </p>
+        | Filter tonen (aan/uit) &nbsp;
+
+        @Html.CheckBoxFor(model => model.Filter, new { @class = "sy-switch", @onclick = "valueChanged()" })
+        | @Html.ActionLink("Wis alle filters", "Index", "Components", new { @class = "sy-a" }) |
+    </div>
+    <p>&nbsp;</p>
+
 
     <table class="sy-table">
+        <tr>
+            <th>Actie</th>
+            <th>
+                @Html.DisplayNameFor(model => model.ComponentLijst[0].ComponentNameTemplate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ComponentLijst[0].Authorized)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ComponentLijst[0].VendorName)
+            </th>
+        </tr>
+        @using (Html.BeginForm())
+        {
+        @Html.AntiForgeryToken()
+        <tr class="sy-filter">
+            <td>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Pas filter toe" class="sy-button" />
+                    </div>
+                </div>
+            </td>
+            <td>
+                @Html.EditorFor(model => model.ComponentFilter, new { htmlAttributes = new { @class = "sy-input", @autofocus = "autofocus" } })
+                @Html.ValidationMessageFor(model => model.ComponentFilter, "", new { @class = "text-danger" })
+            </td>
+            <td>
+                @Html.EditorFor(model => model.AuthFilter, new { htmlAttributes = new { @class = "sy-input", @autofocus = "autofocus" } })
+                @Html.ValidationMessageFor(model => model.AuthFilter, "", new { @class = "text-danger" })
+            </td>
+            <td>
+                @Html.EditorFor(model => model.VendorFilter, new { htmlAttributes = new { @class = "sy-input", @autofocus = "autofocus" } })
+                @Html.ValidationMessageFor(model => model.VendorFilter, "", new { @class = "text-danger" })
+            </td>
+        </tr>
+        }
         @if (Model.ComponentLijst != null)
         {
-            var i = 0;
-
             foreach (var item in Model.ComponentLijst)
             {
-                if (i == 0)
-                {
-                    <tr>
-                        <th>Actie</th>
-                        <th>
-                            @Html.DisplayNameFor(modelItem => item.ComponentNameTemplate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(modelItem => item.VendorName)
-                        </th>
-
-
-
-                    </tr>
-                }
-                i = i + 1;
+              
                 <tr>
                     <td>
                         @Html.ActionLink("Bewerk", "Edit", new { id = item.ComponentID }, new { @class = "sy-a" }) |
@@ -49,12 +76,16 @@
                         @Html.DisplayFor(modelItem => item.ComponentNameTemplate)
                     </td>
                     <td>
+                        @Html.DisplayFor(modelItem => item.Authorized)
+                    </td>
+                    <td>
                         @Html.DisplayFor(modelItem => item.VendorName)
                     </td>
 
 
 
                 </tr>
+
             }
         }
 
@@ -66,3 +97,10 @@
 
 
 </div>
+<script>
+    // alert("script tag");
+    // var x = document.querySelector('.sy-switch').checked
+    // alert(x);
+    valueChanged();
+   
+</script>

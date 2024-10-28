@@ -28,7 +28,7 @@
                 @Html.LabelFor(model => model.ComponentName)
             </dt>
             <dd class="sy-dd">
-                @Html.DropDownListFor(model => model.SelectedComponentIDstring, new SelectList(Model.ComponentLijst, "ComponentIDstring", "ComponentName"),
+                @Html.DropDownListFor(model => model.SelectedComponentIDstring, new SelectList(Model.ComponentLijst, "ComponentIDstring", "ComponentNameTemplate"),
                                                             new { @class = "sy-field" })
                 @Html.ValidationMessageFor(model => model.SelectedComponentIDstring, "", new { @class = "text-danger" })
             </dd>

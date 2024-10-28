@@ -406,3 +406,9 @@ select[readonly='readonly'] {
 .sy-table td {
     text-align: left;
 }
+
+/* The switch - the box around the slider */
+.sy-div {
+    height: 5%;
+    width:100%;
+}

@@ -17,7 +17,6 @@ namespace ConfigMan
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Computer()
         {
-            this.Installations = new HashSet<Installation>();
             this.Licenses = new HashSet<License>();
             this.Services = new HashSet<Service>();
         }
@@ -27,8 +26,6 @@ namespace ConfigMan
         public Nullable<System.DateTime> ComputerPurchaseDate { get; set; }
         public string OS { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Installation> Installations { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<License> Licenses { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
