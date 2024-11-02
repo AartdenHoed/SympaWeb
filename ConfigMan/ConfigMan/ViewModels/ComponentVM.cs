@@ -38,8 +38,15 @@ namespace ConfigMan.ViewModels
         [DisplayName("Component geautoriseerd (Y/N)")]
         [MaxLength(1, ErrorMessage = "Lengte = 1 (Y of N)")]
         [StringRange(AllowableValues = new[] { "Y", "N"}, ErrorMessage = "Specificeer Y (geautoriseerd) of N (niet geautoriseerd)")]
-        public string Authorized {  get; set; } 
-       
+        public string Authorized {  get; set; }
+
+        public string Filterstr { get; set; }
+        public bool Filter { get { return (!((this.Filterstr == "N") || (this.Filterstr is null))); } }
+
+        public string ComponentFilter { get; set; }
+        public string VendorFilter { get; set; }
+        public string AuthFilter { get; set; }
+
         public void Fill(Component component)
         {
             this.ComponentNameTemplate = component.ComponentNameTemplate.TrimEnd();

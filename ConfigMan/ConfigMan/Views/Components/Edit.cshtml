@@ -9,15 +9,15 @@
     {
         @Html.AntiForgeryToken()
 
-        <div class="form-horizontal">
-            <h2>
-                @Html.DisplayFor(model => model.Message.Title)
-            </h2>
+    <div class="form-horizontal">
+        <h2>
+            @Html.DisplayFor(model => model.Message.Title)
+        </h2>
 
-            <hr />
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @Html.HiddenFor(model => model.ComponentID)
-            @Html.HiddenFor(model => model.VendorID)
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ComponentID)
+        @Html.HiddenFor(model => model.VendorID)
 
         <dl class="sy-dl">
             <dt class="sy-dt">
@@ -46,16 +46,24 @@
 
 
         </dl>
-            <p>
-                @Html.DisplayFor(model => model.Message.Tekst)
-            </p>
+        <div>
+            @Html.HiddenFor(model => model.ComponentID, new { @class = "sy-hiddenid" })
+            @Html.HiddenFor(model => model.ComponentFilter, new { @class = "sy-hiddenfilter" })
+            @Html.HiddenFor(model => model.VendorFilter, new { @class = "sy-hiddenfilter" })
+            @Html.HiddenFor(model => model.AuthFilter, new { @class = "sy-hiddenfilter" })
+            @Html.HiddenFor(model => model.Filterstr, new { @class = "sy-hiddenfilter" })
+        </div>
+        <p>
+            @Html.DisplayFor(model => model.Message.Tekst)
+        </p>
 
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Opslaan" class="sy-button" /> |  @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-a" })
-                </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Opslaan" class="sy-button" /> |
+                @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-url" }))
             </div>
         </div>
+    </div>
     }
 
 

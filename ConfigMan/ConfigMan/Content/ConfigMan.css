@@ -276,6 +276,18 @@ h2, h3 {
     color: purple;
     background-color: yellow;
 }
+.sy-alist:hover {
+    color: purple;
+    background-color: yellow;
+}
+.sy-url:hover {
+    color: purple;
+    background-color: yellow;
+}
+.sy-aID:hover {
+    color: purple;
+    background-color: yellow;
+}
 .sy-dl {
     overflow: hidden;
     margin: 1%;
@@ -407,7 +419,6 @@ select[readonly='readonly'] {
     text-align: left;
 }
 
-/* The switch - the box around the slider */
 .sy-div {
     height: 5%;
     width:100%;

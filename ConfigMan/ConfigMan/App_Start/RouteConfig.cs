@@ -16,14 +16,34 @@ namespace ConfigMan {
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
             routes.MapRoute(
-                name: "Default2",
-                url: "{controller}/{action}/{msg}/{lvl}",
+                name: "Default1",
+                url: "{controller}/{action}/{id}/{filterstr}/{componentFilter}/{vendorFilter}/{authFilter}",
                 defaults: new
                 {
                     controller = "Component",
                     action = "Index",
-                    msg = UrlParameter.Optional,
-                    lvl = UrlParameter.Optional                   
+                    id = UrlParameter.Optional,
+                    filterstr = UrlParameter.Optional,
+                    componentFilter = UrlParameter.Optional,
+                    vendorFilter = UrlParameter.Optional,
+                    authFilter = UrlParameter.Optional
+                }
+
+
+            );
+            routes.MapRoute(
+                name: "Default2",
+                url: "{controller}/{action}/{message}/{msgLevel}/{filterstr}/{componentFilter}/{vendorFilter}/{authFilter}",
+                defaults: new
+                {
+                    controller = "Component",
+                    action = "Index",
+                    message = UrlParameter.Optional,
+                    msgLevel = UrlParameter.Optional,
+                    filterstr = UrlParameter.Optional,
+                    componentFilter = UrlParameter.Optional,
+                    vendorFilter = UrlParameter.Optional,   
+                    authFilter = UrlParameter.Optional
                 }
 
 

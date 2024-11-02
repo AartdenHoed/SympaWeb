@@ -13,6 +13,7 @@ using System.ComponentModel;
 using System.Diagnostics.Eventing.Reader;
 using System.Security.Policy;
 using System.Reflection;
+using System.Collections;
 
 
 namespace ConfigMan.Controllers
@@ -37,21 +38,34 @@ namespace ConfigMan.Controllers
         //
         // GET: Components
         //
-        public ActionResult Index(string message, string msgLevel)
+        public ActionResult Index(string message, string msgLevel, string filterstr, string componentFilter, string authFilter, string vendorFilter)
         {
             ComponentIndex index = new ComponentIndex();
-                                    
-            if (message is null)
+
+            if ((string.IsNullOrEmpty(filterstr)) || (filterstr == "N"))
             {
-                index.Message.Tekst = "Klik op NIEUWE COMPONENT om een component aan te maken, of klik op een actie voor een bestaande component"; 
-                index.Message.Level = index.Message.Info;
+                index.Filterstr = "N";
             }
+            else
+            {
+                index.Filterstr = "Y";
+            }
+
+            if (message is null)
+                if (!index.Filter) {
+                    index.Message.Tekst = "Klik op NIEUWE COMPONENT om een component aan te maken, of klik op een actie voor een bestaande component"; 
+                    index.Message.Level = index.Message.Info;
+
+                }
+                else {
+                    index.Message.Tekst = "Klik op NIEUWE COMPONENT om een component aan te maken, of klik op een actie voor een bestaande component (LIJST IS GEFILTERD)";
+                    index.Message.Level = index.Message.Info;
+                }
             else
             {
                 index.Message.Tekst = message;
                 index.Message.Level = msgLevel;
-            }
-            
+            }            
                         
             var query = from component in db.Components
                         join vendor in db.Vendors
@@ -67,86 +81,58 @@ namespace ConfigMan.Controllers
                             VendorName = j1.VendorName                            
                         };
             index.ComponentLijst = query.ToList();
-                 
+
+            if (!index.Filter)
+            {
+                return View(index);
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(componentFilter))
+                {
+                    index.ComponentFilter = componentFilter;
+                    var query2 = from cm in index.ComponentLijst
+                                 where cm.ComponentNameTemplate.ToUpper().Contains(componentFilter.ToUpper())
+                                 select cm;
+                    index.ComponentLijst = query2.ToList();
+                }
+                if ((!string.IsNullOrEmpty(vendorFilter)) && (index.ComponentLijst.Count > 0))
+                {
+                    index.VendorFilter = vendorFilter;
+                    var query3 = from cm in index.ComponentLijst
+                                 where cm.VendorName.ToUpper().Contains(vendorFilter.ToUpper())
+                                 select cm;
+                    index.ComponentLijst = query3.ToList();
+                }
+                if ((!string.IsNullOrEmpty(authFilter)) && (index.ComponentLijst.Count > 0))
+                {
+                    index.AuthFilter = authFilter;
+                    var query4 = from cm in index.ComponentLijst
+                                 where cm.Authorized.ToUpper().Contains(authFilter.ToUpper())
+                                 select cm;
+                    index.ComponentLijst = query4.ToList();
+                }
+                
+
+            }
+            if (index.ComponentLijst.Count == 0)
+            {
+                index.Message.Tekst = "Geen enkele component voldoet aan de ingegeven filterwaarden ";
+                index.Message.Level = index.Message.Warning;
+            }
             return View(index);
-
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Index([Bind(Include = "ComponentFilter,AuthFilter,VendorFilter")] ComponentIndex componentindex)
-        {
-            componentindex.Message.Tekst = "Klik op NIEUWE COMPONENT om een component aan te maken, of klik op een actie voor een bestaande component (LIJST IS GEFILTERD)";
-            componentindex.Message.Level = componentindex.Message.Info;
-            componentindex.Filter = true;
-
-            List<ComponentVM> list1 = new List<ComponentVM>();
-            List<ComponentVM> list2 = new List<ComponentVM>();
-            List<ComponentVM> list3 = new List<ComponentVM>();
-            List<ComponentVM> list4 = new List<ComponentVM>();
-            var query1 = from component in db.Components
-                        join vendor in db.Vendors
-                        on component.VendorID equals vendor.VendorID into join1
-                        from j1 in join1
-                        orderby j1.VendorGroup, j1.VendorName, component.ComponentNameTemplate
-                        select new ComponentVM
-                        {
-                            ComponentID = component.ComponentID,
-                            ComponentNameTemplate = component.ComponentNameTemplate,
-                            Authorized = component.Authorized,
-                            VendorID = j1.VendorID,
-                            VendorName = j1.VendorName
-                        };
-            list1 = query1.ToList();
-
-            if (!string.IsNullOrEmpty(componentindex.ComponentFilter))
-            {
-                var query2 = from cm in list1
-                        where cm.ComponentNameTemplate.ToUpper().Contains(componentindex.ComponentFilter.ToUpper())
-                        select cm;
-                list2 = query2.ToList();
-            }
-            else list2 = list1;
-
-            if ((!string.IsNullOrEmpty(componentindex.VendorFilter)) && (list2.Count > 0))  
-            {
-                var query3 = from cm in list2
-                             where cm.VendorName.ToUpper().Contains(componentindex.VendorFilter.ToUpper())
-                             select cm;
-                list3 = query3.ToList();
-            }
-            else list3 = list2;
-
-            if ((!string.IsNullOrEmpty(componentindex.AuthFilter)) && (list3.Count > 0))
-            {
-                var query4 = from cm in list3
-                             where cm.Authorized.ToUpper().Contains(componentindex.AuthFilter.ToUpper())
-                             select cm;
-                list4 = query4.ToList();
-            }
-            else list4 = list3;
-
-            if (list4.Count == 0)
-            {
-                componentindex.Message.Tekst = "Geen enkele component voldoet aan de ingegeven filterwaarden ";
-                componentindex.Message.Level = componentindex.Message.Warning;
-
-            }
-
-            componentindex.ComponentLijst = list4;
-
-            return View(componentindex);
-
-        }
+        }      
+            
+ 
 
         //
         // GET: Components/Details/5
         //
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? id, string filterstr, string componentFilter, string authFilter, string vendorFilter)
         {
             ComponentVM componentVM = new ComponentVM();
             Contract.ContractFailed += (Contract_ContractFailed);
-            Contract.Requires(id > 0, "Contract Failed!");
+            Contract.Requires(id > 0, "Contract Failed!");           
 
             if (!ContractErrorOccurred)
             {
@@ -176,7 +162,42 @@ namespace ConfigMan.Controllers
                     componentVM.Message.Fill("Component - Bekijken", componentVM.Message.Info, "Klik op BEWERK om deze component te bewerken");
 
                 }
-                
+                if ((string.IsNullOrEmpty(filterstr)) || (filterstr == "N"))
+                {
+                    componentVM.Filterstr = "N";
+                }
+                else
+                {
+                    componentVM.Filterstr = "Y";
+                }
+                if (componentVM.Filter)
+                {
+                    if (string.IsNullOrEmpty(componentFilter))
+                    {
+                        componentVM.ComponentFilter = null;
+                    }
+                    else
+                    {
+                        componentVM.ComponentFilter = componentFilter;
+                    }
+                    if (string.IsNullOrEmpty(vendorFilter))
+                    {
+                        componentVM.VendorFilter = null;
+                    }
+                    else
+                    {
+                        componentVM.VendorFilter = vendorFilter;
+                    }
+                    if (string.IsNullOrEmpty(authFilter))
+                    {
+                        componentVM.AuthFilter = null;
+                    }
+                    else
+                    {
+                        componentVM.AuthFilter = authFilter;
+                    }
+                }
+
                 return View(componentVM);
             }
             else
@@ -185,6 +206,7 @@ namespace ConfigMan.Controllers
 
                 string m = "Contract error bij Component Bekijken (GET)";
                 string l = componentVM.Message.Error;
+               
                 return RedirectToAction("Index", "Components", new {Message = m, MsgLevel = l });
             }
            
@@ -193,7 +215,7 @@ namespace ConfigMan.Controllers
         //
         // GET: Components/Create
         //
-        public ActionResult Create()
+        public ActionResult Create(string filterstr, string componentFilter, string authFilter, string vendorFilter)
         {
             // Create vendor drop down list
             ComponentVM componentVM = new ComponentVM();
@@ -205,7 +227,43 @@ namespace ConfigMan.Controllers
                 componentVM.VendorLijst.Add(VM);
             }
             componentVM.Message.Fill("Component - Aanmaken", componentVM.Message.Info, "Klik op AANMAKEN om deze component op te slaan");
-            
+
+            if ((string.IsNullOrEmpty(filterstr)) || (filterstr == "N"))
+            {
+                componentVM.Filterstr = "N";
+            }
+            else
+            {
+                componentVM.Filterstr = "Y";
+            }
+            if (componentVM.Filter)
+            {
+                if (string.IsNullOrEmpty(componentFilter))
+                {
+                    componentVM.ComponentFilter = null;
+                }
+                else
+                {
+                    componentVM.ComponentFilter = componentFilter;
+                }
+                if (string.IsNullOrEmpty(vendorFilter))
+                {
+                    componentVM.VendorFilter = null;
+                }
+                else
+                {
+                    componentVM.VendorFilter = vendorFilter;
+                }
+                if (string.IsNullOrEmpty(authFilter))
+                {
+                    componentVM.AuthFilter = null;
+                }
+                else
+                {
+                    componentVM.AuthFilter = authFilter;
+                }
+            }
+
             return View(componentVM);
             
         }
@@ -215,7 +273,8 @@ namespace ConfigMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ComponentID,VendorID,ComponentNameTemplate,Authorized,SelectedVendorIDstring")] ComponentVM componentVM)
+        public ActionResult Create([Bind(Include = "ComponentID,VendorID,VendorName,ComponentNameTemplate,Authorized,SelectedVendorIDstring," +
+            "Filterstr,ComponentFilter,VendorFilter,AuthFilter")] ComponentVM componentVM)
         {
             List<Vendor> vendordblist = new List<Vendor>();
             if (ModelState.IsValid)
@@ -242,7 +301,15 @@ namespace ConfigMan.Controllers
                 {
                     string m = "Component " + component.ComponentNameTemplate.TrimEnd() + " is toegevoegd";
                     string l = componentVM.Message.Info;
-                    return RedirectToAction("Index", "Components", new {Message = m, MsgLevel = l });
+                    return RedirectToAction("Index", "Components", new
+                    {
+                        Message = m,
+                        MsgLevel = l,
+                        filterstr = componentVM.Filterstr,
+                        componentFilter = componentVM.ComponentFilter,
+                        authFilter = componentVM.AuthFilter,
+                        vendorFilter = componentVM.VendorFilter
+                    });
 
                 }
             }
@@ -264,7 +331,7 @@ namespace ConfigMan.Controllers
         //
         // GET: Components/Edit/5
         //
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int? id, string filterstr, string componentFilter, string authFilter, string vendorFilter)
         {
             ComponentVM componentVM = new ComponentVM();
             Contract.Requires((id != null) && (id > 0));
@@ -314,7 +381,42 @@ namespace ConfigMan.Controllers
                     }
                     componentVM.Message.Fill("Component - Bewerken", componentVM.Message.Info, "Voer wijzigingen in en klik op OPSLAAN");
                 }
-                
+                if ((string.IsNullOrEmpty(filterstr)) || (filterstr == "N"))
+                {
+                    componentVM.Filterstr = "N";
+                }
+                else
+                {
+                    componentVM.Filterstr = "Y";
+                }
+                if (componentVM.Filter)
+                {
+                    if (string.IsNullOrEmpty(componentFilter))
+                    {
+                        componentVM.ComponentFilter = null;
+                    }
+                    else
+                    {
+                        componentVM.ComponentFilter = componentFilter;
+                    }
+                    if (string.IsNullOrEmpty(vendorFilter))
+                    {
+                        componentVM.VendorFilter = null;
+                    }
+                    else
+                    {
+                        componentVM.VendorFilter = vendorFilter;
+                    }
+                    if (string.IsNullOrEmpty(authFilter))
+                    {
+                        componentVM.AuthFilter = null;
+                    }
+                    else
+                    {
+                        componentVM.AuthFilter = authFilter;
+                    }
+                }
+
                 return View(componentVM);
             }
             else
@@ -322,7 +424,8 @@ namespace ConfigMan.Controllers
                 ContractErrorOccurred = false;
                 string m = "Contract error bij Component Bewerken (GET)";
                 string l = componentVM.Message.Error;
-                return RedirectToAction("Index", "Components", new {Message = m, MsgLevel = l });
+                return RedirectToAction("Index", "Components", new {Message = m, MsgLevel = l,
+                        filterstr, componentFilter, authFilter, vendorFilter});
             }
 
         }
@@ -332,7 +435,8 @@ namespace ConfigMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ComponentID,VendorID,VendorName,ComponentNameTemplate,Authorized,SelectedVendorIDstring")] ComponentVM componentVM)
+        public ActionResult Edit([Bind(Include = "ComponentID,VendorID,VendorName,ComponentNameTemplate,Authorized,SelectedVendorIDstring," +
+            "Filterstr,ComponentFilter,VendorFilter,AuthFilter")] ComponentVM componentVM)
         {
             if (ModelState.IsValid)
             {
@@ -348,7 +452,15 @@ namespace ConfigMan.Controllers
         
                 string m = "Component " + component.ComponentNameTemplate.TrimEnd() + " is aangepast";
                 string l = componentVM.Message.Info;
-                return RedirectToAction("Index", "Components", new {Message = m, MsgLevel = l });
+                return RedirectToAction("Index", "Components", new
+                {
+                    Message = m,
+                    MsgLevel = l,
+                    filterstr = componentVM.Filterstr,
+                    componentFilter = componentVM.ComponentFilter,
+                    authFilter = componentVM.AuthFilter,
+                    vendorFilter = componentVM.VendorFilter
+                });
             }
             else
             {
@@ -381,7 +493,7 @@ namespace ConfigMan.Controllers
         //
         // GET: Components/Delete/5
         //
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int? id, string filterstr, string componentFilter, string authFilter, string vendorFilter)
         {
             ComponentVM componentVM = new ComponentVM();
             Contract.Requires((id != null) && (id > 0));
@@ -430,7 +542,8 @@ namespace ConfigMan.Controllers
         // POST: Components/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int id, string filterstr, string componentFilter, string authFilter, string vendorFilter)
+
         {
             SympaMessage msg = new SympaMessage();
             string m = "";
@@ -450,6 +563,41 @@ namespace ConfigMan.Controllers
                     ComponentVM componentVM = new ComponentVM();
                     componentVM.Message.Fill("Component - Verwijderen", componentVM.Message.Warning, "Component " + component.ComponentNameTemplate + " kan niet worden verwijderd. Verwijder eerst alle Installaties, Services en Documentatie *** (" + exc.Message + ")");
                     componentVM.Fill(component);
+                    if ((string.IsNullOrEmpty(filterstr)) || (filterstr == "N"))
+                    {
+                        componentVM.Filterstr = "N";
+                    }
+                    else
+                    {
+                        componentVM.Filterstr = "Y";
+                    }
+                    if (componentVM.Filter)
+                    {
+                        if (string.IsNullOrEmpty(componentFilter))
+                        {
+                            componentVM.ComponentFilter = null;
+                        }
+                        else
+                        {
+                            componentVM.ComponentFilter = componentFilter;
+                        }
+                        if (string.IsNullOrEmpty(vendorFilter))
+                        {
+                            componentVM.VendorFilter = null;
+                        }
+                        else
+                        {
+                            componentVM.VendorFilter = vendorFilter;
+                        }
+                        if (string.IsNullOrEmpty(authFilter))
+                        {
+                            componentVM.AuthFilter = null;
+                        }
+                        else
+                        {
+                            componentVM.AuthFilter = authFilter;
+                        }
+                    }
                     return View(componentVM);
                 }
                 m = "Component " + component.ComponentNameTemplate.TrimEnd() + " is verwijderd.";
@@ -462,7 +610,16 @@ namespace ConfigMan.Controllers
                 l = msg.Error;
                 
             }
-            return RedirectToAction("Index", "Components", new {Message = m, MsgLevel = l });
+            
+            return RedirectToAction("Index", "Components", new
+            {
+                Message = m,
+                MsgLevel = l,
+                filterstr,
+                componentFilter,
+                authFilter,
+                vendorFilter
+            });
         }
 
         public ActionResult Report01()
