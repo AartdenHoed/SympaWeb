@@ -274,6 +274,7 @@
     <Compile Include="ViewModels\Component.cs" />
     <Compile Include="ViewModels\InstallationCompare.cs" />
     <Compile Include="ViewModels\InstallationIndex.cs" />
+    <Compile Include="ViewModels\SympaFilter.cs" />
     <Compile Include="ViewModels\VendorIndex.cs" />
     <Compile Include="ViewModels\ComputerIndex.cs" />
     <Compile Include="ViewModels\ComponentIndex.cs" />
@@ -450,6 +451,7 @@
     <Content Include="Views\Vendors\Report03.cshtml" />
     <Content Include="Views\Installations\Report07.cshtml" />
     <Content Include="Views\Installations\Report08.cshtml" />
+    <Content Include="Views\Components\Match.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

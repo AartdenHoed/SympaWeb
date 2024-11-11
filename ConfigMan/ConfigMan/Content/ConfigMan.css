@@ -423,3 +423,6 @@ select[readonly='readonly'] {
     height: 5%;
     width:100%;
 }
+.sy-gekoppeld {
+    background-color: greenyellow;
+}

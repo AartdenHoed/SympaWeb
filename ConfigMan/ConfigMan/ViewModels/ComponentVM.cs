@@ -14,6 +14,7 @@ namespace ConfigMan.ViewModels
         public SympaMessage Message = new SympaMessage();
         
         public List<VendorVM> VendorLijst = new List<VendorVM>();
+        public List<InstallationVM> InstallationLijst = new List<InstallationVM>();
         
         public string SelectedVendorIDstring { get; set; }
 
@@ -23,6 +24,9 @@ namespace ConfigMan.ViewModels
         
         [DisplayName("Unieke Vendor Naam")]
         public string VendorName { get; set; }
+
+        [DisplayName("Vendor Group")]
+        public string VendorGroup { get; set; }
 
         private string _ComponentNameTemplate = "";
 
@@ -40,12 +44,7 @@ namespace ConfigMan.ViewModels
         [StringRange(AllowableValues = new[] { "Y", "N"}, ErrorMessage = "Specificeer Y (geautoriseerd) of N (niet geautoriseerd)")]
         public string Authorized {  get; set; }
 
-        public string Filterstr { get; set; }
-        public bool Filter { get { return (!((this.Filterstr == "N") || (this.Filterstr is null))); } }
-
-        public string ComponentFilter { get; set; }
-        public string VendorFilter { get; set; }
-        public string AuthFilter { get; set; }
+        public SympaFilter FilterData = new SympaFilter();
 
         public void Fill(Component component)
         {

@@ -19,6 +19,7 @@ namespace ConfigMan
         {
             this.Licenses = new HashSet<License>();
             this.Services = new HashSet<Service>();
+            this.Installations = new HashSet<Installation>();
         }
     
         public int ComputerID { get; set; }
@@ -30,5 +31,7 @@ namespace ConfigMan
         public virtual ICollection<License> Licenses { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Service> Services { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Installation> Installations { get; set; }
     }
 }

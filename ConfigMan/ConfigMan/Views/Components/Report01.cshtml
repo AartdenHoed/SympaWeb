@@ -26,7 +26,7 @@
                 if (i == 0)
                 {
                     <tr>
-
+                        <th>Actie</th>
                         <th>
                             @Html.DisplayNameFor(modelItem => item.ComponentNameTemplate)
                         </th>
@@ -43,6 +43,12 @@
                 }
                 i = i + 1;
     <tr>
+        <td>
+            @Html.HiddenFor(modelItem => item.ComponentID, new { @class = "sy-hiddenid" })
+            @Html.ActionLink("Bewerk", "Edit", new {id = item.ComponentID, rtrn="report01" }, new { @class = "sy-alist" }) |
+            @Html.ActionLink("Bekijk", "Details", new { id = item.ComponentID, rtrn="report01" }, new { @class = "sy-alist" }) |
+            @Html.ActionLink("Verwijder", "Delete", new { id = item.ComponentID, rtrn="report01" }, new { @class = "sy-alist" })
+        </td>
 
         <td>
             @Html.DisplayFor(modelItem => item.ComponentNameTemplate)

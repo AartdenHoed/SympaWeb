@@ -87,7 +87,7 @@ namespace ConfigMan.Controllers
         //
         // GET: Installations/Details/5
         //
-        public ActionResult Details(int? computerid, int? componentid, string release, DateTime? startdatetime)
+        public ActionResult Details(int computerid, int componentid, string release, DateTime startdatetime)
         {
             InstallationVM installationVM = new InstallationVM();
             Contract.ContractFailed += (Contract_ContractFailed);
@@ -185,7 +185,7 @@ namespace ConfigMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ComputerID,ComponentID,Release,Location,InstallDate,MeasuredDateTime,StartDateTime,EndDateTime,Count,SelectedComputerIDstring,SelectedComponentIDstring")] InstallationVM installationVM)
+        public ActionResult Create([Bind(Include = "ComputerID,ComponentID,ComponentName,Release,Location,InstallDate,MeasuredDateTime,StartDateTime,EndDateTime,Count,SelectedComputerIDstring,SelectedComponentIDstring")] InstallationVM installationVM)
         {
             if (ModelState.IsValid)
             {
@@ -259,10 +259,10 @@ namespace ConfigMan.Controllers
         //
         // GET: Installations/Edit/5
         //
-        public ActionResult Edit(int? computerid, int? componentid, string release, DateTime? startdatetime)
+        public ActionResult Edit(int computerid, int componentid, string release, DateTime startdatetime)
         {
             InstallationVM installationVM = new InstallationVM();
-            Contract.Requires((componentid != null) && (componentid > 0) && (computerid != null) && (computerid >0));
+            Contract.Requires((componentid > 0) && (computerid >0));
             Contract.ContractFailed += (Contract_ContractFailed);
 
             if (!ContractErrorOccurred)
@@ -323,7 +323,7 @@ namespace ConfigMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ComputerID,ComponentID,Release,HiddenStartDateTime,Location,InstallDate,MeasuredDateTime,EndDateTime,Count")] InstallationVM installationVM)
+        public ActionResult Edit([Bind(Include = "ComputerID,ComponentID,ComponentName,Release,HiddenStartDateTime,Location,InstallDate,MeasuredDateTime,EndDateTime,Count")] InstallationVM installationVM)
         {
             if (ModelState.IsValid)
             {
@@ -349,7 +349,7 @@ namespace ConfigMan.Controllers
         //
         // GET: Installations/Delete/5
         //
-        public ActionResult Delete(int? computerid, int? componentid, string release, DateTime startdatetime)
+        public ActionResult Delete(int computerid, int componentid, string release, DateTime startdatetime)
         {
             InstallationVM installationVM = new InstallationVM();
             Contract.ContractFailed += (Contract_ContractFailed);
@@ -414,7 +414,7 @@ namespace ConfigMan.Controllers
         // POST: Installations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int? computerid, int? componentid, string release, DateTime startdatetime)
+        public ActionResult DeleteConfirmed(int computerid, int componentid, string release, DateTime startdatetime)
         {
             SympaMessage msg = new SympaMessage();
             string m = "";

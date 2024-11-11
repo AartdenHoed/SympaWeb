@@ -16,78 +16,86 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.ComputerID)
         @Html.HiddenFor(model => model.ComponentID)
+        @Html.HiddenFor(model => model.ComponentNameTemplate)
         @Html.HiddenFor(model => model.HiddenStartDateTime)
         @Html.HiddenFor(model => model.Release)
 
-        <dl class="sy-dl">
-            <dt class="sy-dt">
-                @Html.LabelFor(model => model.ComputerName)
-            </dt>
-            <dd class="sy-dd">
-                @Html.DisplayFor(model => model.ComputerName) &nbsp;
-            </dd>
-            <dt class="sy-dt">
-                @Html.LabelFor(model => model.ComponentName)
-            </dt>
-            <dd class="sy-dd">
-                @Html.DisplayFor(model => model.ComponentName) &nbsp;
-            </dd>
-            <dt class="sy-dt">
-                @Html.LabelFor(model => model.Release)
-            </dt>
-            <dd class="sy-dd">
-                @Html.DisplayFor(model => model.Release) &nbsp;
-            </dd>
-            <dt class="sy-dt">
-                @Html.LabelFor(model => model.VendorName)
-            </dt>
-            <dd class="sy-dd">
-                @Html.DisplayFor(model => model.VendorName) &nbsp;
-            </dd>
-            <dt class="sy-dt">
-                @Html.LabelFor(model => model.StartDateTime)
-            </dt>
-            <dd class="sy-dd">
-                @Html.DisplayFor(model => model.StartDateTime) &nbsp;
-            </dd>
-            <dt class="sy-dt">
-                @Html.LabelFor(model => model.InstallDate)
-            </dt>
-            <dd class="sy-dd">
-                @Html.EditorFor(model => model.InstallDate, new { htmlAttributes = new { @class = "sy-input" } })
-                @Html.ValidationMessageFor(model => model.InstallDate, "", new { @class = "text-danger" })
-            </dd>
-            <dt class="sy-dt">
-                @Html.LabelFor(model => model.MeasuredDateTime)
-            </dt>
-            <dd class="sy-dd">
-                @Html.EditorFor(model => model.MeasuredDateTime, new { htmlAttributes = new { @class = "sy-input" } })
-                @Html.ValidationMessageFor(model => model.MeasuredDateTime, "", new { @class = "text-danger" })
-            </dd>
-            <dt class="sy-dt">
-                @Html.LabelFor(model => model.EndDateTime)
-            </dt>
-            <dd class="sy-dd">
-                @Html.EditorFor(model => model.EndDateTime, new { htmlAttributes = new { @class = "sy-input" } })
-                @Html.ValidationMessageFor(model => model.EndDateTime, "", new { @class = "text-danger" })
-            </dd>
+    <dl class="sy-dl">
+        <dt class="sy-dt">
+            @Html.LabelFor(model => model.ComputerName)
+        </dt>
+        <dd class="sy-dd">
+            @Html.DisplayFor(model => model.ComputerName) &nbsp;
+        </dd>
+        <dt class="sy-dt">
+            @Html.LabelFor(model => model.ComponentNameTemplate)
+        </dt>
+        <dd class="sy-dd">
+            @Html.DisplayFor(model => model.ComponentNameTemplate) &nbsp;
+        </dd>
+        <dt class="sy-dt">
+            @Html.LabelFor(model => model.Release)
+        </dt>
+        <dd class="sy-dd">
+            @Html.DisplayFor(model => model.Release) &nbsp;
+        </dd>
+        <dt class="sy-dt">
+            @Html.LabelFor(model => model.VendorName)
+        </dt>
+        <dd class="sy-dd">
+            @Html.DisplayFor(model => model.VendorName) &nbsp;
+        </dd>
+        <dt class="sy-dt">
+            @Html.LabelFor(model => model.StartDateTime)
+        </dt>
+        <dd class="sy-dd">
+            @Html.DisplayFor(model => model.StartDateTime) &nbsp;
+        </dd>
+        <dt class="sy-dt">
+            @Html.LabelFor(model => model.ComponentName)
+        </dt>
+        <dd class="sy-dd">
+            @Html.EditorFor(model => model.ComponentName, new { htmlAttributes = new { @class = "sy-input" } })
+            @Html.ValidationMessageFor(model => model.ComponentName, "", new { @class = "text-danger" })
+        </dd>
+        <dt class="sy-dt">
+            @Html.LabelFor(model => model.InstallDate)
+        </dt>
+        <dd class="sy-dd">
+            @Html.EditorFor(model => model.InstallDate, new { htmlAttributes = new { @class = "sy-input" } })
+            @Html.ValidationMessageFor(model => model.InstallDate, "", new { @class = "text-danger" })
+        </dd>
+        <dt class="sy-dt">
+            @Html.LabelFor(model => model.MeasuredDateTime)
+        </dt>
+        <dd class="sy-dd">
+            @Html.EditorFor(model => model.MeasuredDateTime, new { htmlAttributes = new { @class = "sy-input" } })
+            @Html.ValidationMessageFor(model => model.MeasuredDateTime, "", new { @class = "text-danger" })
+        </dd>
+        <dt class="sy-dt">
+            @Html.LabelFor(model => model.EndDateTime)
+        </dt>
+        <dd class="sy-dd">
+            @Html.EditorFor(model => model.EndDateTime, new { htmlAttributes = new { @class = "sy-input" } })
+            @Html.ValidationMessageFor(model => model.EndDateTime, "", new { @class = "text-danger" })
+        </dd>
 
-            <dt class="sy-dt">
-                @Html.LabelFor(model => model.Location)
-            </dt>
-            <dd class="sy-dd">
-                @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "sy-input" } })
-                @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-danger" })
-            </dd>
-            <dt class="sy-dt">
-                @Html.LabelFor(model => model.Count)
-            </dt>
-            <dd class="sy-dd">
-                @Html.EditorFor(model => model.Count, new { htmlAttributes = new { @class = "sy-input" } })
-                @Html.ValidationMessageFor(model => model.Count, "", new { @class = "text-danger" })
-            </dd>
+        <dt class="sy-dt">
+            @Html.LabelFor(model => model.Location)
+        </dt>
+        <dd class="sy-dd">
+            @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "sy-input" } })
+            @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-danger" })
+        </dd>
+        <dt class="sy-dt">
+            @Html.LabelFor(model => model.Count)
+        </dt>
+        <dd class="sy-dd">
+            @Html.EditorFor(model => model.Count, new { htmlAttributes = new { @class = "sy-input" } })
+            @Html.ValidationMessageFor(model => model.Count, "", new { @class = "text-danger" })
+        </dd>
 
-        </dl>
+    </dl>
         <p>
             @Html.DisplayFor(model => model.Message.Tekst)
         </p>

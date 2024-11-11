@@ -1,9 +1,6 @@
 ﻿<div class="controller">
     @model ConfigMan.ViewModels.ComponentIndex
-    @{
-        ViewBag.Title = Model.Message.Title;
-    }
-    
+
     <h2>
         @Html.DisplayFor(model => model.Message.Title)
     </h2>
@@ -13,20 +10,32 @@
 
     <div class="sy-div">
 
-        @Html.ActionLink("Nieuwe Component", "Create", "", new { @class = "sy-acreate" }) |
+        @Html.ActionLink("Nieuwe Component", "Create", null, new { @class = "sy-acreate" }) |
         @Html.ActionLink("Terug naar Menu", "Menu", "Components", new { @class = "sy-a" })
         | Filter tonen (aan/uit) &nbsp;
 
-        @Html.CheckBoxFor(model => model.Filter, new { @class = "sy-switch", @onclick = "valueChanged()" })
+        @Html.CheckBoxFor(model => model.FilterData.Filter, new { @class = "sy-switch", @onclick = "valueChanged()" })
         | @Html.ActionLink("Wis alle filters", "Index", "Components", new { filterstr = "N" }, new { @class = "sy-a" }) |
-        @Html.HiddenFor(model => model.Filterstr, new { @class = "sy-hiddenfilter" })
+        
     </div>
     <p>&nbsp;</p>
+    <p class="sy-filter">
+        @Html.HiddenFor(model => model.FilterData.Subsetstr, new { @id = "Subsetstr" })
+        @Html.HiddenFor(model => model.FilterData.Filterstr, new { @class = "sy-hiddenfilter", @id = "Filterstr" })
+        @Html.DisplayNameFor(model => model.FilterData.ShowAll) :
+        @Html.CheckBoxFor(model => model.FilterData.ShowAll, new { @class = "sy-checky", @onclick = "onlyOne(this)" }) |
+        @Html.DisplayNameFor(model => model.FilterData.ShowActive) :
+        @Html.CheckBoxFor(model => model.FilterData.ShowActive, new { @class = "sy-checky", @onclick = "onlyOne(this)" }) |
+        @Html.DisplayNameFor(model => model.FilterData.ShowInactive) :
+        @Html.CheckBoxFor(model => model.FilterData.ShowInactive, new { @class = "sy-checky", @onclick = "onlyOne(this)" }) |
+        @Html.DisplayNameFor(model => model.FilterData.ShowEmpty) :
+        @Html.CheckBoxFor(model => model.FilterData.ShowEmpty, new { @class = "sy-checky", @onclick = "onlyOne(this)" })
 
-
+    </p>
+   
     <table class="sy-table">
         <tr>
-            
+
             <th>Actie</th>
             <th>
                 @Html.DisplayNameFor(model => model.ComponentLijst[0].ComponentNameTemplate)
@@ -38,31 +47,33 @@
                 @Html.DisplayNameFor(model => model.ComponentLijst[0].VendorName)
             </th>
         </tr>
-       
+
         <tr class="sy-filter">
             <td>
-                @Html.ActionLink("Pas filter toe", "Index", 
-                      new {filterStr="Y"}, new {@class = "sy-url"})                                                                               
+                @Html.ActionLink("Pas filter toe", "Index", null , new { @class = "sy-url" })
             </td>
             <td>
-                @Html.EditorFor(model => model.ComponentFilter, new { htmlAttributes = new { @class = "sy-input", @autofocus = "autofocus", @onchange = "SetFilterUrl('Y')" } })
-                @Html.ValidationMessageFor(model => model.ComponentFilter, "", new { @class = "text-danger"})
+                @Html.EditorFor(model => model.FilterData.ComponentFilter, 
+               new { htmlAttributes = new { @id = "ComponentFilter", @class = "sy-input", @autofocus = "autofocus", @onchange = "adaptUrls()" } })
+                @Html.ValidationMessageFor(model => model.FilterData.ComponentFilter, "", new { @class = "text-danger" })
             </td>
             <td>
-                @Html.EditorFor(model => model.AuthFilter, new { htmlAttributes = new { @class = "sy-input", @autofocus = "autofocus", @onchange = "SetFilterUrl('Y')" } })
-                @Html.ValidationMessageFor(model => model.AuthFilter, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.FilterData.AuthFilter,
+               new { htmlAttributes = new { @id = "AuthFilter", @class = "sy-input", @autofocus = "autofocus", @onchange = "adaptUrls()" } })
+                @Html.ValidationMessageFor(model => model.FilterData.AuthFilter, "", new { @class = "text-danger" })
             </td>
             <td>
-                @Html.EditorFor(model => model.VendorFilter, new { htmlAttributes = new { @class = "sy-input", @autofocus = "autofocus", @onchange = "SetFilterUrl('Y')" } })
-                @Html.ValidationMessageFor(model => model.VendorFilter, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.FilterData.VendorFilter, 
+               new { htmlAttributes = new { @id = "VendorFilter", @class = "sy-input", @autofocus = "autofocus", @onchange = "adaptUrls()" } })
+                @Html.ValidationMessageFor(model => model.FilterData.VendorFilter, "", new { @class = "text-danger" })
             </td>
         </tr>
-        
+
         @if (Model.ComponentLijst != null)
         {
             foreach (var item in Model.ComponentLijst)
             {
-              
+
                 <tr>
                     <td>
                         @Html.HiddenFor(modelItem => item.ComponentID, new { @class = "sy-hiddenid" })

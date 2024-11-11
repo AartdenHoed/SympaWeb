@@ -1,9 +1,6 @@
 ﻿<div class="controller">
     @model ConfigMan.ViewModels.ComponentVM
-    @{
-        ViewBag.Title = Model.Message.Title;
-    }
-
+    
     <div>
         <h2>
             @Html.DisplayFor(model => model.Message.Title)
@@ -34,10 +31,11 @@
         </dl>
         <div>
             @Html.HiddenFor(model => model.ComponentID, new { @class = "sy-hiddenid" })
-            @Html.HiddenFor(model => model.ComponentFilter, new { @class = "sy-hiddenfilter" })
-            @Html.HiddenFor(model => model.VendorFilter, new { @class = "sy-hiddenfilter" })
-            @Html.HiddenFor(model => model.AuthFilter, new { @class = "sy-hiddenfilter" })
-            @Html.HiddenFor(model => model.Filterstr, new { @class = "sy-hiddenfilter" })
+            @Html.HiddenFor(model => model.FilterData.ComponentFilter, new { @class = "sy-hiddenfilter", @id = "ComponentFilter" })
+            @Html.HiddenFor(model => model.FilterData.VendorFilter, new { @class = "sy-hiddenfilter", @id = "VendorFilter" })
+            @Html.HiddenFor(model => model.FilterData.AuthFilter, new { @class = "sy-hiddenfilter", @id = "AuthFilter" })
+            @Html.HiddenFor(model => model.FilterData.Filterstr, new { @class = "sy-hiddenfilter", @id = "Filterstr" })
+            @Html.HiddenFor(model => model.FilterData.Subsetstr, new { @class = "sy-hiddenfilter", @id = "Subsetstr" })
         </div>
         <p>
             @Html.DisplayFor(model => model.Message.Tekst)

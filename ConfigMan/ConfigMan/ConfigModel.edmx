@@ -36,7 +36,6 @@
           <Key>
             <PropertyRef Name="ComputerID" />
             <PropertyRef Name="ComponentID" />
-            <PropertyRef Name="ComponentName" />
             <PropertyRef Name="Release" />
             <PropertyRef Name="StartDateTime" />
           </Key>
@@ -137,6 +136,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Installation_Component">
+          <End Role="Component" Type="Self.Component" Multiplicity="1" />
+          <End Role="Installation" Type="Self.Installation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Component">
+              <PropertyRef Name="ComponentID" />
+            </Principal>
+            <Dependent Role="Installation">
+              <PropertyRef Name="ComponentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Installation_Computer">
+          <End Role="Computer" Type="Self.Computer" Multiplicity="1" />
+          <End Role="Installation" Type="Self.Installation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Computer">
+              <PropertyRef Name="ComputerID" />
+            </Principal>
+            <Dependent Role="Installation">
+              <PropertyRef Name="ComputerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_License_Component">
           <End Role="Component" Type="Self.Component" Multiplicity="1" />
           <End Role="License" Type="Self.License" Multiplicity="*" />
@@ -202,6 +225,14 @@
             <End Role="Component" EntitySet="Component" />
             <End Role="Documentation" EntitySet="Documentation" />
           </AssociationSet>
+          <AssociationSet Name="FK_Installation_Component" Association="Self.FK_Installation_Component">
+            <End Role="Component" EntitySet="Component" />
+            <End Role="Installation" EntitySet="Installation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Installation_Computer" Association="Self.FK_Installation_Computer">
+            <End Role="Computer" EntitySet="Computer" />
+            <End Role="Installation" EntitySet="Installation" />
+          </AssociationSet>
           <AssociationSet Name="FK_License_Component" Association="Self.FK_License_Component">
             <End Role="Component" EntitySet="Component" />
             <End Role="License" EntitySet="License" />
@@ -235,6 +266,7 @@
           <NavigationProperty Name="Services" Relationship="SympaModel.FK_Service_Component" FromRole="Component" ToRole="Service" />
           <Property Name="ComponentNameTemplate" Type="String" Nullable="false" MaxLength="120" FixedLength="true" Unicode="false" />
           <Property Name="Authorized" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="Installations" Relationship="SympaModel.FK_Installation_Component" FromRole="Component" ToRole="Installation" />
         </EntityType>
         <EntityType Name="Computer">
           <Key>
@@ -246,6 +278,7 @@
           <NavigationProperty Name="Licenses" Relationship="Self.FK_License_Computer" FromRole="Computer" ToRole="License" />
           <Property Name="OS" Type="String" MaxLength="24" FixedLength="true" Unicode="false" />
           <NavigationProperty Name="Services" Relationship="SympaModel.FK_Service_Computer" FromRole="Computer" ToRole="Service" />
+          <NavigationProperty Name="Installations" Relationship="SympaModel.FK_Installation_Computer" FromRole="Computer" ToRole="Installation" />
         </EntityType>
         <EntityType Name="Documentation">
           <Key>
@@ -373,6 +406,14 @@
             <End Role="Service" EntitySet="Services1" />
           </AssociationSet>
           <EntitySet Name="Installations" EntityType="SympaModel.Installation" />
+          <AssociationSet Name="FK_Installation_Component" Association="SympaModel.FK_Installation_Component">
+            <End Role="Component" EntitySet="Components" />
+            <End Role="Installation" EntitySet="Installations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Installation_Computer" Association="SympaModel.FK_Installation_Computer">
+            <End Role="Computer" EntitySet="Computers" />
+            <End Role="Installation" EntitySet="Installations" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Service">
           <Key>
@@ -434,7 +475,6 @@
           <Key>
             <PropertyRef Name="ComputerID" />
             <PropertyRef Name="ComponentID" />
-            <PropertyRef Name="ComponentName" />
             <PropertyRef Name="Release" />
             <PropertyRef Name="StartDateTime" />
           </Key>
@@ -448,7 +488,33 @@
           <Property Name="StartDateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="EndDateTime" Type="DateTime" Precision="3" />
           <Property Name="Count" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Component" Relationship="SympaModel.FK_Installation_Component" FromRole="Installation" ToRole="Component" />
+          <NavigationProperty Name="Computer" Relationship="SympaModel.FK_Installation_Computer" FromRole="Installation" ToRole="Computer" />
         </EntityType>
+        <Association Name="FK_Installation_Component">
+          <End Type="SympaModel.Component" Role="Component" Multiplicity="1" />
+          <End Type="SympaModel.Installation" Role="Installation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Component">
+              <PropertyRef Name="ComponentID" />
+            </Principal>
+            <Dependent Role="Installation">
+              <PropertyRef Name="ComponentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Installation_Computer">
+          <End Type="SympaModel.Computer" Role="Computer" Multiplicity="1" />
+          <End Type="SympaModel.Installation" Role="Installation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Computer">
+              <PropertyRef Name="ComputerID" />
+            </Principal>
+            <Dependent Role="Installation">
+              <PropertyRef Name="ComputerID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->

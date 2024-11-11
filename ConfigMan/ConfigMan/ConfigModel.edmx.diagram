@@ -18,7 +18,9 @@
         <EntityTypeShape EntityType="SympaModel.Service" Width="1.5" PointX="6.25" PointY="3.625" />
         <AssociationConnector Association="SympaModel.FK_Service_Component" />
         <AssociationConnector Association="SympaModel.FK_Service_Computer" />
-        <EntityTypeShape EntityType="SympaModel.Installation" Width="1.5" PointX="3.375" PointY="0.75" />
+        <EntityTypeShape EntityType="SympaModel.Installation" Width="1.5" PointX="3.5" PointY="0.5" />
+        <AssociationConnector Association="SympaModel.FK_Installation_Component" />
+        <AssociationConnector Association="SympaModel.FK_Installation_Computer" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -23,7 +23,8 @@ namespace ConfigMan.ViewModels
         public int ComponentID { get; set; }
         public string ComponentName { get; set; }   
         public int VendorID { get; set; }
-        public string VendorName {  get; set; } 
+        public string VendorName {  get; set; }
+        public string VendorGroup { get; set; }
 
         [Required(ErrorMessage = "Release is een verplicht veld")]
         [DisplayName("Release aanduiding")]
