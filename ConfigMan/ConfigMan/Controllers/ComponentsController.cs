@@ -42,15 +42,16 @@ namespace ConfigMan.Controllers
         //
         // GET: Components
         //
-        public ActionResult Index(string message, string msgLevel, string filterstr, string subsetstr, string componentFilter, string authFilter, string vendorFilter)
+        public ActionResult Index(string messageP, string msgLevelP, 
+            string filterstrP, string subsetstrP, string componentFilterP, string authFilterP, string vendorFilterP)
         {
             ComponentIndex index = new ComponentIndex();
 
-            index.FilterData.Fill(filterstr, subsetstr, componentFilter, authFilter, vendorFilter);
+            index.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
 
             string t = "Component - Overzicht";
-            string m = message;
-            string l = msgLevel;
+            string m = messageP;
+            string l = msgLevelP;
             if (m is null) { 
                 if (!index.FilterData.Filter) {
                     m = "Klik op NIEUWE COMPONENT om een component aan te maken, of klik op een actie voor een bestaande component"; 
@@ -194,7 +195,7 @@ namespace ConfigMan.Controllers
         //
         // GET: Components/Details/5
         //
-        public ActionResult Details(int? id, string filterstr, string subsetstr, string componentFilter, string authFilter, string vendorFilter)
+        public ActionResult Details(int? id, string filterstrP, string subsetstrP, string componentFilterP, string authFilterP, string vendorFilterP)
         {
             ComponentVM componentVM = new ComponentVM();
             Contract.ContractFailed += (Contract_ContractFailed);
@@ -210,17 +211,17 @@ namespace ConfigMan.Controllers
                 m = "Contract error bij Component Bekijken (GET)";
                 l = componentVM.Message.Error;
                 componentVM.Message.Fill(t, l, m);
-                componentVM.FilterData.Fill(filterstr, subsetstr, componentFilter, authFilter, vendorFilter);
+                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
                                 
                 return RedirectToAction("Index", "Components", new
                 {
-                    message = m,
-                    msgLevel = l,
-                    filterstr = componentVM.FilterData.Filterstr,
-                    subsetstr = componentVM.FilterData.Subsetstr,
-                    componentFilter = componentVM.FilterData.ComponentFilter,
-                    authFilter = componentVM.FilterData.AuthFilter,
-                    vendorFilter = componentVM.FilterData.VendorFilter
+                    messageP = m,
+                    msgLevelP = l,
+                    filterstrP = componentVM.FilterData.Filterstr,
+                    subsetstrP = componentVM.FilterData.Subsetstr,
+                    componentFilterP = componentVM.FilterData.ComponentFilter,
+                    authFilterP = componentVM.FilterData.AuthFilter,
+                    vendorFilterP = componentVM.FilterData.VendorFilter
                 });
             }
             else 
@@ -252,7 +253,7 @@ namespace ConfigMan.Controllers
                     m = "Klik op BEWERK om deze component te bewerken";
                 }
                 componentVM.Message.Fill(t, l, m);
-                componentVM.FilterData.Fill(filterstr, subsetstr, componentFilter, authFilter, vendorFilter);
+                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
                 return View(componentVM);
             }           
         }
@@ -260,7 +261,7 @@ namespace ConfigMan.Controllers
         //
         // GET: Components/Create
         //
-        public ActionResult Create(string filterstr, string subsetstr, string componentFilter, string authFilter, string vendorFilter)
+        public ActionResult Create(string filterstrP, string subsetstrP, string componentFilterP, string authFilterP, string vendorFilterP)
         {
             // Create vendor drop down list
             ComponentVM componentVM = new ComponentVM();
@@ -272,7 +273,7 @@ namespace ConfigMan.Controllers
                 componentVM.VendorLijst.Add(VM);
             }
             componentVM.Message.Fill("Component - Aanmaken", componentVM.Message.Info, "Klik op AANMAKEN om deze component op te slaan");
-            componentVM.FilterData.Fill(filterstr, subsetstr, componentFilter, authFilter, vendorFilter);
+            componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
 
             
             return View(componentVM);
@@ -284,9 +285,10 @@ namespace ConfigMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ComponentVM componentVM)
+        public ActionResult Create(ComponentVM componentVM, string filterstrP, string subsetstrP, string componentFilterP, string authFilterP, string vendorFilterP)
         {
             List<Vendor> vendordblist = new List<Vendor>();
+            componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
             if (ModelState.IsValid)
             {
                 Component component = new Component();
@@ -314,13 +316,13 @@ namespace ConfigMan.Controllers
                     
                     return RedirectToAction("Index", "Components", new
                     {
-                        message = m,
-                        msgLevel = l,
-                        filterstr = componentVM.FilterData.Filterstr,
-                        subsetstr = componentVM.FilterData.Subsetstr,
-                        componentFilter = componentVM.FilterData.ComponentFilter,
-                        authFilter = componentVM.FilterData.AuthFilter,
-                        vendorFilter = componentVM.FilterData.VendorFilter
+                        messageP = m,
+                        msgLevelP = l,
+                        filterstrP = componentVM.FilterData.Filterstr,
+                        subsetstrP = componentVM.FilterData.Subsetstr,
+                        componentFilterP = componentVM.FilterData.ComponentFilter,
+                        authFilterP = componentVM.FilterData.AuthFilter,
+                        vendorFilterP = componentVM.FilterData.VendorFilter
                     });
 
                 }
@@ -343,7 +345,7 @@ namespace ConfigMan.Controllers
         //
         // GET: Components/Edit/5
         //
-        public ActionResult Edit(int id, string filterstr, string subsetstr, string componentFilter, string authFilter, string vendorFilter)
+        public ActionResult Edit(int id, string filterstrP, string subsetstrP, string componentFilterP, string authFilterP, string vendorFilterP)
         {
             ComponentVM componentVM = new ComponentVM();
             Contract.ContractFailed += (Contract_ContractFailed);
@@ -359,17 +361,17 @@ namespace ConfigMan.Controllers
                 m = "Contract error bij Component Bewerken (GET)";
                 l = componentVM.Message.Error;
                 componentVM.Message.Fill(t, l, m);
-                componentVM.FilterData.Fill(filterstr, subsetstr, componentFilter, authFilter, vendorFilter);
+                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
 
                 return RedirectToAction("Index", "Components", new
                 {
-                    message = m,
-                    msgLevel = l,
-                    filterstr = componentVM.FilterData.Filterstr,
-                    subsetstr = componentVM.FilterData.Subsetstr,
-                    componentFilter = componentVM.FilterData.ComponentFilter,
-                    authFilter = componentVM.FilterData.AuthFilter,
-                    vendorFilter = componentVM.FilterData.VendorFilter
+                    messageP = m,
+                    msgLevelP = l,
+                    filterstrP = componentVM.FilterData.Filterstr,
+                    subsetstrP = componentVM.FilterData.Subsetstr,
+                    componentFilterP = componentVM.FilterData.ComponentFilter,
+                    authFilterP = componentVM.FilterData.AuthFilter,
+                    vendorFilterP = componentVM.FilterData.VendorFilter
                 });
             }
             else 
@@ -417,7 +419,7 @@ namespace ConfigMan.Controllers
                     }
                 }
                 componentVM.Message.Fill(t, l, m);
-                componentVM.FilterData.Fill(filterstr, subsetstr, componentFilter, authFilter, vendorFilter);
+                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
    
                 return View(componentVM);
             }
@@ -429,8 +431,11 @@ namespace ConfigMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(ComponentVM componentVM)
+        public ActionResult Edit(ComponentVM componentVM, string filterstrP, string subsetstrP, string componentFilterP, string authFilterP, string vendorFilterP)
         {
+            string t = "Component - Bewerken";
+            string l = "?";
+            string m = "?";
             if (ModelState.IsValid)
             {
                 int selectedVendorID = Int32.Parse(componentVM.SelectedVendorIDstring);
@@ -443,17 +448,19 @@ namespace ConfigMan.Controllers
                 db.Entry(component).State = EntityState.Modified;
                 db.SaveChanges();
         
-                string m = "Component " + component.ComponentNameTemplate.TrimEnd() + " is aangepast";
-                string l = componentVM.Message.Info;
+                m = "Component " + component.ComponentNameTemplate.TrimEnd() + " is aangepast";
+                l = componentVM.Message.Info;
+                componentVM.Message.Fill(t,l,m);
+                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
                 return RedirectToAction("Index", "Components", new
                 {
-                    message = m,
-                    msgLevel = l,
-                    filterstr = componentVM.FilterData.Filterstr,
-                    subsetstr = componentVM.FilterData.Subsetstr,
-                    componentFilter = componentVM.FilterData.ComponentFilter,
-                    authFilter = componentVM.FilterData.AuthFilter,
-                    vendorFilter = componentVM.FilterData.VendorFilter
+                    messageP = componentVM.Message.Tekst,
+                    msgLevelP = componentVM.Message.Level,
+                    filterstrP = componentVM.FilterData.Filterstr,
+                    subsetstrP = componentVM.FilterData.Subsetstr,
+                    componentFilterP = componentVM.FilterData.ComponentFilter,
+                    authFilterP = componentVM.FilterData.AuthFilter,
+                    vendorFilterP = componentVM.FilterData.VendorFilter
                 });
             }
             else
@@ -476,9 +483,11 @@ namespace ConfigMan.Controllers
                     componentVM.VendorLijst.Add(VM);
                 }
 
-                componentVM.Message.Fill("Component - Bewerken",
-                        componentVM.Message.Error, "Model ERROR in " + componentVM.ComponentNameTemplate);
-                
+                l = componentVM.Message.Error;
+                m = "Model ERROR in " + componentVM.ComponentNameTemplate;
+                componentVM.Message.Fill(t, l, m);
+                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
+
                 return View(componentVM);
             }
 
@@ -487,7 +496,7 @@ namespace ConfigMan.Controllers
         //
         // GET: Components/Delete/5
         //
-        public ActionResult Delete(int id, string filterstr, string subsetstr, string componentFilter, string authFilter, string vendorFilter)
+        public ActionResult Delete(int id, string filterstrP, string subsetstrP, string componentFilterP, string authFilterP, string vendorFilterP)
         {
             ComponentVM componentVM = new ComponentVM();
             Contract.ContractFailed += (Contract_ContractFailed);
@@ -503,17 +512,17 @@ namespace ConfigMan.Controllers
                 m = "Contract error bij Component Verwijderen (GET)";
                 l = componentVM.Message.Error;
                 componentVM.Message.Fill(t, l, m);
-                componentVM.FilterData.Fill(filterstr, subsetstr, componentFilter, authFilter, vendorFilter);
+                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
 
                 return RedirectToAction("Index", "Components", new
                 {
-                    message = m,
-                    msgLevel = l,
-                    filterstr = componentVM.FilterData.Filterstr,
-                    subsetstr = componentVM.FilterData.Subsetstr,
-                    componentFilter = componentVM.FilterData.ComponentFilter,
-                    authFilter = componentVM.FilterData.AuthFilter,
-                    vendorFilter = componentVM.FilterData.VendorFilter
+                    messageP = m,
+                    msgLevelP = l,
+                    filterstrP = componentVM.FilterData.Filterstr,
+                    subsetstrP = componentVM.FilterData.Subsetstr,
+                    componentFilterP = componentVM.FilterData.ComponentFilter,
+                    authFilterP = componentVM.FilterData.AuthFilter,
+                    vendorFilterP = componentVM.FilterData.VendorFilter
                 });
             }
 
@@ -545,7 +554,7 @@ namespace ConfigMan.Controllers
                     m = "Klik op VERWIJDEREN om deze component te verwijderen";
                 }
                 componentVM.Message.Fill(t, l, m);
-                componentVM.FilterData.Fill(filterstr, subsetstr, componentFilter, authFilter, vendorFilter);
+                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
                 return View(componentVM);
             }
             
@@ -555,7 +564,7 @@ namespace ConfigMan.Controllers
         // POST: Components/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id, string filterstr, string subsetstr, string componentFilter, string authFilter, string vendorFilter)
+        public ActionResult DeleteConfirmed(int id, string filterstrP, string subsetstrP, string componentFilterP, string authFilterP, string vendorFilterP)
 
         {
             ComponentVM componentVM = new ComponentVM();
@@ -564,7 +573,7 @@ namespace ConfigMan.Controllers
             string t = "Component - Verwijderen";
             string l = "?";
             string m = "?";
-            componentVM.FilterData.Fill(filterstr, subsetstr, componentFilter, authFilter, vendorFilter);
+            componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
 
             if (ContractErrorOccurred)
             {
@@ -587,7 +596,7 @@ namespace ConfigMan.Controllers
                     m = "Component " + component.ComponentNameTemplate + " kan niet worden verwijderd. Verwijder eerst alle Installaties, Services en Documentatie *** (" + exc.Message + ")";
                     componentVM.Message.Fill(t,l,m);
                     componentVM.Fill(component);
-                    componentVM.FilterData.Fill(filterstr, subsetstr, componentFilter, authFilter, vendorFilter);
+                    componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
 
                     return View(componentVM);
                 }
@@ -598,13 +607,13 @@ namespace ConfigMan.Controllers
 
             return RedirectToAction("Index", "Components", new
             {
-                message = m,
-                msgLevel = l,
-                filterstr = componentVM.FilterData.Filterstr,
-                subsetstr = componentVM.FilterData.Subsetstr,
-                componentFilter = componentVM.FilterData.ComponentFilter,
-                authFilter = componentVM.FilterData.AuthFilter,
-                vendorFilter = componentVM.FilterData.VendorFilter
+                messageP = m,
+                msgLevelP = l,
+                filterstrP = componentVM.FilterData.Filterstr,
+                subsetstrP = componentVM.FilterData.Subsetstr,
+                componentFilterP = componentVM.FilterData.ComponentFilter,
+                authFilterP = componentVM.FilterData.AuthFilter,
+                vendorFilterP = componentVM.FilterData.VendorFilter
             });
         }
 
@@ -674,16 +683,17 @@ namespace ConfigMan.Controllers
             return View(index);
 
         }
-        public ActionResult Match(int id, string message, string msglevel, string filterstr, string subsetstr, string componentFilter, string authFilter, string vendorFilter)
+        public ActionResult Match(int id, string messageP, string msglevelP, 
+            string filterstrP, string subsetstrP, string componentFilterP, string authFilterP, string vendorFilterP)
         {
             ComponentVM componentVM = new ComponentVM();
             Contract.ContractFailed += (Contract_ContractFailed);
             Contract.Requires(id > 0, "Geef een geldig Component ID op");
             string t = "Component - Matchen";
-            string m = message;
-            string l = msglevel;
+            string m = messageP;
+            string l = msglevelP;
             componentVM.Message.Fill(t, l, m);
-            componentVM.FilterData.Fill(filterstr, subsetstr, componentFilter, authFilter, vendorFilter);
+            componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
 
             if (ContractErrorOccurred)
             {
@@ -769,7 +779,7 @@ namespace ConfigMan.Controllers
 
                 }
                 componentVM.Message.Fill(t, l, m);
-                componentVM.FilterData.Fill(filterstr, subsetstr, componentFilter, authFilter, vendorFilter);
+                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
                
             }
             return View(componentVM);
@@ -777,7 +787,7 @@ namespace ConfigMan.Controllers
 
         }
 
-        public ActionResult Koppel(string filterstr, string subsetstr, string componentFilter, string authFilter, string vendorFilter,
+        public ActionResult Koppel(string filterstrP, string subsetstrP, string componentFilterP, string authFilterP, string vendorFilterP,
                                     int computerid, int componentid, string release, DateTime startdatetime, int newcomponentid)
         {
             ComponentVM componentVM = new ComponentVM();
@@ -789,7 +799,7 @@ namespace ConfigMan.Controllers
             Contract.Requires(startdatetime != null, "Contract Failed (startdatetime)!");
             Contract.Requires(newcomponentid > 0, "Contract Failed (componentid)!");
 
-            componentVM.FilterData.Fill(filterstr, subsetstr, componentFilter, authFilter, vendorFilter);
+            componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
 
             string t = "Component - Koppelen Installatie";
             string m = "?";
@@ -805,13 +815,13 @@ namespace ConfigMan.Controllers
 
                 return RedirectToAction("Index", "Components", new
                 {
-                    message = m,
-                    msgLevel = l,
-                    filterstr = componentVM.FilterData.Filterstr,
-                    subsetstr = componentVM.FilterData.Subsetstr,
-                    componentFilter = componentVM.FilterData.ComponentFilter,
-                    authFilter = componentVM.FilterData.AuthFilter,
-                    vendorFilter = componentVM.FilterData.VendorFilter
+                    messageP = m,
+                    msgLevelP = l,
+                    filterstrP = componentVM.FilterData.Filterstr,
+                    subsetstrP = componentVM.FilterData.Subsetstr,
+                    componentFilterP = componentVM.FilterData.ComponentFilter,
+                    authFilterP = componentVM.FilterData.AuthFilter,
+                    vendorFilterP = componentVM.FilterData.VendorFilter
                 });
             }
             else
@@ -876,13 +886,13 @@ namespace ConfigMan.Controllers
                 return RedirectToAction("Match", "Components", new
                 {
                     id = newcomponentid,
-                    message = m,
-                    msgLevel = l,
-                    filterstr = componentVM.FilterData.Filterstr,
-                    subsetstr = componentVM.FilterData.Subsetstr,
-                    componentFilter = componentVM.FilterData.ComponentFilter,
-                    authFilter = componentVM.FilterData.AuthFilter,
-                    vendorFilter = componentVM.FilterData.VendorFilter
+                    messageP = m,
+                    msgLevelP = l,
+                    filterstrP = componentVM.FilterData.Filterstr,
+                    subsetstrP = componentVM.FilterData.Subsetstr,
+                    componentFilterP = componentVM.FilterData.ComponentFilter,
+                    authFilterP = componentVM.FilterData.AuthFilter,
+                    vendorFilterP = componentVM.FilterData.VendorFilter
                 });
             }
            

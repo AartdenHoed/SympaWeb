@@ -75,7 +75,7 @@ function valueChanged()
 
         if (x) {
             $(".sy-filter").show();
-            $("#Filterstr")[0].value = "Y";
+            $("#FilterData_Filterstr")[0].value = "Y";
             //alert("set to Y");
         }
         else {
@@ -92,56 +92,51 @@ function valueChanged()
 function adaptUrls() {
     //alert("Common");
 
-    var fdoc = document.getElementById("Filterstr");
-    if (fdoc != null) {
+    var fdoc = document.getElementById("FilterData_Filterstr");
+    if ((fdoc != null) && (typeof fdoc !== 'undefined')) {
         var filterstr = fdoc.value;
-        if ((filterstr == null) || (filterstr == "")) {
-            filterstr = "N";
-        }
     }
+    if ((filterstr == null) || (filterstr == "") || (typeof filterstr === 'undefined')) {
+        filterstr = "N";
+    } 
     if (filterstr == "N") {
         //alert("END -> No filterstr");
         return;
     }
+    //alert("filterstr = " + filterstr);
 
-    //alert("START - SetFilterUrl");
+    var subset = "&subsetstrP=" + $("#FilterData_Subsetstr")[0].value;
+    //alert(subset);
+    var component = "&componentFilterP=" + $("#FilterData_ComponentFilter")[0].value;
+    //alert(component);
+    var vendor = "&vendorFilterP=" + $("#FilterData_VendorFilter")[0].value;
+    //alert(vendor);
+    var auth = "&authFilterP=" + $("#FilterData_AuthFilter")[0].value;
+    //alert(auth);
+
+    //alert("START - sy-url");
+
     var syurl = document.getElementsByClassName('sy-url');
 
     if (syurl.length > 0) { 
         // Adapt filter parameter that have to be passed to controllers via URL.      
             
-        var url = "/Components?filterStr=" + filterstr;
+        var url = "/Components?filterStrP=" + filterstr;
         //alert(url);
-        var part0 = "&subsetstr=" + $("#Subsetstr")[0].value;
-        //alert(part0);
-        var part1 = "&componentFilter=" + $("#ComponentFilter")[0].value;
-        //alert(part1);
-        var part2 = "&vendorFilter=" + $("#VendorFilter")[0].value;
-        //alert(part2);
-        var part3 = "&authFilter=" + $("#AuthFilter")[0].value;
-        //alert(part3);
-        var completeURL = url + part0 + part1 + part2 + part3;
+        
+        var completeURL = url + subset + component + vendor + auth;
         //alert(completeURL);
         $(".sy-url").attr("href", completeURL);      
 
     }    
-    //alert("END - SetFilterUrl");
+    //alert("END - sy-url");
     
-    //alert("START SetListUrl");       
+    //alert("START sy-alist");       
     
     var sya = document.getElementsByClassName("sy-alist");
 
     if (sya.length > 0) {
 
-        var part0 = "&subsetstr=" + $("#Subsetstr")[0].value;
-        //alert(part0);
-        var part1 = "&componentFilter=" + $("#ComponentFilter")[0].value;
-        //alert(part1);
-        var part2 = "&vendorFilter=" + $("#VendorFilter")[0].value;
-        //alert(part2);
-        var part3 = "&authFilter=" + $("#AuthFilter")[0].value;
-        //alert(part3);
-        
         var hid = document.getElementsByClassName("sy-hiddenid");
         // alert(sya.length);
         var teller = 1;
@@ -169,7 +164,7 @@ function adaptUrls() {
                 // alert(attrStripped);
             }
 
-            var newattr = attrStripped + "?id=" + hidden.toString() + "&filterStr=Y" + part0 + part1 + part2 + part3;
+            var newattr = attrStripped + "?id=" + hidden.toString() + "&filterStrP=Y" + subset + component + vendor + auth
             
             // alert("here?");
             $(sya[i]).attr("href", newattr);
@@ -178,9 +173,9 @@ function adaptUrls() {
 
         }
     }
-    //alert("END SetListUrl");
+    //alert("END sy-alist");
 
-    //alert("START SetListUrl2");       
+    //alert("START sy-alist2");       
  
     var sya = document.getElementsByClassName("sy-alist2");
    
@@ -189,18 +184,9 @@ function adaptUrls() {
         var gekop = document.getElementsByClassName("sy-gekoppeld");
         var oldid = document.getElementsByClassName("sy-oldid");
 
-        var filt = "?filterstr="+ $("#Filterstr")[0].value;
-        var part0 = "&subsetstr=" + $("#Subsetstr")[0].value;
-        //alert(part0);
-        var part1 = "&componentFilter=" + $("#ComponentFilter")[0].value;
-        //alert(part1);
-        var part2 = "&vendorFilter=" + $("#VendorFilter")[0].value;
-        //alert(part2);
-        var part3 = "&authFilter=" + $("#AuthFilter")[0].value;
-        //alert(part3);
+        var filt = "?filterstrP=" + $("#FilterData_Filterstr")[0].value;
         var newid = $(".sy-hiddenid")[0].value;
-        // alert(newid);
-                
+                        
         for (let i = 0; i < sya.length; i++) {
             
             // alert(oldid[i].value);
@@ -222,7 +208,7 @@ function adaptUrls() {
             
             var trail = attr.substring(ix + 1);
 
-            var newattr = attrStripped + filt + part0 + part1 + part2 + part3 + "&" +  trail;
+            var newattr = attrStripped + filt + subset + component + vendor + auth + "&" +  trail;
             if (i < 3) {
                 //alert(attrStripped);
                 //alert(newattr);
@@ -233,24 +219,16 @@ function adaptUrls() {
 
         }
     }
-    //alert("END SetListUrl2");
+    //alert("END sy-alist2");
   
-    //alert("START SetCreateUrl");
+    //alert("START sy-acreate");
     
       
     var syc = document.getElementsByClassName("sy-acreate");
 
     if (syc.length > 0) {
 
-        var part0 = "&subsetstr=" + $("#Subsetstr")[0].value;
-        //alert(part0);
-        var part1 = "&componentFilter=" + $("#ComponentFilter")[0].value;
-        //alert(part1);
-        var part2 = "&vendorFilter=" + $("#VendorFilter")[0].value;
-        //alert(part2);
-        var part3 = "&authFilter=" + $("#AuthFilter")[0].value;
-        //alert(part3);
-                
+                      
         for (let i = 0; i < syc.length; i++) {
             
             var attr = syc[i].getAttribute("href");
@@ -261,7 +239,7 @@ function adaptUrls() {
             var newattr = attr;
             var f1 = attr.indexOf(s1);
             if (f1 > 0) {
-                var repstring = "/Create?filterStr=Y" + part0 + part1 + part2 + part3;
+                var repstring = "/Create?filterStrP=Y" + subset + component + vendor + auth;
                 var attrStripped = attr.substring(0, f1);
                 newattr = attrStripped + repstring;
                 // alert(newattr);
@@ -274,7 +252,7 @@ function adaptUrls() {
 
         }
     }
-    //alert("END SetCreateUrl");
+    //alert("END sy-acreate");
    
 }
 
@@ -303,7 +281,7 @@ function onlyOne(current) {
                 others[i].checked = false;
             }
             else {
-                $("#Subsetstr")[0].value = urlletter[i];
+                $("#FilterData_Subsetstr")[0].value = urlletter[i];
                 // alert("set to " + urlletter[i]);
             }
         }
@@ -317,7 +295,7 @@ function onlyOne(current) {
         }
         if (!onefound) {
             others[0].checked = true;
-            $("#Subsetstr")[0].value = urlletter[0];
+            $("#FilterData_Subsetstr")[0].value = urlletter[0];
         }    
     }  
     

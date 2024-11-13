@@ -20,8 +20,8 @@
     </div>
     <p>&nbsp;</p>
     <p class="sy-filter">
-        @Html.HiddenFor(model => model.FilterData.Subsetstr, new { @id = "Subsetstr" })
-        @Html.HiddenFor(model => model.FilterData.Filterstr, new { @class = "sy-hiddenfilter", @id = "Filterstr" })
+        @Html.HiddenFor(model => model.FilterData.Subsetstr)
+        @Html.HiddenFor(model => model.FilterData.Filterstr, new { @class = "sy-hiddenfilter" })
         @Html.DisplayNameFor(model => model.FilterData.ShowAll) :
         @Html.CheckBoxFor(model => model.FilterData.ShowAll, new { @class = "sy-checky", @onclick = "onlyOne(this)" }) |
         @Html.DisplayNameFor(model => model.FilterData.ShowActive) :
@@ -54,17 +54,17 @@
             </td>
             <td>
                 @Html.EditorFor(model => model.FilterData.ComponentFilter, 
-               new { htmlAttributes = new { @id = "ComponentFilter", @class = "sy-input", @autofocus = "autofocus", @onchange = "adaptUrls()" } })
+               new { htmlAttributes = new { @class = "sy-input", @autofocus = "autofocus", @onchange = "adaptUrls()" } })
                 @Html.ValidationMessageFor(model => model.FilterData.ComponentFilter, "", new { @class = "text-danger" })
             </td>
             <td>
                 @Html.EditorFor(model => model.FilterData.AuthFilter,
-               new { htmlAttributes = new { @id = "AuthFilter", @class = "sy-input", @autofocus = "autofocus", @onchange = "adaptUrls()" } })
+               new { htmlAttributes = new { @class = "sy-input", @autofocus = "autofocus", @onchange = "adaptUrls()" } })
                 @Html.ValidationMessageFor(model => model.FilterData.AuthFilter, "", new { @class = "text-danger" })
             </td>
             <td>
                 @Html.EditorFor(model => model.FilterData.VendorFilter, 
-               new { htmlAttributes = new { @id = "VendorFilter", @class = "sy-input", @autofocus = "autofocus", @onchange = "adaptUrls()" } })
+               new { htmlAttributes = new { @class = "sy-input", @autofocus = "autofocus", @onchange = "adaptUrls()" } })
                 @Html.ValidationMessageFor(model => model.FilterData.VendorFilter, "", new { @class = "text-danger" })
             </td>
         </tr>
