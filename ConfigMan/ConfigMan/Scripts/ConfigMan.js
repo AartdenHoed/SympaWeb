@@ -92,7 +92,32 @@ function valueChanged()
 function adaptUrls() {
     //alert("Common");
 
+    var sya2 = document.getElementsByClassName("sy-alist2");
+    var kop = document.getElementsByClassName("sy-koppel");
+
+    if ((sya2.length > 0) && (kop.length > 0)) {
+        var kop = document.getElementsByClassName("sy-koppel");
+        var gekop = document.getElementsByClassName("sy-gekoppeld");
+        var oldid = document.getElementsByClassName("sy-oldid");
+
+        var newid = $(".sy-hiddenid")[0].value;
+
+        for (let i = 0; i < sya2.length; i++) {
+
+            // alert(oldid[i].value);
+            if (newid == oldid[i].value) {
+                $(kop[i]).hide();
+                $(gekop[i]).show();
+            }
+            else {
+                $(kop[i]).show();
+                $(gekop[i]).hide();
+            }
+        }
+    }
+
     var fdoc = document.getElementById("FilterData_Filterstr");
+    //alert(fdoc);
     if ((fdoc != null) && (typeof fdoc !== 'undefined')) {
         var filterstr = fdoc.value;
     }
@@ -180,24 +205,11 @@ function adaptUrls() {
     var sya = document.getElementsByClassName("sy-alist2");
    
     if (sya.length > 0) {
-        var kop = document.getElementsByClassName("sy-koppel");
-        var gekop = document.getElementsByClassName("sy-gekoppeld");
-        var oldid = document.getElementsByClassName("sy-oldid");
-
+        
         var filt = "?filterstrP=" + $("#FilterData_Filterstr")[0].value;
-        var newid = $(".sy-hiddenid")[0].value;
+        
                         
-        for (let i = 0; i < sya.length; i++) {
-            
-            // alert(oldid[i].value);
-            if (newid == oldid[i].value) {
-                $(kop[i]).hide();
-                $(gekop[i]).show();
-            }
-            else {
-                $(kop[i]).show();
-                $(gekop[i]).hide();
-            }
+        for (let i = 0; i < sya.length; i++) {                     
 
             var attr = sya[i].getAttribute("href");
             // alert(attr);

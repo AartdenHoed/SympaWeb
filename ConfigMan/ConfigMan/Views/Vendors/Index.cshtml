@@ -11,58 +11,62 @@
         @Html.DisplayFor(model => model.Message.Tekst)
     </p>
 
-    <p>
+    <div class="sy-div">
         @Html.ActionLink("Nieuwe Vendor", "Create", "", new { @class = "sy-a" }) |
-        @Html.ActionLink("Terug naar Menu", "Menu", "Vendors", new { @class = "sy-a" })
-    </p>
+        @Html.ActionLink("Terug naar Menu", "Menu", "Vendors", new { @class = "sy-a" }) |
+        <div class="sy-aantal">
+            @Html.DisplayNameFor(model => model.Aantal) :
+            @Html.DisplayFor(model => model.Aantal)
+        </div>
+     </div>
 
-    <table class="sy-table">
+        <table class="sy-table">
 
-        @if (Model.VendorLijst != null)
-        {
-            var i = 0;
-
-            foreach (var item in Model.VendorLijst)
+            @if (Model.VendorLijst != null)
             {
-                if (i == 0)
+                var i = 0;
+
+                foreach (var item in Model.VendorLijst)
                 {
+                    if (i == 0)
+                    {
+                        <tr>
+                            <th></th>
+                            <th>
+                                @Html.DisplayNameFor(modelItem => item.VendorName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(modelItem => item.VendorGroup)
+                            </th>
+
+
+                        </tr>
+                    }
+                    i = i + 1;
+
+
                     <tr>
-                        <th></th>
-                        <th>
-                            @Html.DisplayNameFor(modelItem => item.VendorName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(modelItem => item.VendorGroup)
-                        </th>
+                        <td>
+                            @Html.ActionLink("Bewerk", "Edit", new { id = item.VendorID }, new { @class = "sy-a" }) |
+                            @Html.ActionLink("Bekijk", "Details", new { id = item.VendorID }, new { @class = "sy-a" }) |
+                            @Html.ActionLink("Verwijder", "Delete", new { id = item.VendorID }, new { @class = "sy-a" })
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.VendorName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.VendorGroup)
+                        </td>
 
 
                     </tr>
                 }
-                i = i + 1;
-
-
-                <tr>
-                    <td>
-                        @Html.ActionLink("Bewerk", "Edit", new { id = item.VendorID }, new { @class = "sy-a" }) |
-                        @Html.ActionLink("Bekijk", "Details", new { id = item.VendorID }, new { @class = "sy-a" }) |
-                        @Html.ActionLink("Verwijder", "Delete", new { id = item.VendorID }, new { @class = "sy-a" })
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.VendorName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.VendorGroup)
-                    </td>
-
-
-                </tr>
             }
-        }
 
-    </table>
-    <p>
-        *** Einde van de lijst ***
-    </p>
+        </table>
+        <p>
+            *** Einde van de lijst ***
+        </p>
 
 
-</div>
+    </div>

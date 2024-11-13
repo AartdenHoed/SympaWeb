@@ -16,8 +16,13 @@
 
         @Html.CheckBoxFor(model => model.FilterData.Filter, new { @class = "sy-switch", @onclick = "valueChanged()" })
         | @Html.ActionLink("Wis alle filters", "Index", "Components", new { filterstr = "N" }, new { @class = "sy-a" }) |
-        
+        <div class="sy-aantal">
+            @Html.DisplayNameFor(model => model.Aantal) :
+            @Html.DisplayFor(model => model.Aantal)
+        </div>
+
     </div>
+    
     <p>&nbsp;</p>
     <p class="sy-filter">
         @Html.HiddenFor(model => model.FilterData.Subsetstr)

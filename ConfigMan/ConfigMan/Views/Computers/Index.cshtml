@@ -9,62 +9,66 @@
     <p>
         @Html.DisplayFor(model => model.Message.Tekst)
     </p>
-    <p>
+    <div class="sy-div">
         @Html.ActionLink("Nieuwe Computer", "Create", "", new { @class = "sy-a" }) |
-        @Html.ActionLink("Terug naar Menu", "Menu", "Computers", new { @class = "sy-a" })
-    </p>
+        @Html.ActionLink("Terug naar Menu", "Menu", "Computers", new { @class = "sy-a" }) |
+        <div class="sy-aantal">
+            @Html.DisplayNameFor(model => model.Aantal) :
+            @Html.DisplayFor(model => model.Aantal)
+        </div>
+     </div>
 
-    <table class="sy-table">
-        @if (Model.ComputerLijst != null)
-        {
-            var i = 0;
-
-            foreach (var item in Model.ComputerLijst)
+        <table class="sy-table">
+            @if (Model.ComputerLijst != null)
             {
-                if (i == 0)
+                var i = 0;
+
+                foreach (var item in Model.ComputerLijst)
                 {
+                    if (i == 0)
+                    {
+                        <tr>
+                            <th></th>
+                            <th>
+                                @Html.DisplayNameFor(modelItem => item.ComputerName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(modelItem => item.ComputerPurchaseDate)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(modelItem => item.OS)
+                            </th>
+
+                        </tr>
+                    }
+                    i = i + 1;
+
                     <tr>
-                        <th></th>
-                        <th>
-                            @Html.DisplayNameFor(modelItem => item.ComputerName)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(modelItem => item.ComputerPurchaseDate)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(modelItem => item.OS)
-                        </th>
+                        <td>
+                            @Html.ActionLink("Bewerk", "Edit", new { id = item.ComputerID }, new { @class = "sy-a" }) |
+                            @Html.ActionLink("Bekijk", "Details", new { id = item.ComputerID }, new { @class = "sy-a" }) |
+                            @Html.ActionLink("Verwijder", "Delete", new { id = item.ComputerID }, new { @class = "sy-a" })
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ComputerName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ComputerPurchaseDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OS)
+                        </td>
 
                     </tr>
                 }
-                i = i + 1;
-
-                <tr>
-                    <td>
-                        @Html.ActionLink("Bewerk", "Edit", new { id = item.ComputerID }, new { @class = "sy-a" }) |
-                        @Html.ActionLink("Bekijk", "Details", new { id = item.ComputerID }, new { @class = "sy-a" }) |
-                        @Html.ActionLink("Verwijder", "Delete", new { id = item.ComputerID }, new { @class = "sy-a" })
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ComputerName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ComputerPurchaseDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.OS)
-                    </td>
-
-                </tr>
             }
-        }
 
-    </table>
-    <p>
-        *** Einde van de lijst ***
-    </p>
-
+        </table>
+        <p>
+            *** Einde van de lijst ***
+        </p>
 
 
 
-</div>
+
+    </div>

@@ -12,6 +12,8 @@ namespace ConfigMan.ViewModels
 {
     public class ComponentIndex
     {
+        [DisplayName("Aantal componenten")]
+        public int Aantal { get { return this.ComponentLijst.Count; } }
         public SympaFilter FilterData = new SympaFilter();
 
         public SympaMessage Message = new SympaMessage();

@@ -10,91 +10,95 @@
         @Html.DisplayFor(model => model.Message.Tekst)
     </p>
 
-    <p>
+    <div class="sy-div">
         @Html.ActionLink("Nieuwe Installatie", "Create", "", new { @class = "sy-a" }) |
-        @Html.ActionLink("Terug naar Menu", "Menu", "Installations", new { @class = "sy-a" })
-    </p>
+        @Html.ActionLink("Terug naar Menu", "Menu", "Installations", new { @class = "sy-a" }) |
+        <div class="sy-aantal">
+            @Html.DisplayNameFor(model => model.Aantal) :
+            @Html.DisplayFor(model => model.Aantal)
+        </div>
+     </div>
 
-    <table class="sy-table">
+        <table class="sy-table">
 
-    @if (Model.InstallationLijst != null)
-    {
-        var i = 0;
-
-        foreach (var item in Model.InstallationLijst)
-        {
-            if (i == 0)
+            @if (Model.InstallationLijst != null)
             {
-                <tr>
-                    <th></th>
-                    <th>
-                        @Html.DisplayNameFor(modelItem => item.ComputerName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(modelItem => item.ComponentName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(modelItem => item.Release)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(modelItem => item.StartDateTime)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(modelItem => item.EndDateTime)
-                    </th>
+                var i = 0;
 
-                </tr>
+                foreach (var item in Model.InstallationLijst)
+                {
+                    if (i == 0)
+                    {
+                        <tr>
+                            <th></th>
+                            <th>
+                                @Html.DisplayNameFor(modelItem => item.ComputerName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(modelItem => item.ComponentName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(modelItem => item.Release)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(modelItem => item.StartDateTime)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(modelItem => item.EndDateTime)
+                            </th>
+
+                        </tr>
+                    }
+                    i = i + 1;
+
+                    <tr>
+                        <td>
+                            @Html.ActionLink("Bewerk", "Edit", new
+                       {
+                           computerid = item.ComputerID,
+                           componentid = item.ComponentID,
+                           release = item.Release,
+                           startdatetime = item.StartDateTime
+                       }, new { @class = "sy-a" }) |
+                            @Html.ActionLink("Bekijk", "Details", new
+                       {
+                           computerid = item.ComputerID,
+                           componentid = item.ComponentID,
+                           release = item.Release,
+                           startdatetime = item.StartDateTime
+                       }, new { @class = "sy-a" }) |
+                            @Html.ActionLink("Verwijder", "Delete", new
+                       {
+                           computerid = item.ComputerID,
+                           componentid = item.ComponentID,
+                           release = item.Release,
+                           startdatetime = item.StartDateTime
+                       }, new { @class = "sy-a" })
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ComputerName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ComponentName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Release)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StartDateTime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EndDateTime)
+                        </td>
+
+                    </tr>
+                }
             }
-            i = i + 1;
 
-<tr>
-    <td>
-        @Html.ActionLink("Bewerk", "Edit", new
-   {
-       computerid = item.ComputerID,
-       componentid = item.ComponentID,
-       release = item.Release,
-       startdatetime = item.StartDateTime
-   }, new { @class = "sy-a" }) |
-        @Html.ActionLink("Bekijk", "Details", new
-   {
-       computerid = item.ComputerID,
-       componentid = item.ComponentID,
-       release = item.Release,
-       startdatetime = item.StartDateTime
-   }, new { @class = "sy-a" }) |
-        @Html.ActionLink("Verwijder", "Delete", new
-   {
-       computerid = item.ComputerID,
-       componentid = item.ComponentID,
-       release = item.Release,
-       startdatetime = item.StartDateTime
-   }, new { @class = "sy-a" })
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.ComputerName)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.ComponentName)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Release)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.StartDateTime)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.EndDateTime)
-    </td>
+        </table>
 
-</tr>
-        }
-    }
+        <p>
+            *** Einde van de lijst ***
+        </p>
 
-                </table>
-
-                <p>
-                    *** Einde van de lijst ***
-                </p>
-
-            </div>
+    </div>

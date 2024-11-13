@@ -426,3 +426,7 @@ select[readonly='readonly'] {
 .sy-gekoppeld {
     background-color: greenyellow;
 }
+.sy-aantal {
+    float: right;
+    background-color: aqua;
+}

@@ -11,6 +11,8 @@ namespace ConfigMan.ViewModels
 {
     public class VendorIndex
     {
+        [DisplayName("Aantal vendors")]
+        public int Aantal { get { return this.VendorLijst.Count; } }
         public SympaMessage Message = new SympaMessage();
 
         public List<VendorVM> VendorLijst = new List<VendorVM>();

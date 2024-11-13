@@ -11,6 +11,8 @@ namespace ConfigMan.ViewModels
 {
     public class InstallationIndex
     {
+        [DisplayName("Aantal installaties")]
+        public int Aantal { get { return this.InstallationLijst.Count; } }
         public SympaMessage Message = new SympaMessage();
 
         public List<InstallationVM> InstallationLijst = new List<InstallationVM>();

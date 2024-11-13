@@ -761,20 +761,28 @@ namespace ConfigMan.Controllers
                                  };
                     List<InstallationVM> templist = new List<InstallationVM>();
                     templist = query2.ToList();
-                    // Check if Installation Name matches ComponentNameTemplate
-                    Regex rg = new Regex(componentVM.ComponentNameTemplate.Trim());
-                    foreach (InstallationVM ivm in templist)
-                    {
-                        if ((rg.IsMatch(ivm.ComponentName.Trim())) || (ivm.ComponentName.Trim() == componentVM.ComponentNameTemplate.Trim()))
-                        {
-                            componentVM.InstallationLijst.Add(ivm);
-                        }
-                    }
-                    if (componentVM.InstallationLijst.Count == 0)
+                    if (templist.Count == 0)
                     {
                         l = componentVM.Message.Warning;
-                        m = "Geen overeenkomstige installaties gevonden.";
+                        m = "Geen installaties gevonden van leverancier " + componentVM.VendorGroup;
+                    }
+                    else
+                    {
+                        // Check if Installation Name matches ComponentNameTemplate
+                        Regex rg = new Regex(componentVM.ComponentNameTemplate.Trim());
+                        foreach (InstallationVM ivm in templist)
+                        {
+                            if ((rg.IsMatch(ivm.ComponentName.Trim())) || (ivm.ComponentName.Trim() == componentVM.ComponentNameTemplate.Trim()))
+                            {
+                                componentVM.InstallationLijst.Add(ivm);
+                            }
+                        }
+                        if (componentVM.InstallationLijst.Count == 0)
+                        {
+                            l = componentVM.Message.Warning;
+                            m = "Geen overeenkomstige installaties gevonden van leverancier " + componentVM.VendorGroup;
 
+                        }
                     }
 
                 }

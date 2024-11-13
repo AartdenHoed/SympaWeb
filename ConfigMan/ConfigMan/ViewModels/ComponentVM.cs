@@ -15,7 +15,9 @@ namespace ConfigMan.ViewModels
         
         public List<VendorVM> VendorLijst = new List<VendorVM>();
         public List<InstallationVM> InstallationLijst = new List<InstallationVM>();
-        
+        [DisplayName("Aantal installaties")]
+        public int Aantal { get { return this.InstallationLijst.Count; } }
+
         public string SelectedVendorIDstring { get; set; }
 
         public int ComponentID { get; set; }

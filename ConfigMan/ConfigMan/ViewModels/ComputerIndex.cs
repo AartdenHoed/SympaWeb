@@ -11,6 +11,8 @@ namespace ConfigMan.ViewModels
 {
     public class ComputerIndex
     {
+        [DisplayName("Aantal computers")]
+        public int Aantal { get { return this.ComputerLijst.Count; } }
         public SympaMessage Message = new SympaMessage();
 
         public List<ComputerVM> ComputerLijst = new List<ComputerVM>();
