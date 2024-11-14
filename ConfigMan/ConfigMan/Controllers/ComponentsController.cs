@@ -769,22 +769,36 @@ namespace ConfigMan.Controllers
                     else
                     {
                         // Check if Installation Name matches ComponentNameTemplate
-                        Regex rg = new Regex(componentVM.ComponentNameTemplate.Trim());
-                        foreach (InstallationVM ivm in templist)
+                        try
                         {
-                            if ((rg.IsMatch(ivm.ComponentName.Trim())) || (ivm.ComponentName.Trim() == componentVM.ComponentNameTemplate.Trim()))
+                            RegexOptions options = RegexOptions.IgnoreCase;
+                            Regex rg = new Regex(componentVM.ComponentNameTemplate.Trim() + "$",options);
+                            foreach (InstallationVM ivm in templist)
                             {
-                                componentVM.InstallationLijst.Add(ivm);
+                                if ((rg.IsMatch(ivm.ComponentName.Trim())) || (ivm.ComponentName.Trim() == componentVM.ComponentNameTemplate.Trim()))
+                                {
+                                    componentVM.InstallationLijst.Add(ivm);
+                                }
+                            }
+                            if (componentVM.InstallationLijst.Count == 0)
+                            {
+                                l = componentVM.Message.Warning;
+                                m = "Geen overeenkomstige installaties gevonden van leverancier " + componentVM.VendorGroup;
+
                             }
                         }
-                        if (componentVM.InstallationLijst.Count == 0)
-                        {
-                            l = componentVM.Message.Warning;
-                            m = "Geen overeenkomstige installaties gevonden van leverancier " + componentVM.VendorGroup;
-
+                        catch {
+                            l = componentVM.Message.Error;
+                            m = "Deze template levert een REGEX error op: " + componentVM.ComponentNameTemplate.Trim();
                         }
+                        
                     }
 
+                }
+                if (!string.IsNullOrEmpty(messageP))
+                {
+                    m = messageP;
+                    l = msglevelP;
                 }
                 componentVM.Message.Fill(t, l, m);
                 componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
@@ -843,6 +857,7 @@ namespace ConfigMan.Controllers
                            
                 Installation OldInst = query.Single();
                 bool addfailed = false;
+                string e = "";
                 if (OldInst != null)
                 {
                     Installation NewInst = new Installation()
@@ -864,15 +879,17 @@ namespace ConfigMan.Controllers
                     {
                         db.SaveChanges();
                     }
-                    catch (DbUpdateException)
+                    catch (Exception ex)
                     {
                         addfailed = true;
+                        e = ex.Message;
+
 
                     }
                     if (addfailed)
                     {
                         l = componentVM.Message.Error;
-                        m = "Installatie " + OldInst.ComponentName.TrimEnd() + " is al gekoppeld.";
+                        m = "Installatie " + OldInst.ComponentName.TrimEnd() + " is al gekoppeld. " + e;
                         componentVM.Message.Fill(t, l, m);
                     }
                     else 
@@ -894,8 +911,8 @@ namespace ConfigMan.Controllers
                 return RedirectToAction("Match", "Components", new
                 {
                     id = newcomponentid,
-                    messageP = m,
-                    msgLevelP = l,
+                    messageP = componentVM.Message.Tekst,
+                    msgLevelP = componentVM.Message.Level,
                     filterstrP = componentVM.FilterData.Filterstr,
                     subsetstrP = componentVM.FilterData.Subsetstr,
                     componentFilterP = componentVM.FilterData.ComponentFilter,
