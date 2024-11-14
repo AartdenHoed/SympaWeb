@@ -293,8 +293,14 @@ function onlyOne(current) {
                 others[i].checked = false;
             }
             else {
-                $("#FilterData_Subsetstr")[0].value = urlletter[i];
-                // alert("set to " + urlletter[i]);
+                if (others[i].checked) {
+                    $("#FilterData_Subsetstr")[0].value = urlletter[i];
+                    // alert("set to " + urlletter[i]);
+                }
+                else {
+                    others[0].checked = true;
+                    $("#FilterData_Subsetstr")[0].value = urlletter[0];
+                }
             }
         }
     }
