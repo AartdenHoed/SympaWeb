@@ -15,12 +15,12 @@
         <AssociationConnector Association="SympaModel.FK_Documentation_Component" ManuallyRouted="false" />
         <AssociationConnector Association="SympaModel.FK_License_Component" ManuallyRouted="false" />
         <AssociationConnector Association="SympaModel.FK_License_Computer" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="SympaModel.Service" Width="1.5" PointX="6.25" PointY="3.625" />
-        <AssociationConnector Association="SympaModel.FK_Service_Component" />
-        <AssociationConnector Association="SympaModel.FK_Service_Computer" />
         <EntityTypeShape EntityType="SympaModel.Installation" Width="1.5" PointX="3.5" PointY="0.5" />
         <AssociationConnector Association="SympaModel.FK_Installation_Component" />
         <AssociationConnector Association="SympaModel.FK_Installation_Computer" />
+        <EntityTypeShape EntityType="SympaModel.Service" Width="1.5" PointX="6.25" PointY="5" />
+        <AssociationConnector Association="SympaModel.FK_Service_Component" />
+        <AssociationConnector Association="SympaModel.FK_Service_Computer" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -200,6 +200,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ServicesController.cs" />
     <Compile Include="Filters\ExceptionFilter.cs" />
     <Compile Include="Filters\LogActionFilter.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -271,9 +272,13 @@
     <Compile Include="Vendor.cs">
       <DependentUpon>ConfigModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\Service.cs" />
     <Compile Include="ViewModels\Component.cs" />
     <Compile Include="ViewModels\InstallationCompare.cs" />
     <Compile Include="ViewModels\InstallationIndex.cs" />
+    <Compile Include="ViewModels\ServiceFilter.cs" />
+    <Compile Include="ViewModels\ServiceIndex.cs" />
+    <Compile Include="ViewModels\ServiceVM.cs" />
     <Compile Include="ViewModels\SympaFilter.cs" />
     <Compile Include="ViewModels\VendorIndex.cs" />
     <Compile Include="ViewModels\ComputerIndex.cs" />
@@ -433,8 +438,6 @@
     <Content Include="Views\Vendors\Menu.cshtml" />
     <Content Include="Views\Vendors\Report01.cshtml" />
     <Content Include="Views\Vendors\Report02.cshtml" />
-    <Content Include="Views\Components\Menu.cshtml" />
-    <Content Include="Views\Components\Report01.cshtml" />
     <Content Include="Views\Installations\Create.cshtml" />
     <Content Include="Views\Installations\Delete.cshtml" />
     <Content Include="Views\Installations\Details.cshtml" />
@@ -447,11 +450,14 @@
     <Content Include="Views\Installations\Report04.cshtml" />
     <Content Include="Views\Installations\Report05.cshtml" />
     <Content Include="Views\Installations\Report06.cshtml" />
-    <Content Include="Views\Components\Report02.cshtml" />
     <Content Include="Views\Vendors\Report03.cshtml" />
     <Content Include="Views\Installations\Report07.cshtml" />
     <Content Include="Views\Installations\Report08.cshtml" />
     <Content Include="Views\Components\Match.cshtml" />
+    <Content Include="Views\Services\Details.cshtml" />
+    <Content Include="Views\Services\Index.cshtml" />
+    <Content Include="Views\Services\Edit.cshtml" />
+    <Content Include="Views\Services\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

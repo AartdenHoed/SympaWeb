@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Web;
-using System.Web.Mvc;
 
 namespace ConfigMan.ViewModels
 {
-    
-    public class SympaFilter
+    public class ServiceFilter
     {
         public string Filterstr { get; set; }
         public bool Filter { get { return (!((this.Filterstr == "N") || (this.Filterstr is null))); } }
@@ -26,7 +24,7 @@ namespace ConfigMan.ViewModels
         [DisplayName("Toon componenten zonder installaties")]
         public bool ShowEmpty { get { return (this.Subsetstr == "E"); } }
 
-        private string P_Subsetstr { get; set;  }
+        private string P_Subsetstr { get; set; }
         public string Subsetstr
         {
             get { return this.P_Subsetstr; }
@@ -36,19 +34,10 @@ namespace ConfigMan.ViewModels
                 else { this.P_Subsetstr = value; }
             }
         }
-
-        public string ComponentFilter { get; set; }
-        public string VendorFilter { get; set; }
-        public string AuthFilter { get; set; }
-
-        public void Fill(string filterstr, string subsetstr, string componentFilter, string authFilter, string vendorFilter)
+        public void Fill()
         {
-            this.Filterstr = filterstr;
-            this.Subsetstr = subsetstr;
-            this.ComponentFilter = componentFilter;
-            this.AuthFilter = authFilter;
-            this.VendorFilter = vendorFilter;
+            int i = 1;
         }
-    }
 
+    }
 }

@@ -14,9 +14,11 @@ namespace ConfigMan
     
     public partial class Service
     {
-        public string PSComputerNAme { get; set; }
+        public string PSComputerName { get; set; }
         public string SystemName { get; set; }
         public string Name { get; set; }
+        public int ComputerID { get; set; }
+        public int ComponentID { get; set; }
         public string Suffix { get; set; }
         public string Caption { get; set; }
         public string DisplayName { get; set; }
@@ -28,14 +30,18 @@ namespace ConfigMan
         public string Status { get; set; }
         public long ExitCode { get; set; }
         public string Description { get; set; }
+        public string Software { get; set; }
         public string DirName { get; set; }
         public string ProgramName { get; set; }
         public string Parameter { get; set; }
         public string ChangeState { get; set; }
         public System.DateTime StartDate { get; set; }
         public System.DateTime CheckDate { get; set; }
-        public int ComponentID { get; set; }
-        public int ComputerID { get; set; }
+        public string OldChangeState { get; set; }
+        public string OldDirName { get; set; }
+        public string OldProgramName { get; set; }
+        public string OldParameter { get; set; }
+        public string DirectoryTemplate { get; set; }
     
         public virtual Component Component { get; set; }
         public virtual Computer Computer { get; set; }

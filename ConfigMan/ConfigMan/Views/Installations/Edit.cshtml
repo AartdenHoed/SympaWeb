@@ -1,11 +1,8 @@
 ﻿<div class="controller">
     @model ConfigMan.ViewModels.InstallationVM
-    @{
-        ViewBag.Title = Model.Message.Title;
-    }
-
+    
     @using (Html.BeginForm())
-        {
+    {
             @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
@@ -109,6 +106,7 @@
         </div>
     </div>
         }
+   
 
 
         @section Scripts {

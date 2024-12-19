@@ -11,7 +11,8 @@
     <div class="sy-div">
 
         @Html.ActionLink("Nieuwe Component", "Create", null, new { @class = "sy-acreate" }) |
-        @Html.ActionLink("Terug naar Menu", "Menu", "Components", new { @class = "sy-a" })
+        @Html.ActionLink("Hoofd Menu", "Index", "Home", "", new { @class = "sy-a" })
+        
         | Filter tonen (aan/uit) &nbsp;
 
         @Html.CheckBoxFor(model => model.FilterData.Filter, new { @class = "sy-switch", @onclick = "valueChanged()" })

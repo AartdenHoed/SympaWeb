@@ -31,14 +31,6 @@ namespace ConfigMan.Controllers
         private readonly DbEntities db = new DbEntities();
         private static bool ContractErrorOccurred = false;
         
-        public ActionResult Menu()
-        {
-            SympaMessage msg = new SympaMessage();
-            msg.Fill("Component - Beheer Menu", msg.Info, "Kies een optie");
-           
-            return View(msg);
-        }
-
         //
         // GET: Components
         //
@@ -616,73 +608,7 @@ namespace ConfigMan.Controllers
                 vendorFilterP = componentVM.FilterData.VendorFilter
             });
         }
-
-        public ActionResult Report01()
-        {
-            ComponentIndex index = new ComponentIndex();
-            index.Message.Title = "Rapport - Componenten zonder installaties";
-            
-            index.Message.Tekst = "Overzicht van componenten zonder installaties";
-            index.Message.Level = index.Message.Info;
-            
-
-            var query = from c in db.Components
-                        where !(from i in db.Installations
-                                select i.ComponentID)
-                               .Contains(c.ComponentID)
-                        join vendor in db.Vendors
-                            on c.VendorID equals vendor.VendorID into join1
-                        from j1 in join1
-                        orderby j1.VendorGroup, j1.VendorName, c.ComponentNameTemplate
-                        select new ComponentVM                       
-                        {
-                            ComponentID = c.ComponentID,
-                            ComponentNameTemplate = c.ComponentNameTemplate,
-                            Authorized = c.Authorized,
-                            VendorID = c.VendorID,
-                            VendorName = j1.VendorName
-                            
-                        };
-
-            index.ComponentLijst = query.ToList();
-            
-            return View(index);
-
-        }
-
-        public ActionResult Report02()
-        {
-            ComponentIndex index = new ComponentIndex();
-            index.Message.Title = "Rapport - Componenten zonder actieve installaties";
-
-            index.Message.Tekst = "Overzicht van componenten zonder actieve installaties";
-            index.Message.Level = index.Message.Info;
-
-
-            var query = from c in db.Components
-                        where !(from i in db.Installations
-                                where i.EndDateTime == null
-                                select i.ComponentID)
-                               .Contains(c.ComponentID)
-                        join vendor in db.Vendors
-                            on c.VendorID equals vendor.VendorID into join1
-                        from j1 in join1
-                        orderby j1.VendorGroup, j1.VendorName, c.ComponentNameTemplate
-                        select new ComponentVM
-                        {
-                            ComponentID = c.ComponentID,
-                            ComponentNameTemplate = c.ComponentNameTemplate,
-                            Authorized = c.Authorized,
-                            VendorID = c.VendorID,
-                            VendorName = j1.VendorName
-
-                        };
-
-            index.ComponentLijst = query.ToList();
-
-            return View(index);
-
-        }
+       
         public ActionResult Match(int id, string messageP, string msglevelP, 
             string filterstrP, string subsetstrP, string componentFilterP, string authFilterP, string vendorFilterP)
         {

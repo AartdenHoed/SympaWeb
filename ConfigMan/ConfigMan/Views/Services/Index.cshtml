@@ -1,0 +1,100 @@
+﻿<div class="controller">
+    @model ConfigMan.ViewModels.ServiceIndex
+
+    <h2>
+        @Html.DisplayFor(model => model.Message.Title)
+    </h2>
+    <p>
+        @Html.DisplayFor(model => model.Message.Tekst)
+    </p>
+
+    <div class="sy-div">
+        @Html.ActionLink("Hoofd Menu", "Index", "Home", "", new { @class = "sy-a" })
+        
+        | Filter tonen (aan/uit) &nbsp;
+
+        @Html.CheckBoxFor(model => model.FilterData.Filter, new { @class = "sy-switch", @onclick = "valueChanged()" })
+        | @Html.ActionLink("Wis alle filters", "Index", "Components", new { filterstr = "N" }, new { @class = "sy-a" }) |
+        <div class="sy-aantal">
+            @Html.DisplayNameFor(model => model.Aantal) :
+            @Html.DisplayFor(model => model.Aantal)
+        </div>
+
+    </div>
+    
+    <p>&nbsp;</p>
+    <p class="sy-filter">
+       
+
+    </p>
+   
+    <table class="sy-table">
+        <tr>
+
+            <th>Actie</th>
+            <th>
+                @Html.DisplayNameFor(model => model.ServiceLijst[0].SystemName) <br />
+                @Html.DisplayNameFor(model => model.ServiceLijst[0].Name) <br />
+                @Html.DisplayNameFor(model => model.ServiceLijst[0].ChangeState)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ServiceLijst[0].ComponentName) <br />
+                @Html.DisplayNameFor(model => model.ServiceLijst[0].DisplayName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ServiceLijst[0].DirName) <br />
+                @Html.DisplayNameFor(model => model.ServiceLijst[0].ProgramName) <br />
+                @Html.DisplayNameFor(model => model.ServiceLijst[0].Parameter) 
+            </th>
+            
+        </tr>
+
+        <tr class="sy-filter">
+            <td>
+                @Html.ActionLink("Pas filter toe", "Index", null , new { @class = "sy-url" })
+            </td>
+            
+        </tr>
+
+        @if (Model.ServiceLijst != null)
+        {
+            foreach (var item in Model.ServiceLijst)
+            {
+
+                <tr>
+                    <td>
+                        @Html.HiddenFor(modelItem => item.ComputerID, new { @class = "sy-hiddenid" })
+                        @Html.ActionLink("Bewerk", "Edit", new { id = item.ComputerID, name = item.Name }, new { @class = "sy-alist" }) |
+                        @Html.ActionLink("Bekijk", "Details", new { id = item.ComputerID, name = item.Name }, new { @class = "sy-alist" }) |
+                        @Html.ActionLink("Verwijder", "Delete", new { id = item.ComputerID, name = item.Name }, new { @class = "sy-alist" })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SystemName) <br />
+                        @Html.DisplayFor(modelItem => item.Name)    <br />
+                        @Html.DisplayFor(modelItem => item.ChangeState)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ComponentName) <br />
+                        @Html.DisplayFor(modelItem => item.DisplayName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DirName) <br />
+                        @Html.DisplayFor(modelItem => item.ProgramName) <br />
+                        @Html.DisplayFor(modelItem => item.Parameter) &nbsp;
+                    </td>
+
+
+
+                </tr>
+
+            }
+        }
+
+    </table>
+
+    <p>
+        *** Einde van de lijst ***
+    </p>
+
+
+</div>

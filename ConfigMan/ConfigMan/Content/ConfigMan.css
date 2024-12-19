@@ -105,7 +105,8 @@ h2, h3 {
 }
 .controller {
     margin: 1%;
-    height: 90%;
+    height: 95%;
+    width: 98%;
 }
 .cline {
     background-color: lightgrey;
@@ -135,7 +136,7 @@ h2, h3 {
     padding: 3%;
     text-align: center;
     width: 90%;
-    height: 9%;   
+    height: 8%;   
     list-style: none; 
     border: solid 1px #000000;
     border-radius: 8px;
@@ -165,7 +166,7 @@ h2, h3 {
     background-repeat: no-repeat;
     background-position: center;
     align-items: center;
-    
+    border-radius: 12px;
 }
 .sympaMsg {
     color: red;
@@ -429,4 +430,8 @@ select[readonly='readonly'] {
 .sy-aantal {
     float: right;
     background-color: aqua;
+}
+.sy-readonly {  
+    width: 100%;
+    background-color: khaki  !important;
 }

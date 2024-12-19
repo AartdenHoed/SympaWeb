@@ -40,11 +40,13 @@ namespace ConfigMan.ViewModels
         public string ComponentNameTemplateV 
         { get { return ComponentNameTemplate.Replace("\\.", ".").Replace("\\d+", "#").Replace("\\(", "(").Replace("\\)", ")"); }}
 
+        private string _Authorized = "";
+
         [Required(ErrorMessage = "Autorisatie (Y/N) is een verplicht veld")]
         [DisplayName("Component geautoriseerd (Y/N)")]
         [MaxLength(1, ErrorMessage = "Lengte = 1 (Y of N)")]
-        [StringRange(AllowableValues = new[] { "Y", "N"}, ErrorMessage = "Specificeer Y (geautoriseerd) of N (niet geautoriseerd)")]
-        public string Authorized {  get; set; }
+        [StringRange(AllowableValues = new[] { "Y", "N", "y", "n"}, ErrorMessage = "Specificeer Y (geautoriseerd) of N (niet geautoriseerd)")]
+        public string Authorized { get { return _Authorized.ToUpper(); } set { _Authorized = value.ToUpper(); } }
 
         public SympaFilter FilterData = new SympaFilter();
 

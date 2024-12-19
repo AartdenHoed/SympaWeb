@@ -1,0 +1,193 @@
+﻿<div class="controller">
+    @model ConfigMan.ViewModels.ServiceVM
+
+    <div>
+        <h2>
+            @Html.DisplayFor(model => model.Message.Title)
+        </h2>
+        <hr />
+        <dl class="sy-dl">
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.StartDate)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.StartDate)
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.CheckDate)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.CheckDate)
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.PSComputerName)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.PSComputerName)
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.ComponentName)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.ComponentName)
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.SystemName)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.SystemName)
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.Suffix)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.Suffix) &nbsp;
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.Caption)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.Caption)
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.DisplayName)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.DisplayName)
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.PathName)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.PathName)
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.ServiceType)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.ServiceType)
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.StartMode)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.StartMode)
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.Started)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.Started)
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.State)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.State)
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.Status)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.Status)
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.ExitCode)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.ExitCode)
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.Software)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.Software)
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.ChangeState)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.ChangeState)
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.OldChangeState)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.OldChangeState) &nbsp;
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.DirectoryTemplate)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.DirectoryTemplate) &nbsp;
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.DirName)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.DirName)
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.OldDirName)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.OldDirName) &nbsp;
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.ProgramName)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.ProgramName)
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.OldProgramName)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.OldProgramName) &nbsp;
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.Parameter)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.Parameter) &nbsp;
+            </dd>
+            <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.OldParameter)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.OldParameter) &nbsp;
+            </dd>
+
+        </dl>
+    </div>
+    <div>
+        @Html.HiddenFor(model => model.ComponentID, new { @class = "sy-hiddenid" })
+
+    </div>
+
+    <p>
+        @Html.DisplayFor(model => model.Message.Tekst)
+    </p>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Verwijder" class="sy-button" /> |  @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-a" })
+
+        </div>
+    }
+</div>
