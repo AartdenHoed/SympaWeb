@@ -36,35 +36,44 @@ namespace ConfigMan.Controllers
             }
             index.Message.Fill(t, l, m);
 
-            var queryA = from service in db.Services
-                         join component in db.Components
-                         on service.ComponentID equals component.ComponentID
-                         join computer in db.Computers
-                         on service.ComputerID equals computer.ComputerID
-                         orderby computer.ComputerName, service.Name
-                         select new ServiceVM
-                         {
-                             SystemName = service.SystemName,
-                             Name = service.Name,
-                             DisplayName = service.DisplayName,
-                             ChangeState = service.ChangeState,
-                             ComponentName = component.ComponentNameTemplate,
-                             DirName = service.DirName,
-                             ProgramName = service.ProgramName,
-                             Parameter = service.Parameter,
-                             ComputerID = service.ComputerID
-                         };
-                             
-                         
-                           
-            index.ServiceLijst = queryA.ToList();
-                   
-           
-            if (index.ServiceLijst.Count == 0)
+            try
             {
-                m = "Geen service gevonden";
-                l = index.Message.Warning;
-                
+
+                var queryA = from service in db.Services
+                             join component in db.Components
+                             on service.ComponentID equals component.ComponentID
+                             join computer in db.Computers
+                             on service.ComputerID equals computer.ComputerID
+                             orderby computer.ComputerName, service.Name
+                             select new ServiceVM
+                             {
+                                 SystemName = service.SystemName,
+                                 Name = service.Name,
+                                 DisplayName = service.DisplayName,
+                                 ChangeState = service.ChangeState,
+                                 ComponentName = component.ComponentNameTemplate,
+                                 DirName = service.DirName,
+                                 ProgramName = service.ProgramName,
+                                 Parameter = service.Parameter,
+                                 ComputerID = service.ComputerID
+                             };
+
+
+
+                index.ServiceLijst = queryA.ToList();
+
+
+                if (index.ServiceLijst.Count == 0)
+                {
+                    m = "Geen service gevonden";
+                    l = index.Message.Warning;
+
+                }
+            }
+            catch (Exception e)
+            {
+                m = e.Message;
+
             }
             index.Message.Fill(t, l, m);
             return View(index);

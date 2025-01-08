@@ -36,7 +36,7 @@ namespace ConfigMan.Controllers {
         //
         // GET: Vendors
         //
-        public ActionResult Index(string message, String msgLevel)
+        public ActionResult Index(string message, string msgLevel)
         {
             VendorIndex index = new VendorIndex();
             index.Message.Title = "Vendor - Overzicht";

@@ -32,6 +32,7 @@ namespace ConfigMan
         public string Description { get; set; }
         public string Software { get; set; }
         public string DirName { get; set; }
+        public string DirectoryTemplate { get; set; }
         public string ProgramName { get; set; }
         public string Parameter { get; set; }
         public string ChangeState { get; set; }
@@ -41,7 +42,6 @@ namespace ConfigMan
         public string OldDirName { get; set; }
         public string OldProgramName { get; set; }
         public string OldParameter { get; set; }
-        public string DirectoryTemplate { get; set; }
     
         public virtual Component Component { get; set; }
         public virtual Computer Computer { get; set; }

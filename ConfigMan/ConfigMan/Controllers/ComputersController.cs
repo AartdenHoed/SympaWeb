@@ -48,12 +48,21 @@ namespace ConfigMan.Controllers {
                 index.Message.Tekst = message;
                 index.Message.Level = msgLevel;
             }
-            List<Computer> complist = db.Computers.OrderBy(x => x.ComputerName).ToList();
-            
-            foreach (Computer c in complist) {
-                ComputerVM VM = new ComputerVM();
-                VM.Fill(c);
-                index.ComputerLijst.Add(VM); 
+            try
+            {
+                List<Computer> complist = db.Computers.OrderBy(x => x.ComputerName).ToList();
+
+                foreach (Computer c in complist)
+                {
+                    ComputerVM VM = new ComputerVM();
+                    VM.Fill(c);
+                    index.ComputerLijst.Add(VM);
+                }
+            }
+            catch (Exception e) 
+            {
+                index.Message.Tekst = e.Message;
+
             }
             return View(index);
 
