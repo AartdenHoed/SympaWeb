@@ -92,184 +92,337 @@ function valueChanged()
 function adaptUrls() {
     //alert("Common");
 
-    var sya2 = document.getElementsByClassName("sy-alist2");
-    var kop = document.getElementsByClassName("sy-koppel");
+    var logic = "?";
+    var where = document.getElementsByClassName("sy-component");
+    if (where.length > 0) {
+        logic = "Component";
+    }
+    var where = document.getElementsByClassName("sy-service");
+    if (where.length > 0) {
+        logic = "Service";
+    }
+    //alert(logic);
+    //var blank = '%' + '2' + '0';
+    //alert(blank)
 
-    if ((sya2.length > 0) && (kop.length > 0)) {
+    if (logic == "Component") {
+
+        var sya2 = document.getElementsByClassName("sy-alist2");
         var kop = document.getElementsByClassName("sy-koppel");
-        var gekop = document.getElementsByClassName("sy-gekoppeld");
-        var oldid = document.getElementsByClassName("sy-oldid");
 
-        var newid = $(".sy-hiddenid")[0].value;
+        if ((sya2.length > 0) && (kop.length > 0)) {
+            var kop = document.getElementsByClassName("sy-koppel");
+            var gekop = document.getElementsByClassName("sy-gekoppeld");
+            var oldid = document.getElementsByClassName("sy-oldid");
 
-        for (let i = 0; i < sya2.length; i++) {
+            var newid = $(".sy-hiddenid")[0].value;
 
-            // alert(oldid[i].value);
-            if (newid == oldid[i].value) {
-                $(kop[i]).hide();
-                $(gekop[i]).show();
-            }
-            else {
-                $(kop[i]).show();
-                $(gekop[i]).hide();
+            for (let i = 0; i < sya2.length; i++) {
+
+                // alert(oldid[i].value);
+                if (newid == oldid[i].value) {
+                    $(kop[i]).hide();
+                    $(gekop[i]).show();
+                }
+                else {
+                    $(kop[i]).show();
+                    $(gekop[i]).hide();
+                }
             }
         }
-    }
 
-    var fdoc = document.getElementById("FilterData_Filterstr");
-    //alert(fdoc);
-    if ((fdoc != null) && (typeof fdoc !== 'undefined')) {
-        var filterstr = fdoc.value;
-    }
-    if ((filterstr == null) || (filterstr == "") || (typeof filterstr === 'undefined')) {
-        filterstr = "N";
-    } 
-    if (filterstr == "N") {
-        //alert("END -> No filterstr");
-        return;
-    }
-    //alert("filterstr = " + filterstr);
+        var fdoc = document.getElementById("FilterData_Filterstr");
+        //alert(fdoc);
+        if ((fdoc != null) && (typeof fdoc !== 'undefined')) {
+            var filterstr = fdoc.value;
+        }
+        if ((filterstr == null) || (filterstr == "") || (typeof filterstr === 'undefined')) {
+            filterstr = "N";
+        }
+        if (filterstr == "N") {
+            //alert("END -> No filterstr");
+            return;
+        }
+        //alert("filterstr = " + filterstr);
 
-    var subset = "&subsetstrP=" + $("#FilterData_Subsetstr")[0].value;
-    //alert(subset);
-    var component = "&componentFilterP=" + $("#FilterData_ComponentFilter")[0].value;
-    //alert(component);
-    var vendor = "&vendorFilterP=" + $("#FilterData_VendorFilter")[0].value;
-    //alert(vendor);
-    var auth = "&authFilterP=" + $("#FilterData_AuthFilter")[0].value;
-    //alert(auth);
+        var subset = "&subsetstrP=" + $("#FilterData_Subsetstr")[0].value;
+        //alert(subset);
+        var component = "&componentFilterP=" + encodeURIComponent($("#FilterData_ComponentFilter")[0].value);
+        //alert(component);
+        var vendor = "&vendorFilterP=" + encodeURIComponent($("#FilterData_VendorFilter")[0].value);
+        //alert(vendor);
+        var auth = "&authFilterP=" + $("#FilterData_AuthFilter")[0].value;
+        //alert(auth);
 
-    //alert("START - sy-url");
+        //alert("START - sy-url");
 
-    var syurl = document.getElementsByClassName('sy-url');
+        var syurl = document.getElementsByClassName('sy-url');
 
-    if (syurl.length > 0) { 
-        // Adapt filter parameter that have to be passed to controllers via URL.      
-            
-        var url = "/Components?filterStrP=" + filterstr;
-        //alert(url);
-        
-        var completeURL = url + subset + component + vendor + auth;
-        //alert(completeURL);
-        $(".sy-url").attr("href", completeURL);      
+        if (syurl.length > 0) {
+            // Adapt filter parameter that have to be passed to controllers via URL.      
 
-    }    
-    //alert("END - sy-url");
-    
-    //alert("START sy-alist");       
-    
-    var sya = document.getElementsByClassName("sy-alist");
+            var url = "/Components?filterStrP=" + filterstr;
+            //alert(url);
 
-    if (sya.length > 0) {
-
-        var hid = document.getElementsByClassName("sy-hiddenid");
-        // alert(sya.length);
-        var teller = 1;
-        var hidindex = 0;
-        for (let i = 0; i < sya.length; i++) {
-            //for (let i = 0; i < 4; i++) {
-            // alert("in loop");
-
-            if (teller > 3) {
-                teller = 1;
-                hidindex = hidindex + 1;
-            }
-            var attr = sya[i].getAttribute("href");
-            // alert(attr);
-            var hidden = hid[hidindex].value;
-
-            var s1 = "/" + hidden.toString();
-            var s2 = "?id=" + hidden.toString();
-            var ix = attr.indexOf(s1);
-            if (ix == -1) {
-                ix = attr.indexOf(s2);
-            }
-            var attrStripped = attr.substring(0, ix);
-            if (i < 3) { 
-                // alert(attrStripped);
-            }
-
-            var newattr = attrStripped + "?id=" + hidden.toString() + "&filterStrP=Y" + subset + component + vendor + auth
-            
-            // alert("here?");
-            $(sya[i]).attr("href", newattr);
-
-            teller = teller + 1;
+            var completeURL = url + subset + component + vendor + auth;
+            //alert(completeURL);
+            $(".sy-url").attr("href", completeURL);
 
         }
-    }
-    //alert("END sy-alist");
+        //alert("END - sy-url");
 
-    //alert("START sy-alist2");       
- 
-    var sya = document.getElementsByClassName("sy-alist2");
-   
-    if (sya.length > 0) {
-        
-        var filt = "?filterstrP=" + $("#FilterData_Filterstr")[0].value;
-        
-                        
-        for (let i = 0; i < sya.length; i++) {                     
+        //alert("START sy-alist");       
 
-            var attr = sya[i].getAttribute("href");
-            // alert(attr);
-            
-            var s1 = "?";
-            var ix = attr.indexOf(s1);
-            var attrStripped = attr.substring(0, ix);
-            
-            var trail = attr.substring(ix + 1);
+        var sya = document.getElementsByClassName("sy-alist");
 
-            var newattr = attrStripped + filt + subset + component + vendor + auth + "&" +  trail;
-            if (i < 3) {
-                //alert(attrStripped);
-                //alert(newattr);
+        if (sya.length > 0) {
+
+            var hid = document.getElementsByClassName("sy-hiddenid");
+            // alert(sya.length);
+            var teller = 1;
+            var hidindex = 0;
+            for (let i = 0; i < sya.length; i++) {
+                //for (let i = 0; i < 4; i++) {
+                // alert("in loop");
+
+                if (teller > 3) {
+                    teller = 1;
+                    hidindex = hidindex + 1;
+                }
+                var attr = sya[i].getAttribute("href");
+                // alert(attr);
+                var hidden = hid[hidindex].value;
+
+                var s1 = "/" + hidden.toString();
+                var s2 = "?id=" + hidden.toString();
+                var ix = attr.indexOf(s1);
+                if (ix == -1) {
+                    ix = attr.indexOf(s2);
+                }
+                var attrStripped = attr.substring(0, ix);
+                if (i < 3) {
+                    // alert(attrStripped);
+                }
+
+                var newattr = attrStripped + "?id=" + hidden.toString() + "&filterStrP=Y" + subset + component + vendor + auth;
+                var newattr2 = newattr.replace(" ", "%20");
+                // alert("here?");
+                $(sya[i]).attr("href", newattr2);
+
+                teller = teller + 1;
+
             }
-            
-            $(sya[i]).attr("href", newattr);
-                      
-
         }
-    }
-    //alert("END sy-alist2");
-  
-    //alert("START sy-acreate");
-    
-      
-    var syc = document.getElementsByClassName("sy-acreate");
+        //alert("END sy-alist");
 
-    if (syc.length > 0) {
+        //alert("START sy-alist2");       
 
-                      
-        for (let i = 0; i < syc.length; i++) {
-            
-            var attr = syc[i].getAttribute("href");
-            // alert(attr);
-            
-            var s1 = "/Create";
-            // alert(s1);            
-            var newattr = attr;
-            var f1 = attr.indexOf(s1);
-            if (f1 > 0) {
-                var repstring = "/Create?filterStrP=Y" + subset + component + vendor + auth;
-                var attrStripped = attr.substring(0, f1);
-                newattr = attrStripped + repstring;
-                // alert(newattr);
+        var sya = document.getElementsByClassName("sy-alist2");
+
+        if (sya.length > 0) {
+
+            var filt = "?filterstrP=" + $("#FilterData_Filterstr")[0].value;
+
+
+            for (let i = 0; i < sya.length; i++) {
+
+                var attr = sya[i].getAttribute("href");
+                // alert(attr);
+
+                var s1 = "?";
+                var ix = attr.indexOf(s1);
+                var attrStripped = attr.substring(0, ix);
+
+                var trail = attr.substring(ix + 1);
+
+                var newattr = attrStripped + filt + subset + component + vendor + auth + "&" + trail;
+                
+                if (i < 3) {
+                    //alert(attrStripped);
+                    //alert(newattr);
+                }
+
+                $(sya[i]).attr("href", newattr);
+
+
             }
-            else {
+        }
+        //alert("END sy-alist2");
+
+        //alert("START sy-acreate");
+
+
+        var syc = document.getElementsByClassName("sy-acreate");
+
+        if (syc.length > 0) {
+
+
+            for (let i = 0; i < syc.length; i++) {
+
+                var attr = syc[i].getAttribute("href");
+                // alert(attr);
+
+                var s1 = "/Create";
+                // alert(s1);            
                 var newattr = attr;
+                var f1 = attr.indexOf(s1);
+                if (f1 > 0) {
+                    var repstring = "/Create?filterStrP=Y" + subset + component + vendor + auth;
+                    var attrStripped = attr.substring(0, f1);
+                    newattr = attrStripped + repstring;
+                    // alert(newattr);
+                }
+                else {
+                    var newattr = attr;
+                }
+                // alert("here?");
+               
+                $(syc[i]).attr("href", newattr);
+
             }
-            // alert("here?");
-            $(syc[i]).attr("href", newattr);
+        }
+        //alert("END sy-acreate");
+        return
+    }
+
+    if (logic == "Service") {
+        var fdoc = document.getElementById("FilterData_Filterstr");
+        //alert(fdoc);
+        if ((fdoc != null) && (typeof fdoc !== 'undefined')) {
+            var filterstr = fdoc.value;
+        }
+        //alert("filterstr = " + filterstr);
+        if ((filterstr == null) || (filterstr == "") || (typeof filterstr === 'undefined')) {
+            filterstr = "N";
+        }
+        if (filterstr == "N") {
+            //alert("END -> No filterstr");
+            return;
+        } 
+        //alert("here");
+
+        var subset = "&subsetstrP=" + $("#FilterData_Subsetstr")[0].value;
+        //alert(subset);
+        var systeem = "&systeemfilterP=" + $("#FilterData_SysteemFilter")[0].value;
+        //alert(systeem);
+        var servicenaam = "&servicenaamfilterP=" + encodeURIComponent($("#FilterData_ServiceNaamFilter")[0].value); 
+        //alert(servicenaam);
+        var changestate = "&changestatefilterP=" + $("#FilterData_ChangeStateFilter")[0].value;
+        //alert(changestatw);
+        var component = "&componentfilterP=" + encodeURIComponent($("#FilterData_ComponentFilter")[0].value);
+        //alert(component);
+        var directory = "&directoryfilterP=" + encodeURIComponent($("#FilterData_DirectoryFilter")[0].value);
+        //alert(directory);
+        var template = "&templatefilterP=" + encodeURIComponent($("#FilterData_TemplateFilter")[0].value);
+        //alert(template);
+        var program = "&programfilterP=" + encodeURIComponent($("#FilterData_ProgramFilter")[0].value);
+        //alert(program);
+
+        //alert("START - sy-url");
+
+        var syurl = document.getElementsByClassName('sy-url');
+
+        if (syurl.length > 0) {
+            // Adapt filter parameter that have to be passed to controllers via URL.      
+
+            var url = "/Services?filterStrP=" + filterstr;
+            //alert(url);
+
+            var completeURL = url + subset + systeem + servicenaam + changestate + component + directory + template +  program;
+            
+            //alert(completeURL);
+            $(".sy-url").attr("href", completeURL);
 
         }
-    }
-    //alert("END sy-acreate");
+        //alert("END - sy-url");
+
+        //alert("START sy-alist");       
+
+        var sya = document.getElementsByClassName("sy-alist");
+
+        if (sya.length > 0) {
+
+            var hid = document.getElementsByClassName("sy-hiddenid");
+            var hid2 = document.getElementsByClassName("sy-hiddenid2");
+            // alert(sya.length);
+            var teller = 1;
+            var hidindex = 0;
+            for (let i = 0; i < sya.length; i++) {
+                //for (let i = 0; i < 4; i++) {
+                // alert("in loop");
+
+                if (teller > 3) {
+                    teller = 1;
+                    hidindex = hidindex + 1;
+                }
+                var attr = sya[i].getAttribute("href");
+                // alert(attr);
+                var hidden = hid[hidindex].value;
+                var hidden2 = encodeURIComponent(hid2[hidindex].value);
+
+                var s1 = "/" + hidden.toString() + "?name=" + hidden2;
+                var s2 = "?id=" + hidden.toString() + "&name=" + hidden2;
+                var ix = attr.indexOf(s1);
+                if (ix == -1) {
+                    ix = attr.indexOf(s2);
+                }
+                var attrStripped = attr.substring(0, ix);
+                if (i < 3) {
+                    // alert(attrStripped);
+                }
+
+                var newattr = attrStripped + "?id=" + hidden.toString() + "&name=" + hidden2 +
+                    "&filterStrP=Y" + subset + systeem + servicenaam + changestate + component + directory + template + program;
+
+                //alert(newattr);
+                
+                $(sya[i]).attr("href", newattr);
+
+                teller = teller + 1;
+
+            }
+        }
+        //alert("END sy-alist");
+
+        //alert("START sy-alist2");       
+
+        var sya = document.getElementsByClassName("sy-alist2");
+
+        if (sya.length > 0) {
+
+            var filt = "?filterstrP=" + $("#FilterData_Filterstr")[0].value;
+
+
+            for (let i = 0; i < sya.length; i++) {
+
+                var attr = sya[i].getAttribute("href");
+                // alert(attr);
+
+                var s1 = "?";
+                var ix = attr.indexOf(s1);
+                var attrStripped = attr.substring(0, ix);
+
+                var trail = attr.substring(ix + 1);
+
+                var newattr = attrStripped + filt + subset + systeem + servicenaam + changestate + component + directory + template + program + "&" + trail;
+                if (i < 3) {
+                    //alert(attrStripped);
+                    //alert(newattr);
+                }
+                
+                $(sya[i]).attr("href", newattr);
+
+
+            }
+        }
+        //alert("END sy-alist2");
+
+    } 
    
 }
 
-/* dwing af dat er maar 1 box wordt gecheckt */
-function onlyOne(current) {
+/* dwing af dat er precies 1 box wordt gecheckt */
+function onlyOne(current, fromwhere) {
     //alert("Geklikt op:" + current.id);
     var und = false;
     
@@ -284,7 +437,13 @@ function onlyOne(current) {
         //alert("END onlyOne (0)");
         return;
     }
-    const urlletter = ["A", "Y", "N", "E"];
+    var urlletter = ["1", "2"];
+    if (fromwhere == "Comp") {
+        urlletter = ["A", "Y", "N", "E"];
+    }
+    else {
+        urlletter = ["A", "G"];
+    }
     if (!und) {
         /* alert(others.length); */
 

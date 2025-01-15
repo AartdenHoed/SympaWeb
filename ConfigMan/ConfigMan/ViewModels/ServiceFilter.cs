@@ -10,21 +10,11 @@ namespace ConfigMan.ViewModels
     public class ServiceFilter
     {
         public string Filterstr { get; set; }
+
         public bool Filter { get { return (!((this.Filterstr == "N") || (this.Filterstr is null))); } }
 
-        [DisplayName("Toon alle componenten")]
-        public bool ShowAll { get { return (this.Subsetstr == "A"); } }
-
-        [DisplayName("Toon componenten met actieve installaties")]
-        public bool ShowActive { get { return (this.Subsetstr == "Y"); } }
-
-        [DisplayName("Toon componenten zonder actieve installaties")]
-        public bool ShowInactive { get { return (this.Subsetstr == "N"); } }
-
-        [DisplayName("Toon componenten zonder installaties")]
-        public bool ShowEmpty { get { return (this.Subsetstr == "E"); } }
-
         private string P_Subsetstr { get; set; }
+
         public string Subsetstr
         {
             get { return this.P_Subsetstr; }
@@ -34,9 +24,41 @@ namespace ConfigMan.ViewModels
                 else { this.P_Subsetstr = value; }
             }
         }
-        public void Fill()
+
+        [DisplayName("Toon alle Services")]
+        public bool ShowAll { get { return (this.Subsetstr == "A"); } }
+
+        [DisplayName("Toon services zonder installaties")]
+        public bool ShowGhosts { get { return (this.Subsetstr == "G"); } }
+
+        public string SysteemFilter { get; set; }
+
+        public string ServiceNaamFilter { get; set; }
+
+        public string ChangeStateFilter { get; set; }
+
+        public string DirectoryFilter { get; set; }
+        public string TemplateFilter { get; set; }
+
+        public string ComponentFilter { get; set; }
+
+        public string ProgramFilter { get; set; }
+
+
+
+
+        public void Fill(string filterstr, string subsetstr, string systeemfilter, string servicenaamfilter, string changestatefilter,
+                                           string directoryfilter, string templatefilter, string componentfilter, string programfilter)
         {
-            int i = 1;
+            this.Filterstr = filterstr;
+            this.Subsetstr = subsetstr;
+            this.SysteemFilter = systeemfilter;   
+            this.ServiceNaamFilter = servicenaamfilter;
+            this.ChangeStateFilter = changestatefilter;
+            this.DirectoryFilter = directoryfilter;
+            this.TemplateFilter = templatefilter;
+            this.ComponentFilter = componentfilter;
+            this.ProgramFilter = programfilter;
         }
 
     }

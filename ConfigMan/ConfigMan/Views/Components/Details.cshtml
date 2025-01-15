@@ -1,6 +1,8 @@
 ﻿<div class="controller">
+    <div class="sy-component">
+    </div>
     @model ConfigMan.ViewModels.ComponentVM
-    
+
     <div>
         <h2>
             @Html.DisplayFor(model => model.Message.Title)
@@ -34,11 +36,11 @@
     </div>
     <div>
         @Html.HiddenFor(model => model.ComponentID, new { @class = "sy-hiddenid" })
-        @Html.HiddenFor(model => model.FilterData.ComponentFilter, new { @class = "sy-hiddenfilter"})
-        @Html.HiddenFor(model => model.FilterData.VendorFilter, new { @class = "sy-hiddenfilter"})
-        @Html.HiddenFor(model => model.FilterData.AuthFilter, new { @class = "sy-hiddenfilter"})
-        @Html.HiddenFor(model => model.FilterData.Filterstr, new { @class = "sy-hiddenfilter"})
-        @Html.HiddenFor(model => model.FilterData.Subsetstr, new { @class = "sy-hiddenfilter"})
+        @Html.HiddenFor(model => model.FilterData.ComponentFilter, new { @class = "sy-hiddenfilter" })
+        @Html.HiddenFor(model => model.FilterData.VendorFilter, new { @class = "sy-hiddenfilter" })
+        @Html.HiddenFor(model => model.FilterData.AuthFilter, new { @class = "sy-hiddenfilter" })
+        @Html.HiddenFor(model => model.FilterData.Filterstr, new { @class = "sy-hiddenfilter" })
+        @Html.HiddenFor(model => model.FilterData.Subsetstr, new { @class = "sy-hiddenfilter" })
     </div>
 
     <p>

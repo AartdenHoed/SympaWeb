@@ -1,4 +1,6 @@
 ﻿<div class="controller">
+    <div class="sy-service">
+    </div>
     @model ConfigMan.ViewModels.ServiceVM
 
     @using (Html.BeginForm())
@@ -6,19 +8,22 @@
         @Html.AntiForgeryToken()
 
 
-    <div>
-        <h2>
-            @Html.DisplayFor(model => model.Message.Title)
-        </h2>
-        <hr />
-        @Html.HiddenFor(model => model.ComputerID)
-        @Html.HiddenFor(model => model.ComponentName)
+<div>
+    <h2>
+        @Html.DisplayFor(model => model.Message.Title)
+    </h2>
+    <hr />
+    @Html.HiddenFor(model => model.ComputerID)
+    @Html.HiddenFor(model => model.Name)
+    @Html.HiddenFor(model => model.ComponentID)
+
+
     <dl class="sy-dl">
         <dt class="sy-dt">
             @Html.DisplayNameFor(model => model.StartDate)
         </dt>
         <dd class="sy-dd">
-            @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "sy-readonly", @readonly = "readonly"} })
+            @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "sy-readonly", @readonly = "readonly" } })
         </dd>
         <dt class="sy-dt">
             @Html.DisplayNameFor(model => model.CheckDate)
@@ -181,11 +186,22 @@
         </dd>
 
     </dl>
-    </div>
-        <div>
-            @Html.HiddenFor(model => model.ComponentID, new { @class = "sy-hiddenid" })
+</div>
+<div>
+    @Html.HiddenFor(model => model.ComputerID, new { @class = "sy-hiddenid" })
+    @Html.HiddenFor(model => model.Name, new { @class = "sy-hiddenid2" })
+    @Html.HiddenFor(model => model.FilterData.Filterstr, new { @class = "sy-hiddenfilter" })
+    @Html.HiddenFor(model => model.FilterData.Subsetstr, new { @class = "sy-hiddenfilter" })
+    @Html.HiddenFor(model => model.FilterData.ServiceNaamFilter, new { @class = "sy-hiddenfilter" })
+    @Html.HiddenFor(model => model.FilterData.SysteemFilter, new { @class = "sy-hiddenfilter" })
+    @Html.HiddenFor(model => model.FilterData.ServiceNaamFilter, new { @class = "sy-hiddenfilter" })
+    @Html.HiddenFor(model => model.FilterData.ChangeStateFilter, new { @class = "sy-hiddenfilter" })
+    @Html.HiddenFor(model => model.FilterData.ComponentFilter, new { @class = "sy-hiddenfilter" })
+    @Html.HiddenFor(model => model.FilterData.DirectoryFilter, new { @class = "sy-hiddenfilter" })
+    @Html.HiddenFor(model => model.FilterData.TemplateFilter, new { @class = "sy-hiddenfilter" })
+    @Html.HiddenFor(model => model.FilterData.ProgramFilter, new { @class = "sy-hiddenfilter" })
 
-        </div>
+</div>
 
         <p>
             @Html.DisplayFor(model => model.Message.Tekst)
@@ -194,10 +210,10 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Opslaan" class="sy-button" /> |  @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-a" })
+                <input type="submit" value="Opslaan" class="sy-button" /> |  @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-url" })
 
             </div>
         </div>
     }
-    </div>
+</div>
   

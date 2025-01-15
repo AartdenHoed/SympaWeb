@@ -10,7 +10,7 @@ namespace ConfigMan.ViewModels
     public class ServiceVM
     {
         public SympaMessage Message = new SympaMessage();
-        public ServiceFilter ServiceFilter = new ServiceFilter();
+        public ServiceFilter FilterData = new ServiceFilter();
         public List<ComponentVM> ComponentLijst = new List<ComponentVM>();
         public string SelectedComponentIDstring { get; set; }
 
@@ -107,7 +107,6 @@ namespace ConfigMan.ViewModels
         [MaxLength(64, ErrorMessage = "Maximale lengte = 64")]
         public string ProgramName { get; set; }
 
-        [Required(ErrorMessage = "Service Parameter is een verplicht veld")]
         [DisplayName("Service Parameter")]
         [MaxLength(2048, ErrorMessage = "Maximale lengte = 2048")]
         public string Parameter { get; set; }

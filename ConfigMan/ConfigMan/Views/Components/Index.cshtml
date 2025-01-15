@@ -1,4 +1,6 @@
 ﻿<div class="controller">
+    <div class="sy-component">
+    </div>
     @model ConfigMan.ViewModels.ComponentIndex
 
     <h2>
@@ -12,7 +14,7 @@
 
         @Html.ActionLink("Nieuwe Component", "Create", null, new { @class = "sy-acreate" }) |
         @Html.ActionLink("Hoofd Menu", "Index", "Home", "", new { @class = "sy-a" })
-        
+
         | Filter tonen (aan/uit) &nbsp;
 
         @Html.CheckBoxFor(model => model.FilterData.Filter, new { @class = "sy-switch", @onclick = "valueChanged()" })
@@ -23,22 +25,21 @@
         </div>
 
     </div>
-    
-    <p>&nbsp;</p>
+
     <p class="sy-filter">
         @Html.HiddenFor(model => model.FilterData.Subsetstr)
         @Html.HiddenFor(model => model.FilterData.Filterstr, new { @class = "sy-hiddenfilter" })
         @Html.DisplayNameFor(model => model.FilterData.ShowAll) :
-        @Html.CheckBoxFor(model => model.FilterData.ShowAll, new { @class = "sy-checky", @onclick = "onlyOne(this)" }) |
+        @Html.CheckBoxFor(model => model.FilterData.ShowAll, new { @class = "sy-checky", @onclick = "onlyOne(this,'Comp')" }) |
         @Html.DisplayNameFor(model => model.FilterData.ShowActive) :
-        @Html.CheckBoxFor(model => model.FilterData.ShowActive, new { @class = "sy-checky", @onclick = "onlyOne(this)" }) |
+        @Html.CheckBoxFor(model => model.FilterData.ShowActive, new { @class = "sy-checky", @onclick = "onlyOne(this,'Comp')" }) |
         @Html.DisplayNameFor(model => model.FilterData.ShowInactive) :
-        @Html.CheckBoxFor(model => model.FilterData.ShowInactive, new { @class = "sy-checky", @onclick = "onlyOne(this)" }) |
+        @Html.CheckBoxFor(model => model.FilterData.ShowInactive, new { @class = "sy-checky", @onclick = "onlyOne(this,'Comp')" }) |
         @Html.DisplayNameFor(model => model.FilterData.ShowEmpty) :
-        @Html.CheckBoxFor(model => model.FilterData.ShowEmpty, new { @class = "sy-checky", @onclick = "onlyOne(this)" })
+        @Html.CheckBoxFor(model => model.FilterData.ShowEmpty, new { @class = "sy-checky", @onclick = "onlyOne(this,'Comp')" })
 
     </p>
-   
+
     <table class="sy-table">
         <tr>
 
@@ -56,10 +57,10 @@
 
         <tr class="sy-filter">
             <td>
-                @Html.ActionLink("Pas filter toe", "Index", null , new { @class = "sy-url" })
+                @Html.ActionLink("Pas filter toe", "Index", null, new { @class = "sy-url" })
             </td>
             <td>
-                @Html.EditorFor(model => model.FilterData.ComponentFilter, 
+                @Html.EditorFor(model => model.FilterData.ComponentFilter,
                new { htmlAttributes = new { @class = "sy-input", @autofocus = "autofocus", @onchange = "adaptUrls()" } })
                 @Html.ValidationMessageFor(model => model.FilterData.ComponentFilter, "", new { @class = "text-danger" })
             </td>
@@ -69,7 +70,7 @@
                 @Html.ValidationMessageFor(model => model.FilterData.AuthFilter, "", new { @class = "text-danger" })
             </td>
             <td>
-                @Html.EditorFor(model => model.FilterData.VendorFilter, 
+                @Html.EditorFor(model => model.FilterData.VendorFilter,
                new { htmlAttributes = new { @class = "sy-input", @autofocus = "autofocus", @onchange = "adaptUrls()" } })
                 @Html.ValidationMessageFor(model => model.FilterData.VendorFilter, "", new { @class = "text-danger" })
             </td>

@@ -1,4 +1,6 @@
 ﻿<div class="controller">
+    <div class="sy-service">
+    </div>
     @model ConfigMan.ViewModels.ServiceIndex
 
     <h2>
@@ -10,24 +12,27 @@
 
     <div class="sy-div">
         @Html.ActionLink("Hoofd Menu", "Index", "Home", "", new { @class = "sy-a" })
-        
+
         | Filter tonen (aan/uit) &nbsp;
 
         @Html.CheckBoxFor(model => model.FilterData.Filter, new { @class = "sy-switch", @onclick = "valueChanged()" })
-        | @Html.ActionLink("Wis alle filters", "Index", "Components", new { filterstr = "N" }, new { @class = "sy-a" }) |
+        | @Html.ActionLink("Wis alle filters", "Index", "Services", new { filterstr = "N" }, new { @class = "sy-a" }) |
         <div class="sy-aantal">
             @Html.DisplayNameFor(model => model.Aantal) :
             @Html.DisplayFor(model => model.Aantal)
         </div>
 
     </div>
-    
-    <p>&nbsp;</p>
-    <p class="sy-filter">
-       
 
+    <p class="sy-filter">
+        @Html.HiddenFor(model => model.FilterData.Subsetstr)
+        @Html.HiddenFor(model => model.FilterData.Filterstr, new { @class = "sy-hiddenfilter" })
+        @Html.DisplayNameFor(model => model.FilterData.ShowAll) :
+        @Html.CheckBoxFor(model => model.FilterData.ShowAll, new { @class = "sy-checky", @onclick = "onlyOne(this,'Serv')" }) |
+        @Html.DisplayNameFor(model => model.FilterData.ShowGhosts) :
+        @Html.CheckBoxFor(model => model.FilterData.ShowGhosts, new { @class = "sy-checky", @onclick = "onlyOne(this,'Serv')" }) |
     </p>
-   
+
     <table class="sy-table">
         <tr>
 
@@ -39,21 +44,53 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ServiceLijst[0].ComponentName) <br />
+                @Html.DisplayNameFor(model => model.ServiceLijst[0].ProgramName) <br />
                 @Html.DisplayNameFor(model => model.ServiceLijst[0].DisplayName)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.ServiceLijst[0].Parameter)     <br />           
                 @Html.DisplayNameFor(model => model.ServiceLijst[0].DirName) <br />
-                @Html.DisplayNameFor(model => model.ServiceLijst[0].ProgramName) <br />
-                @Html.DisplayNameFor(model => model.ServiceLijst[0].Parameter) 
+                @Html.DisplayNameFor(model => model.ServiceLijst[0].DirectoryTemplate)
             </th>
-            
+
         </tr>
 
         <tr class="sy-filter">
             <td>
-                @Html.ActionLink("Pas filter toe", "Index", null , new { @class = "sy-url" })
+                @Html.ActionLink("Pas filter toe", "Index", null, new { @class = "sy-url" })
             </td>
-            
+            <td>
+                @Html.EditorFor(model => model.FilterData.SysteemFilter,
+               new { htmlAttributes = new { @placeholder = "Systeem naam filter", @class = "sy-input", @autofocus = "autofocus", @onchange = "adaptUrls()" } })
+                @Html.ValidationMessageFor(model => model.FilterData.SysteemFilter, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.FilterData.ServiceNaamFilter,
+                new { htmlAttributes = new { @placeholder = "Service naam filter", @class = "sy-input", @autofocus = "autofocus", @onchange = "adaptUrls()" } })
+                @Html.ValidationMessageFor(model => model.FilterData.ServiceNaamFilter, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.FilterData.ChangeStateFilter,
+                new { htmlAttributes = new { @placeholder = "Change status filter", @class = "sy-input", @autofocus = "autofocus", @onchange = "adaptUrls()" } })
+                @Html.ValidationMessageFor(model => model.FilterData.ChangeStateFilter, "", new { @class = "text-danger" })
+            </td>
+            <td>
+                @Html.EditorFor(model => model.FilterData.ComponentFilter,
+                new { htmlAttributes = new { @placeholder = "Component naam filter", @class = "sy-input", @autofocus = "autofocus", @onchange = "adaptUrls()" } })
+                @Html.ValidationMessageFor(model => model.FilterData.ComponentFilter, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.FilterData.ProgramFilter,
+                new { htmlAttributes = new { @placeholder = "Programma naam filter", @class = "sy-input", @autofocus = "autofocus", @onchange = "adaptUrls()" } })
+                @Html.ValidationMessageFor(model => model.FilterData.ProgramFilter, "", new { @class = "text-danger" })
+                <input placeholder="not used" class="sy-notused" />
+            </td>
+            <td>
+                <input placeholder="not used" class="sy-notused70" />
+                @Html.EditorFor(model => model.FilterData.DirectoryFilter,
+               new { htmlAttributes = new { @placeholder = "Directory naam filter", @class = "sy-input70", @autofocus = "autofocus", @onchange = "adaptUrls()" } })
+                @Html.ValidationMessageFor(model => model.FilterData.DirectoryFilter, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.FilterData.TemplateFilter,
+                new { htmlAttributes = new { @placeholder = "Directory template filter", @class = "sy-input70", @autofocus = "autofocus", @onchange = "adaptUrls()" } })
+                @Html.ValidationMessageFor(model => model.FilterData.TemplateFilter, "", new { @class = "text-danger" })
+
+
+            </td>
+
         </tr>
 
         @if (Model.ServiceLijst != null)
@@ -64,6 +101,7 @@
                 <tr>
                     <td>
                         @Html.HiddenFor(modelItem => item.ComputerID, new { @class = "sy-hiddenid" })
+                        @Html.HiddenFor(modelItem => item.Name, new { @class = "sy-hiddenid2" })
                         @Html.ActionLink("Bewerk", "Edit", new { id = item.ComputerID, name = item.Name }, new { @class = "sy-alist" }) |
                         @Html.ActionLink("Bekijk", "Details", new { id = item.ComputerID, name = item.Name }, new { @class = "sy-alist" }) |
                         @Html.ActionLink("Verwijder", "Delete", new { id = item.ComputerID, name = item.Name }, new { @class = "sy-alist" })
@@ -75,12 +113,13 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.ComponentName) <br />
+                        @Html.DisplayFor(modelItem => item.ProgramName) <br />
                         @Html.DisplayFor(modelItem => item.DisplayName)
                     </td>
                     <td>
+                        @Html.DisplayFor(modelItem => item.Parameter) &nbsp;  <br />                      
                         @Html.DisplayFor(modelItem => item.DirName) <br />
-                        @Html.DisplayFor(modelItem => item.ProgramName) <br />
-                        @Html.DisplayFor(modelItem => item.Parameter) &nbsp;
+                        @Html.DisplayFor(modelItem => item.DirectoryTemplate) &nbsp;
                     </td>
 
 

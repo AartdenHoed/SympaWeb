@@ -1,4 +1,6 @@
 ﻿<div class="controller">
+    <div class="sy-component">
+    </div>
     @model ConfigMan.ViewModels.ComponentVM
 
     <div>
@@ -48,88 +50,88 @@
     <div class="sy-div">
         @Html.ActionLink("Toon overeenkomende installaties", "Match", new { id = Model.ComponentID }, new { @class = "sy-alist" }) |
         @Html.ActionLink("Bewerk", "Edit", new { id = Model.ComponentID }, new { @class = "sy-alist" }) |
-        @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-url" }) | 
+        @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-url" }) |
         <div class="sy-aantal">
             @Html.DisplayNameFor(model => model.Aantal) :
             @Html.DisplayFor(model => model.Aantal)
         </div>
     </div>
 
-        <table class="sy-table">
+    <table class="sy-table">
 
-            @if (Model.InstallationLijst != null)
+        @if (Model.InstallationLijst != null)
+        {
+            var i = 0;
+
+            foreach (var item in Model.InstallationLijst)
             {
-                var i = 0;
-
-                foreach (var item in Model.InstallationLijst)
+                if (i == 0)
                 {
-                    if (i == 0)
-                    {
-                        <tr>
-                            <th>&nbsp;</th>
-                            <th>
-                                @Html.DisplayNameFor(modelItem => item.ComputerName)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(modelItem => item.VendorGroup)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(modelItem => item.ComponentName)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(modelItem => item.Release)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(modelItem => item.StartDateTime)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(modelItem => item.EndDateTime)
-                            </th>
-
-                        </tr>
-                    }
-                    i = i + 1;
-
                     <tr>
-                        <td>
-                            @Html.HiddenFor(model => item.ComponentID, new { @class = "sy-oldid" })
-                            <div class="sy-koppel">
-                                @Html.ActionLink("Koppel", "Koppel", new
-                               {
-                                   computerid = item.ComputerID,
-                                   componentid = item.ComponentID,
-                                   release = item.Release,
-                                   startdatetime = item.StartDateTime,
-                                   newcomponentid = Model.ComponentID
-                               }, new { @class = "sy-alist2" })
-                            </div>
-                            <div class="sy-gekoppeld">
-                                Reeds gekoppeld
-                            </div>
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ComputerName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.VendorGroup)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ComponentName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Release)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.StartDateTime)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.EndDateTime)
-                        </td>
+                        <th>&nbsp;</th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.ComputerName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.VendorGroup)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.ComponentName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.Release)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.StartDateTime)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => item.EndDateTime)
+                        </th>
 
                     </tr>
                 }
+                i = i + 1;
+
+                <tr>
+                    <td>
+                        @Html.HiddenFor(model => item.ComponentID, new { @class = "sy-oldid" })
+                        <div class="sy-koppel">
+                            @Html.ActionLink("Koppel", "Koppel", new
+                           {
+                               computerid = item.ComputerID,
+                               componentid = item.ComponentID,
+                               release = item.Release,
+                               startdatetime = item.StartDateTime,
+                               newcomponentid = Model.ComponentID
+                           }, new { @class = "sy-alist2" })
+                        </div>
+                        <div class="sy-gekoppeld">
+                            Reeds gekoppeld
+                        </div>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ComputerName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VendorGroup)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ComponentName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Release)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartDateTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndDateTime)
+                    </td>
+
+                </tr>
             }
+        }
 
-        </table>
+    </table>
 
-    </div>
+</div>

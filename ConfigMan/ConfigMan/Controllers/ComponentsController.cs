@@ -152,7 +152,7 @@ namespace ConfigMan.Controllers
             }
             else
             {
-                if (!string.IsNullOrEmpty(index.FilterData.ComponentFilter))
+                if ((!string.IsNullOrEmpty(index.FilterData.ComponentFilter)) && (index.ComponentLijst.Count > 0))
                 {
                     var query2 = from cm in index.ComponentLijst
                                  where cm.ComponentNameTemplate.ToUpper().Contains(index.FilterData.ComponentFilter.ToUpper())
