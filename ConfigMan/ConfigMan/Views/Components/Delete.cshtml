@@ -22,6 +22,12 @@
                 @Html.DisplayFor(model => model.Authorized)
             </dd>
             <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.Origin)
+            </dt>
+            <dd class="sy-dd">
+                @Html.DisplayFor(model => model.Origin)
+            </dd>
+            <dt class="sy-dt">
                 @Html.DisplayNameFor(model => model.VendorName)
             </dt>
 
@@ -36,6 +42,7 @@
             @Html.HiddenFor(model => model.FilterData.ComponentFilter, new { @class = "sy-hiddenfilter" })
             @Html.HiddenFor(model => model.FilterData.VendorFilter, new { @class = "sy-hiddenfilter" })
             @Html.HiddenFor(model => model.FilterData.AuthFilter, new { @class = "sy-hiddenfilter" })
+            @Html.HiddenFor(model => model.FilterData.OriginFilter, new { @class = "sy-hiddenfilter" })
             @Html.HiddenFor(model => model.FilterData.Filterstr, new { @class = "sy-hiddenfilter" })
             @Html.HiddenFor(model => model.FilterData.Subsetstr, new { @class = "sy-hiddenfilter" })
         </div>

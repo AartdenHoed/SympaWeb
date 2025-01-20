@@ -35,11 +35,11 @@ namespace ConfigMan.Controllers
         // GET: Components
         //
         public ActionResult Index(string messageP, string msgLevelP, 
-            string filterstrP, string subsetstrP, string componentFilterP, string authFilterP, string vendorFilterP)
+            string filterstrP, string subsetstrP, string componentFilterP, string authFilterP, string originFilterP, string vendorFilterP)
         {
             ComponentIndex index = new ComponentIndex();
 
-            index.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
+            index.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, originFilterP, vendorFilterP);
 
             string t = "Component - Overzicht";
             string m = messageP;
@@ -69,6 +69,7 @@ namespace ConfigMan.Controllers
                                     ComponentID = component.ComponentID,
                                     ComponentNameTemplate = component.ComponentNameTemplate,
                                     Authorized = component.Authorized,
+                                    Origin = component.Origin,
                                     VendorID = j1.VendorID,
                                     VendorName = j1.VendorName
                                 };
@@ -89,6 +90,7 @@ namespace ConfigMan.Controllers
                                      ComponentID = c.ComponentID,
                                      ComponentNameTemplate = c.ComponentNameTemplate,
                                      Authorized = c.Authorized,
+                                     Origin = c.Origin,
                                      VendorID = c.VendorID,
                                      VendorName = j1.VendorName
 
@@ -111,6 +113,7 @@ namespace ConfigMan.Controllers
                                     ComponentID = c.ComponentID,
                                     ComponentNameTemplate = c.ComponentNameTemplate,
                                     Authorized = c.Authorized,
+                                    Origin= c.Origin,
                                     VendorID = c.VendorID,
                                     VendorName = j1.VendorName
 
@@ -132,6 +135,7 @@ namespace ConfigMan.Controllers
                                     ComponentID = c.ComponentID,
                                     ComponentNameTemplate = c.ComponentNameTemplate,
                                     Authorized = c.Authorized,
+                                    Origin= c.Origin,
                                     VendorID = c.VendorID,
                                     VendorName = j1.VendorName
 
@@ -173,7 +177,14 @@ namespace ConfigMan.Controllers
                                  select cm;
                     index.ComponentLijst = query4.ToList();
                 }
-                
+                if ((!string.IsNullOrEmpty(index.FilterData.OriginFilter)) && (index.ComponentLijst.Count > 0))
+                {
+                    var query5 = from cm in index.ComponentLijst
+                                 where cm.Origin.ToUpper().Contains(index.FilterData.OriginFilter.ToUpper())
+                                 select cm;
+                    index.ComponentLijst = query5.ToList();
+                }
+
 
             }
             if (index.ComponentLijst.Count == 0)
@@ -187,7 +198,8 @@ namespace ConfigMan.Controllers
         //
         // GET: Components/Details/5
         //
-        public ActionResult Details(int? id, string filterstrP, string subsetstrP, string componentFilterP, string authFilterP, string vendorFilterP)
+        public ActionResult Details(int? id, string filterstrP, string subsetstrP, string componentFilterP, 
+            string authFilterP, string originFilterP, string vendorFilterP)
         {
             ComponentVM componentVM = new ComponentVM();
             Contract.ContractFailed += (Contract_ContractFailed);
@@ -203,7 +215,7 @@ namespace ConfigMan.Controllers
                 m = "Contract error bij Component Bekijken (GET)";
                 l = componentVM.Message.Error;
                 componentVM.Message.Fill(t, l, m);
-                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
+                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, originFilterP, vendorFilterP);
                                 
                 return RedirectToAction("Index", "Components", new
                 {
@@ -229,6 +241,7 @@ namespace ConfigMan.Controllers
                                 ComponentID = component.ComponentID,
                                 ComponentNameTemplate = component.ComponentNameTemplate,
                                 Authorized = component.Authorized,
+                                Origin = component.Origin,
                                 VendorID = j1.VendorID,
                                 VendorName = j1.VendorName,
                             };
@@ -245,7 +258,7 @@ namespace ConfigMan.Controllers
                     m = "Klik op BEWERK om deze component te bewerken";
                 }
                 componentVM.Message.Fill(t, l, m);
-                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
+                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, originFilterP, vendorFilterP);
                 return View(componentVM);
             }           
         }
@@ -253,7 +266,8 @@ namespace ConfigMan.Controllers
         //
         // GET: Components/Create
         //
-        public ActionResult Create(string filterstrP, string subsetstrP, string componentFilterP, string authFilterP, string vendorFilterP)
+        public ActionResult Create(string filterstrP, string subsetstrP, string componentFilterP, 
+            string authFilterP, string originFilterP, string vendorFilterP)
         {
             // Create vendor drop down list
             ComponentVM componentVM = new ComponentVM();
@@ -265,7 +279,7 @@ namespace ConfigMan.Controllers
                 componentVM.VendorLijst.Add(VM);
             }
             componentVM.Message.Fill("Component - Aanmaken", componentVM.Message.Info, "Klik op AANMAKEN om deze component op te slaan");
-            componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
+            componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, originFilterP, vendorFilterP);
 
             
             return View(componentVM);
@@ -277,10 +291,11 @@ namespace ConfigMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ComponentVM componentVM, string filterstrP, string subsetstrP, string componentFilterP, string authFilterP, string vendorFilterP)
+        public ActionResult Create(ComponentVM componentVM, string filterstrP, string subsetstrP, string componentFilterP, 
+            string authFilterP, string originFilterP, string vendorFilterP)
         {
             List<Vendor> vendordblist = new List<Vendor>();
-            componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
+            componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, originFilterP, vendorFilterP);
             if (ModelState.IsValid)
             {
                 Component component = new Component();
@@ -337,7 +352,8 @@ namespace ConfigMan.Controllers
         //
         // GET: Components/Edit/5
         //
-        public ActionResult Edit(int id, string filterstrP, string subsetstrP, string componentFilterP, string authFilterP, string vendorFilterP)
+        public ActionResult Edit(int id, string filterstrP, string subsetstrP, string componentFilterP, 
+            string authFilterP, string originFilterP, string vendorFilterP)
         {
             ComponentVM componentVM = new ComponentVM();
             Contract.ContractFailed += (Contract_ContractFailed);
@@ -353,7 +369,7 @@ namespace ConfigMan.Controllers
                 m = "Contract error bij Component Bewerken (GET)";
                 l = componentVM.Message.Error;
                 componentVM.Message.Fill(t, l, m);
-                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
+                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, originFilterP, vendorFilterP);
 
                 return RedirectToAction("Index", "Components", new
                 {
@@ -363,6 +379,7 @@ namespace ConfigMan.Controllers
                     subsetstrP = componentVM.FilterData.Subsetstr,
                     componentFilterP = componentVM.FilterData.ComponentFilter,
                     authFilterP = componentVM.FilterData.AuthFilter,
+                    originFilterP = componentVM.FilterData.OriginFilter,
                     vendorFilterP = componentVM.FilterData.VendorFilter
                 });
             }
@@ -379,6 +396,7 @@ namespace ConfigMan.Controllers
                                 ComponentID = component.ComponentID,
                                 ComponentNameTemplate = component.ComponentNameTemplate,
                                 Authorized = component.Authorized,
+                                Origin = component.Origin,
                                 VendorID = j1.VendorID,
                                 VendorName = j1.VendorName,
                             };
@@ -411,7 +429,7 @@ namespace ConfigMan.Controllers
                     }
                 }
                 componentVM.Message.Fill(t, l, m);
-                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
+                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, originFilterP, vendorFilterP);
    
                 return View(componentVM);
             }
@@ -423,7 +441,8 @@ namespace ConfigMan.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(ComponentVM componentVM, string filterstrP, string subsetstrP, string componentFilterP, string authFilterP, string vendorFilterP)
+        public ActionResult Edit(ComponentVM componentVM, string filterstrP, string subsetstrP, string componentFilterP, 
+            string authFilterP, string originFilterP, string vendorFilterP)
         {
             string t = "Component - Bewerken";
             string l = "?";
@@ -443,7 +462,7 @@ namespace ConfigMan.Controllers
                 m = "Component " + component.ComponentNameTemplate.TrimEnd() + " is aangepast";
                 l = componentVM.Message.Info;
                 componentVM.Message.Fill(t,l,m);
-                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
+                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, originFilterP, vendorFilterP);
                 return RedirectToAction("Index", "Components", new
                 {
                     messageP = componentVM.Message.Tekst,
@@ -452,6 +471,7 @@ namespace ConfigMan.Controllers
                     subsetstrP = componentVM.FilterData.Subsetstr,
                     componentFilterP = componentVM.FilterData.ComponentFilter,
                     authFilterP = componentVM.FilterData.AuthFilter,
+                    originFilterP = componentVM.FilterData.OriginFilter,
                     vendorFilterP = componentVM.FilterData.VendorFilter
                 });
             }
@@ -478,7 +498,7 @@ namespace ConfigMan.Controllers
                 l = componentVM.Message.Error;
                 m = "Model ERROR in " + componentVM.ComponentNameTemplate;
                 componentVM.Message.Fill(t, l, m);
-                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
+                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, originFilterP, vendorFilterP);
 
                 return View(componentVM);
             }
@@ -488,7 +508,8 @@ namespace ConfigMan.Controllers
         //
         // GET: Components/Delete/5
         //
-        public ActionResult Delete(int id, string filterstrP, string subsetstrP, string componentFilterP, string authFilterP, string vendorFilterP)
+        public ActionResult Delete(int id, string filterstrP, string subsetstrP, string componentFilterP, 
+            string authFilterP, string originFilterP, string vendorFilterP)
         {
             ComponentVM componentVM = new ComponentVM();
             Contract.ContractFailed += (Contract_ContractFailed);
@@ -504,7 +525,7 @@ namespace ConfigMan.Controllers
                 m = "Contract error bij Component Verwijderen (GET)";
                 l = componentVM.Message.Error;
                 componentVM.Message.Fill(t, l, m);
-                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
+                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, originFilterP, vendorFilterP);
 
                 return RedirectToAction("Index", "Components", new
                 {
@@ -514,6 +535,7 @@ namespace ConfigMan.Controllers
                     subsetstrP = componentVM.FilterData.Subsetstr,
                     componentFilterP = componentVM.FilterData.ComponentFilter,
                     authFilterP = componentVM.FilterData.AuthFilter,
+                    originFilterP = componentVM.FilterData.OriginFilter, 
                     vendorFilterP = componentVM.FilterData.VendorFilter
                 });
             }
@@ -531,6 +553,7 @@ namespace ConfigMan.Controllers
                                 ComponentID = component.ComponentID,
                                 ComponentNameTemplate = component.ComponentNameTemplate,
                                 Authorized = component.Authorized, 
+                                Origin = component.Origin,
                                 VendorID = j1.VendorID,
                                 VendorName = j1.VendorName,
                             };
@@ -546,7 +569,7 @@ namespace ConfigMan.Controllers
                     m = "Klik op VERWIJDEREN om deze component te verwijderen";
                 }
                 componentVM.Message.Fill(t, l, m);
-                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
+                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, originFilterP, vendorFilterP);
                 return View(componentVM);
             }
             
@@ -556,7 +579,8 @@ namespace ConfigMan.Controllers
         // POST: Components/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id, string filterstrP, string subsetstrP, string componentFilterP, string authFilterP, string vendorFilterP)
+        public ActionResult DeleteConfirmed(int id, string filterstrP, string subsetstrP, string componentFilterP, 
+            string authFilterP, string originFilterP, string vendorFilterP)
 
         {
             ComponentVM componentVM = new ComponentVM();
@@ -565,7 +589,7 @@ namespace ConfigMan.Controllers
             string t = "Component - Verwijderen";
             string l = "?";
             string m = "?";
-            componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
+            componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, originFilterP, vendorFilterP);
 
             if (ContractErrorOccurred)
             {
@@ -588,7 +612,7 @@ namespace ConfigMan.Controllers
                     m = "Component " + component.ComponentNameTemplate + " kan niet worden verwijderd. Verwijder eerst alle Installaties, Services en Documentatie *** (" + exc.Message + ")";
                     componentVM.Message.Fill(t,l,m);
                     componentVM.Fill(component);
-                    componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
+                    componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, originFilterP, vendorFilterP);
 
                     return View(componentVM);
                 }
@@ -605,12 +629,14 @@ namespace ConfigMan.Controllers
                 subsetstrP = componentVM.FilterData.Subsetstr,
                 componentFilterP = componentVM.FilterData.ComponentFilter,
                 authFilterP = componentVM.FilterData.AuthFilter,
+                originFilterP = componentVM.FilterData.OriginFilter,
                 vendorFilterP = componentVM.FilterData.VendorFilter
             });
         }
        
         public ActionResult Match(int id, string messageP, string msglevelP, 
-            string filterstrP, string subsetstrP, string componentFilterP, string authFilterP, string vendorFilterP)
+            string filterstrP, string subsetstrP, string componentFilterP, 
+            string authFilterP, string originFilterP, string vendorFilterP)
         {
             ComponentVM componentVM = new ComponentVM();
             Contract.ContractFailed += (Contract_ContractFailed);
@@ -619,7 +645,7 @@ namespace ConfigMan.Controllers
             string m = messageP;
             string l = msglevelP;
             componentVM.Message.Fill(t, l, m);
-            componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
+            componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, originFilterP, vendorFilterP);
 
             if (ContractErrorOccurred)
             {
@@ -641,6 +667,7 @@ namespace ConfigMan.Controllers
                                 ComponentID = component.ComponentID,
                                 ComponentNameTemplate = component.ComponentNameTemplate,
                                 Authorized = component.Authorized,
+                                Origin = component.Origin,
                                 VendorID = j1.VendorID,
                                 VendorName = j1.VendorName,
                                 VendorGroup = j1.VendorGroup
@@ -727,7 +754,7 @@ namespace ConfigMan.Controllers
                     l = msglevelP;
                 }
                 componentVM.Message.Fill(t, l, m);
-                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
+                componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, originFilterP, vendorFilterP);
                
             }
             return View(componentVM);
@@ -735,7 +762,8 @@ namespace ConfigMan.Controllers
 
         }
 
-        public ActionResult Koppel(string filterstrP, string subsetstrP, string componentFilterP, string authFilterP, string vendorFilterP,
+        public ActionResult Koppel(string filterstrP, string subsetstrP, string componentFilterP, 
+            string authFilterP, string originFilterP, string vendorFilterP,
                                     int computerid, int componentid, string release, DateTime startdatetime, int newcomponentid)
         {
             ComponentVM componentVM = new ComponentVM();
@@ -747,7 +775,7 @@ namespace ConfigMan.Controllers
             Contract.Requires(startdatetime != null, "Contract Failed (startdatetime)!");
             Contract.Requires(newcomponentid > 0, "Contract Failed (componentid)!");
 
-            componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, vendorFilterP);
+            componentVM.FilterData.Fill(filterstrP, subsetstrP, componentFilterP, authFilterP, originFilterP, vendorFilterP);
 
             string t = "Component - Koppelen Installatie";
             string m = "?";
@@ -769,6 +797,7 @@ namespace ConfigMan.Controllers
                     subsetstrP = componentVM.FilterData.Subsetstr,
                     componentFilterP = componentVM.FilterData.ComponentFilter,
                     authFilterP = componentVM.FilterData.AuthFilter,
+                    originFilterP = componentVM.FilterData.OriginFilter,
                     vendorFilterP = componentVM.FilterData.VendorFilter
                 });
             }
@@ -843,6 +872,7 @@ namespace ConfigMan.Controllers
                     subsetstrP = componentVM.FilterData.Subsetstr,
                     componentFilterP = componentVM.FilterData.ComponentFilter,
                     authFilterP = componentVM.FilterData.AuthFilter,
+                    originFilterP = componentVM.FilterData.OriginFilter,
                     vendorFilterP = componentVM.FilterData.VendorFilter
                 });
             }

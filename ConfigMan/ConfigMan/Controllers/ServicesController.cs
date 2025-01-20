@@ -14,6 +14,7 @@ using System.Web.UI.WebControls;
 using ConfigMan;
 using ConfigMan.ViewModels;
 using System.Reflection;
+using System.Web.Services.Description;
 
 namespace ConfigMan.Controllers
 {
@@ -205,18 +206,21 @@ namespace ConfigMan.Controllers
         }
 
         // GET: Services/Details/5
-        public ActionResult Details(int id, string name,
+        public ActionResult Details(int id, string name, string messageP, string msgLevelP,
             string filterstrP, string subsetstrP,
             string systeemfilterP, string servicenaamfilterP, string changestatefilterP, string directoryfilterP, string templatefilterP, string componentfilterP, string programfilterP)
         {
-            ServiceVM serviceVM = new ServiceVM(); 
+            ServiceVM serviceVM = new ServiceVM();
             Contract.ContractFailed += (Contract_ContractFailed);
             Contract.Requires(id > 0, "Geef een geldig Computer ID op");
             Contract.Requires(!string.IsNullOrEmpty(name), "Geef een geldige Service Naam op");
             string t = "Service - Bekijken";
-            string l = "?";
             string m = "?";
-
+            string l = "?";
+            if (!string.IsNullOrEmpty(msgLevelP))
+            {
+                l = msgLevelP;
+            }
             if (ContractErrorOccurred)
             {
                 ContractErrorOccurred = false;
@@ -225,7 +229,7 @@ namespace ConfigMan.Controllers
                 l = serviceVM.Message.Error;
                 serviceVM.Message.Fill(t, l, m);
                 serviceVM.FilterData.Fill(filterstrP, subsetstrP,
-                            systeemfilterP, servicenaamfilterP, changestatefilterP, directoryfilterP, templatefilterP, 
+                            systeemfilterP, servicenaamfilterP, changestatefilterP, directoryfilterP, templatefilterP,
                             componentfilterP, programfilterP);
 
                 return RedirectToAction("Index", "Services", new
@@ -248,60 +252,79 @@ namespace ConfigMan.Controllers
                 var query = from service in db.Services
                             where ((service.ComputerID == id) && (service.Name == name))
                             join component in db.Components
-                            on service.ComponentID equals component.ComponentID 
+                            on service.ComponentID equals component.ComponentID
                             join computer in db.Computers
                             on service.ComputerID equals computer.ComputerID
                             orderby computer.ComputerName, service.Name
                             select new ServiceVM
                             {
-                                PSComputerName = service.PSComputerName     ,
-                                SystemName = service.SystemName     ,
-                                Name = service.Name     ,
-                                ComputerID = service.ComputerID     ,
-                                ComponentID = service.ComponentID      ,
+                                PSComputerName = service.PSComputerName,
+                                SystemName = service.SystemName,
+                                Name = service.Name,
+                                ComputerID = service.ComputerID,
+                                ComponentID = service.ComponentID,
                                 ComponentName = component.ComponentNameTemplate,
-                                Suffix =  service.Suffix    ,
-                                Caption = service.Caption     ,
-                                DisplayName = service.DisplayName     ,
-                                PathName =  service.PathName    ,
-                                ServiceType = service.ServiceType     ,
-                                StartMode = service.StartMode     ,
-                                Started = service.Started      ,
-                                State = service.State     ,
-                                Status =  service.Status    ,
-                                ExitCode = service.ExitCode     ,
-                                Description = service.Description     ,
-                                Software = service.Software     ,
-                                DirectoryTemplate =  service.DirectoryTemplate,   
-                                DirName =  service.DirName   ,
-                                ProgramName = service.ProgramName     ,
-                                Parameter =  service.Parameter    ,
-                                ChangeState =  service.ChangeState    ,
-                                StartDate =  service.StartDate    ,
-                                CheckDate =  service.CheckDate    ,
-                                OldChangeState = service.OldChangeState     ,
-                                OldDirName =  service.OldDirName    ,
-                                OldProgramName = service.OldProgramName      ,
-                                OldParameter = service.OldParameter};
+                                Suffix = service.Suffix,
+                                Caption = service.Caption,
+                                DisplayName = service.DisplayName,
+                                PathName = service.PathName,
+                                ServiceType = service.ServiceType,
+                                StartMode = service.StartMode,
+                                Started = service.Started,
+                                State = service.State,
+                                Status = service.Status,
+                                ExitCode = service.ExitCode,
+                                Description = service.Description,
+                                Software = service.Software,
+                                DirectoryTemplate = service.DirectoryTemplate,
+                                DirName = service.DirName,
+                                ProgramName = service.ProgramName,
+                                Parameter = service.Parameter,
+                                ChangeState = service.ChangeState,
+                                StartDate = service.StartDate,
+                                CheckDate = service.CheckDate,
+                                OldChangeState = service.OldChangeState,
+                                OldDirName = service.OldDirName,
+                                OldProgramName = service.OldProgramName,
+                                OldParameter = service.OldParameter
+                            };
                 serviceVM = query.Single();
 
                 if (serviceVM == null)
                 {
                     l = serviceVM.Message.Error;
-                    m = "*** ERROR *** Service " + name + " op computer met ID "  + id.ToString() + " staat niet in de database.";
+                    m = "*** ERROR *** Service " + name + " op computer met ID " + id.ToString() + " staat niet in de database.";
                 }
                 else
                 {
                     l = serviceVM.Message.Info;
-                    m = "Klik op BEWERK om deze service te bewerken";
+                    if (!string.IsNullOrEmpty(messageP))
+                    {
+                        m = messageP;
+                    }
+                    else { 
+                        m = "Klik op BEWERK om deze service te bewerken";
+                    }
                 }
-                serviceVM.Message.Fill(t, l, m);
-                serviceVM.FilterData.Fill(filterstrP, subsetstrP,
-                           systeemfilterP, servicenaamfilterP, changestatefilterP, directoryfilterP, templatefilterP, componentfilterP, programfilterP);
+                var QC = from s in db.Services
+                         where s.DirName == serviceVM.DirName && s.ProgramName == serviceVM.ProgramName && s.ComponentID != serviceVM.ComponentID
+                         select new ServiceVM();
+                int thiscount = QC.ToList().Count();
 
-                return View(serviceVM);
+                if (thiscount != 0)
+                {
+                    l = serviceVM.Message.Warning;
+                    m = m + " ==> Er zijn nog " + thiscount.ToString() + " services met deze program/directory combinatie maar met een andere componentnaam.";
+                }
             }
+            serviceVM.Message.Fill(t, l, m);
+            serviceVM.FilterData.Fill(filterstrP, subsetstrP,
+                       systeemfilterP, servicenaamfilterP, changestatefilterP, directoryfilterP, templatefilterP, componentfilterP, programfilterP);
+
+            return View(serviceVM);
+        
         }
+        
 
         // GET: Services/Edit/5
         public ActionResult Edit(int id, string name,
@@ -386,6 +409,16 @@ namespace ConfigMan.Controllers
                 {
                     l = serviceVM.Message.Info;
                     m = "Voer wijzigingen in en klik op OPSLAAN";
+                    var QC = from s in db.Services
+                             where s.DirName == serviceVM.DirName && s.ProgramName == serviceVM.ProgramName && s.ComponentID != serviceVM.ComponentID
+                             select new ServiceVM();
+                    int thiscount = QC.ToList().Count();
+
+                    if (thiscount != 0)
+                    {
+                        l = serviceVM.Message.Warning;
+                        m = m + " ==> Er zijn nog " + thiscount.ToString() + " services met deze program/directory combinatie maar met een andere componentnaam.";
+                    }
                     List<Component> clist = db.Components.OrderBy(x => x.ComponentNameTemplate).ToList();
 
                     // Set first entry on current value
@@ -424,6 +457,7 @@ namespace ConfigMan.Controllers
             string t = "Service - Bewerken";
             string l = "?";
             string m = "?";
+            
             if (ModelState.IsValid)
             {
                 int selectedComponentID = Int32.Parse(serviceVM.SelectedComponentIDstring);
@@ -438,6 +472,18 @@ namespace ConfigMan.Controllers
 
                 m = "Service " + service.Name.TrimEnd() + " is aangepast";
                 l = serviceVM.Message.Info;
+                // Check if there are services with same program/directroy with a different component
+                var QC = from s in db.Services
+                         where s.DirName == serviceVM.DirName && s.ProgramName == serviceVM.ProgramName && s.ComponentID != serviceVM.ComponentID
+                         select new ServiceVM();
+                int thiscount = QC.ToList().Count();
+
+                if (thiscount != 0)
+                {
+                    l = serviceVM.Message.Warning;
+                    m =  m + " ==> Er zijn nog " + thiscount.ToString() + " services met deze program/directory combinatie maar met een andere componentnaam.";
+                }
+
                 serviceVM.Message.Fill(t, l, m);
                 serviceVM.FilterData.Fill(filterstrP, subsetstrP,
                            systeemfilterP, servicenaamfilterP, changestatefilterP, directoryfilterP, templatefilterP, componentfilterP, programfilterP);
@@ -458,6 +504,7 @@ namespace ConfigMan.Controllers
             }
             else
             {
+                
                 List<Component> clist = db.Components.OrderBy(x => x.ComponentNameTemplate).ToList();
 
                 // Set first entry on current value
@@ -642,6 +689,171 @@ namespace ConfigMan.Controllers
                 componentfilterP = serviceVM.FilterData.ComponentFilter,
                 programfilterP = serviceVM.FilterData.ProgramFilter
             });
+        }
+
+        public ActionResult CompLink(int id, string name,
+           string filterstrP, string subsetstrP,
+           string systeemfilterP, string servicenaamfilterP, string changestatefilterP, string directoryfilterP, string templatefilterP, string componentfilterP, string programfilterP)
+        {
+            ServiceVM serviceVM = new ServiceVM();
+            Contract.ContractFailed += (Contract_ContractFailed);
+            Contract.Requires(id > 0, "Geef een geldig Computer ID op");
+            Contract.Requires(!string.IsNullOrEmpty(name), "Geef een geldige Service Naam op");
+            string t = "Service - Bekijken";
+            string l = "?";
+            string m = "?";
+
+            if (ContractErrorOccurred)
+            {
+                ContractErrorOccurred = false;
+
+                m = "Contract error bij componenten linken aan services";
+                l = serviceVM.Message.Error;
+                serviceVM.Message.Fill(t, l, m);
+                serviceVM.FilterData.Fill(filterstrP, subsetstrP,
+                            systeemfilterP, servicenaamfilterP, changestatefilterP, directoryfilterP, templatefilterP,
+                            componentfilterP, programfilterP);
+
+                return RedirectToAction("Index", "Services", new
+                {
+                    messageP = m,
+                    msgLevelP = l,
+                    filterstrP = serviceVM.FilterData.Filterstr,
+                    subsetstrP = serviceVM.FilterData.Subsetstr,
+                    systeemfilterP = serviceVM.FilterData.SysteemFilter,
+                    servicenaamfilterP = serviceVM.FilterData.ServiceNaamFilter,
+                    changestatefilterP = serviceVM.FilterData.ChangeStateFilter,
+                    directoryfilterP = serviceVM.FilterData.DirectoryFilter,
+                    templatefilterP = serviceVM.FilterData.TemplateFilter,
+                    componentfilterP = serviceVM.FilterData.ComponentFilter,
+                    programfilterP = serviceVM.FilterData.ProgramFilter
+                });
+            }
+            else
+            {
+                // get this service
+                var query = from service in db.Services
+                            where ((service.ComputerID == id) && (service.Name == name))
+                            join component in db.Components
+                            on service.ComponentID equals component.ComponentID
+                            join computer in db.Computers
+                            on service.ComputerID equals computer.ComputerID
+                            orderby computer.ComputerName, service.Name
+                            select new ServiceVM
+                            {
+                                PSComputerName = service.PSComputerName,
+                                SystemName = service.SystemName,
+                                Name = service.Name,
+                                ComputerID = service.ComputerID,
+                                ComponentID = service.ComponentID,
+                                ComponentName = component.ComponentNameTemplate,
+                                Suffix = service.Suffix,
+                                Caption = service.Caption,
+                                DisplayName = service.DisplayName,
+                                PathName = service.PathName,
+                                ServiceType = service.ServiceType,
+                                StartMode = service.StartMode,
+                                Started = service.Started,
+                                State = service.State,
+                                Status = service.Status,
+                                ExitCode = service.ExitCode,
+                                Description = service.Description,
+                                Software = service.Software,
+                                DirectoryTemplate = service.DirectoryTemplate,
+                                DirName = service.DirName,
+                                ProgramName = service.ProgramName,
+                                Parameter = service.Parameter,
+                                ChangeState = service.ChangeState,
+                                StartDate = service.StartDate,
+                                CheckDate = service.CheckDate,
+                                OldChangeState = service.OldChangeState,
+                                OldDirName = service.OldDirName,
+                                OldProgramName = service.OldProgramName,
+                                OldParameter = service.OldParameter
+                            };
+                serviceVM = query.Single();
+
+                if (serviceVM == null)
+                {
+                    l = serviceVM.Message.Error;
+                    m = "*** ERROR *** Service " + name + " op computer met ID " + id.ToString() + " staat niet in de database.";
+                }
+                else
+                {
+                    // get component name
+                    // get all services with same directory and program, but different component names
+                    var QC = from service in db.Services
+                             where service.DirName == serviceVM.DirName && service.ProgramName == serviceVM.ProgramName && service.ComponentID != serviceVM.ComponentID
+                             select new ServiceVM
+                             {
+                                 PSComputerName = service.PSComputerName,
+                                 SystemName = service.SystemName,
+                                 Name = service.Name,
+                                 ComputerID = service.ComputerID,
+                                 ComponentID = service.ComponentID,
+                                 Suffix = service.Suffix,
+                                 Caption = service.Caption,
+                                 DisplayName = service.DisplayName,
+                                 PathName = service.PathName,
+                                 ServiceType = service.ServiceType,
+                                 StartMode = service.StartMode,
+                                 Started = service.Started,
+                                 State = service.State,
+                                 Status = service.Status,
+                                 ExitCode = service.ExitCode,
+                                 Description = service.Description,
+                                 Software = service.Software,
+                                 DirectoryTemplate = service.DirectoryTemplate,
+                                 DirName = service.DirName,
+                                 ProgramName = service.ProgramName,
+                                 Parameter = service.Parameter,
+                                 ChangeState = service.ChangeState,
+                                 StartDate = service.StartDate,
+                                 CheckDate = service.CheckDate,
+                                 OldChangeState = service.OldChangeState,
+                                 OldDirName = service.OldDirName,
+                                 OldProgramName = service.OldProgramName,
+                                 OldParameter = service.OldParameter
+                             };
+                    ServiceIndex si = new ServiceIndex
+                    {
+                        ServiceLijst = QC.ToList()
+                    };
+                    // update all these services
+                    int updatecount = 0;
+                    foreach (ServiceVM Servitem in si.ServiceLijst)
+                    {
+                        Service service = new Service();
+                        service.Fill(Servitem);
+                        service.ComponentID = serviceVM.ComponentID;
+                        db.Entry(service).State = EntityState.Modified;
+                        db.SaveChanges();
+                        updatecount ++;
+                    }
+                    m = updatecount.ToString() + " Services with the same directory and program have gotten the same component name";
+                    l = serviceVM.Message.Info;
+                    serviceVM.FilterData.Fill(filterstrP, subsetstrP,
+                           systeemfilterP, servicenaamfilterP, changestatefilterP, directoryfilterP, templatefilterP,
+                           componentfilterP, programfilterP);
+                }
+                return RedirectToAction("Details", "Services", new
+                {
+                    id = serviceVM.ComputerID,
+                    name = serviceVM.Name,
+                    messageP = m,
+                    msgLevelP = l,
+                    filterstrP = serviceVM.FilterData.Filterstr,
+                    subsetstrP = serviceVM.FilterData.Subsetstr,
+                    systeemfilterP = serviceVM.FilterData.SysteemFilter,
+                    servicenaamfilterP = serviceVM.FilterData.ServiceNaamFilter,
+                    changestatefilterP = serviceVM.FilterData.ChangeStateFilter,
+                    directoryfilterP = serviceVM.FilterData.DirectoryFilter,
+                    templatefilterP = serviceVM.FilterData.TemplateFilter,
+                    componentfilterP = serviceVM.FilterData.ComponentFilter,
+                    programfilterP = serviceVM.FilterData.ProgramFilter
+                });
+
+            }
         }
 
         private void Contract_ContractFailed(object sender, ContractFailedEventArgs e)

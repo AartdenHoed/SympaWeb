@@ -48,6 +48,8 @@ namespace ConfigMan.ViewModels
         [StringRange(AllowableValues = new[] { "Y", "N", "y", "n"}, ErrorMessage = "Specificeer Y (geautoriseerd) of N (niet geautoriseerd)")]
         public string Authorized { get { return _Authorized.ToUpper(); } set { _Authorized = value.ToUpper(); } }
 
+        public string Origin { get; set; }  
+
         public SympaFilter FilterData = new SympaFilter();
 
         public void Fill(Component component)
@@ -56,6 +58,7 @@ namespace ConfigMan.ViewModels
             this.ComponentID = component.ComponentID;
             this.VendorID = component.VendorID;
             this.Authorized = component.Authorized;
+            this.Origin = component.Origin;
 
         }
 

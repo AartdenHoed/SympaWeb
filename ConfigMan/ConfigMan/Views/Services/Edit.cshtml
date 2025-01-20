@@ -210,7 +210,10 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Opslaan" class="sy-button" /> |  @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-url" })
+                <input type="submit" value="Opslaan" class="sy-button" /> |
+                @Html.ActionLink("Koppel overeenkomstige services aan dezelfde component", "CompLink", 
+                     new { id = Model.ComputerID, name = Model.Name }, new { @class = "sy-alist" }) |
+                @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-url" })
 
             </div>
         </div>

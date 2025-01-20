@@ -13,6 +13,7 @@
           <Property Name="VendorID" Type="int" Nullable="false" />
           <Property Name="ComponentNameTemplate" Type="char" MaxLength="120" Nullable="false" />
           <Property Name="Authorized" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="Origin" Type="char" MaxLength="8" Nullable="false" />
         </EntityType>
         <EntityType Name="Computer">
           <Key>
@@ -271,6 +272,7 @@
           <Property Name="Authorized" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
           <NavigationProperty Name="Installations" Relationship="SympaModel.FK_Installation_Component" FromRole="Component" ToRole="Installation" />
           <NavigationProperty Name="Services" Relationship="SympaModel.FK_Service_Component" FromRole="Component" ToRole="Service" />
+          <Property Name="Origin" Type="String" Nullable="false" MaxLength="8" FixedLength="true" Unicode="false" />
         </EntityType>
         <EntityType Name="Computer">
           <Key>
@@ -532,6 +534,7 @@
           <EntitySetMapping Name="Components">
             <EntityTypeMapping TypeName="SympaModel.Component">
               <MappingFragment StoreEntitySet="Component">
+                <ScalarProperty Name="Origin" ColumnName="Origin" />
                 <ScalarProperty Name="Authorized" ColumnName="Authorized" />
                 <ScalarProperty Name="ComponentNameTemplate" ColumnName="ComponentNameTemplate" />
                 <ScalarProperty Name="ComponentID" ColumnName="ComponentID" />

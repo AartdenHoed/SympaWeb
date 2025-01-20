@@ -61,7 +61,7 @@
             </td>
             <td>
                 @Html.EditorFor(model => model.FilterData.SysteemFilter,
-               new { htmlAttributes = new { @placeholder = "Systeem naam filter", @class = "sy-input", @autofocus = "autofocus", @onchange = "adaptUrls()" } })
+                new { htmlAttributes = new { @placeholder = "Systeem naam filter", @class = "sy-input", @autofocus = "autofocus", @onchange = "adaptUrls()" } })
                 @Html.ValidationMessageFor(model => model.FilterData.SysteemFilter, "", new { @class = "text-danger" })
                 @Html.EditorFor(model => model.FilterData.ServiceNaamFilter,
                 new { htmlAttributes = new { @placeholder = "Service naam filter", @class = "sy-input", @autofocus = "autofocus", @onchange = "adaptUrls()" } })

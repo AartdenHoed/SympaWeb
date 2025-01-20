@@ -40,13 +40,15 @@ namespace ConfigMan.ViewModels
         public string ComponentFilter { get; set; }
         public string VendorFilter { get; set; }
         public string AuthFilter { get; set; }
+        public string OriginFilter { get; set; }
 
-        public void Fill(string filterstr, string subsetstr, string componentFilter, string authFilter, string vendorFilter)
+        public void Fill(string filterstr, string subsetstr, string componentFilter, string authFilter, string originFilter, string vendorFilter)
         {
             this.Filterstr = filterstr;
             this.Subsetstr = subsetstr;
             this.ComponentFilter = componentFilter;
             this.AuthFilter = authFilter;
+            this.OriginFilter = originFilter;
             this.VendorFilter = vendorFilter;
         }
     }

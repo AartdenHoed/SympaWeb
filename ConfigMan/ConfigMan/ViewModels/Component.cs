@@ -17,6 +17,7 @@ namespace ConfigMan
             this.Authorized = componentVM.Authorized;
             
             this.ComponentID = componentVM.ComponentID;
+            this.Origin = componentVM.Origin;
             
             if ((componentVM.SelectedVendorIDstring != null) && (componentVM.SelectedVendorIDstring != "")) {
                 this.VendorID = Int32.Parse(componentVM.SelectedVendorIDstring);

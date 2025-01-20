@@ -196,7 +196,9 @@
     </p>
 
     <p>
-        @Html.ActionLink("Toon overeenkomende installaties", "Match", new { id = Model.ComponentID }, new { @class = "sy-alist" }) |
+        @Html.ActionLink("Koppel overeenkomstige services aan dezelfde component", "CompLink",
+        new { id = Model.ComputerID, name = Model.Name }, 
+        new { @class = "sy-alist" }) |
         @Html.ActionLink("Bewerk", "Edit", new { id = Model.ComputerID, name = Model.Name }, new { @class = "sy-alist" }) |
 
         @Html.ActionLink("Terug naar lijst", "Index", "", new { @class = "sy-url" })

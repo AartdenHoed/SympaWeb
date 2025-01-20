@@ -153,6 +153,8 @@ function adaptUrls() {
         //alert(vendor);
         var auth = "&authFilterP=" + $("#FilterData_AuthFilter")[0].value;
         //alert(auth);
+        var origin = "&originFilterP=" + $("#FilterData_OriginFilter")[0].value;
+        //alert(origin);
 
         //alert("START - sy-url");
 
@@ -164,7 +166,7 @@ function adaptUrls() {
             var url = "/Components?filterStrP=" + filterstr;
             //alert(url);
 
-            var completeURL = url + subset + component + vendor + auth;
+            var completeURL = url + subset + component + vendor + auth + origin;
             //alert(completeURL);
             $(".sy-url").attr("href", completeURL);
 
@@ -204,10 +206,9 @@ function adaptUrls() {
                     // alert(attrStripped);
                 }
 
-                var newattr = attrStripped + "?id=" + hidden.toString() + "&filterStrP=Y" + subset + component + vendor + auth;
-                var newattr2 = newattr.replace(" ", "%20");
+                var newattr = attrStripped + "?id=" + hidden.toString() + "&filterStrP=Y" + subset + component + vendor + auth + origin;
                 // alert("here?");
-                $(sya[i]).attr("href", newattr2);
+                $(sya[i]).attr("href", newattr);
 
                 teller = teller + 1;
 
@@ -235,7 +236,7 @@ function adaptUrls() {
 
                 var trail = attr.substring(ix + 1);
 
-                var newattr = attrStripped + filt + subset + component + vendor + auth + "&" + trail;
+                var newattr = attrStripped + filt + subset + component + vendor + auth + origin + "&" + trail;
                 
                 if (i < 3) {
                     //alert(attrStripped);
@@ -267,7 +268,7 @@ function adaptUrls() {
                 var newattr = attr;
                 var f1 = attr.indexOf(s1);
                 if (f1 > 0) {
-                    var repstring = "/Create?filterStrP=Y" + subset + component + vendor + auth;
+                    var repstring = "/Create?filterStrP=Y" + subset + component + vendor + auth + origin;
                     var attrStripped = attr.substring(0, f1);
                     newattr = attrStripped + repstring;
                     // alert(newattr);

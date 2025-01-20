@@ -51,6 +51,9 @@
                 @Html.DisplayNameFor(model => model.ComponentLijst[0].Authorized)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.ComponentLijst[0].Origin)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.ComponentLijst[0].VendorName)
             </th>
         </tr>
@@ -68,6 +71,11 @@
                 @Html.EditorFor(model => model.FilterData.AuthFilter,
                new { htmlAttributes = new { @class = "sy-input", @autofocus = "autofocus", @onchange = "adaptUrls()" } })
                 @Html.ValidationMessageFor(model => model.FilterData.AuthFilter, "", new { @class = "text-danger" })
+            </td>
+            <td>
+                @Html.EditorFor(model => model.FilterData.OriginFilter,
+               new { htmlAttributes = new { @class = "sy-input", @autofocus = "autofocus", @onchange = "adaptUrls()" } })
+                @Html.ValidationMessageFor(model => model.FilterData.OriginFilter, "", new { @class = "text-danger" })
             </td>
             <td>
                 @Html.EditorFor(model => model.FilterData.VendorFilter,
@@ -93,6 +101,9 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Authorized)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Origin)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.VendorName)
