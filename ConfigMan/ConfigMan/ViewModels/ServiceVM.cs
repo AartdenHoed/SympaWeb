@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.Linq;
 using System.Web;
+using System.Text.RegularExpressions;
 
 namespace ConfigMan.ViewModels
 {
@@ -140,5 +141,27 @@ namespace ConfigMan.ViewModels
         [MaxLength(2048, ErrorMessage = "Maximale lengte = 2048")]
         public string OldParameter { get; set; }
 
+        [DisplayName("Regex van directory klopt")]
+        public bool RegexOk
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(this.DirectoryTemplate)) { return true; }
+                else
+                {
+                    string pattern = this.DirectoryTemplate;
+                    Regex rx = new Regex(pattern);
+                    MatchCollection matchdir = rx.Matches(this.DirName);
+                    if (matchdir.Count > 0)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+             }
+        }
     }
 }

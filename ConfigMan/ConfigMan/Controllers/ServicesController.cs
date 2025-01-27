@@ -305,6 +305,10 @@ namespace ConfigMan.Controllers
                     else { 
                         m = "Klik op BEWERK om deze service te bewerken";
                     }
+                    if (! serviceVM.RegexOk)
+                    {
+                        m = m + " (LET OP: regex is niet oké)";
+                    }
                 }
                 var QC = from s in db.Services
                          where s.DirName == serviceVM.DirName && s.ProgramName == serviceVM.ProgramName && s.ComponentID != serviceVM.ComponentID
@@ -474,7 +478,7 @@ namespace ConfigMan.Controllers
                 l = serviceVM.Message.Info;
                 // Check if there are services with same program/directroy with a different component
                 var QC = from s in db.Services
-                         where s.DirName == serviceVM.DirName && s.ProgramName == serviceVM.ProgramName && s.ComponentID != serviceVM.ComponentID
+                         where s.DirName == serviceVM.DirName && s.ProgramName == serviceVM.ProgramName && s.ComponentID != service.ComponentID
                          select new ServiceVM();
                 int thiscount = QC.ToList().Count();
 

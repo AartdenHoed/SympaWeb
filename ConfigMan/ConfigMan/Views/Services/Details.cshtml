@@ -136,6 +136,12 @@
                 @Html.DisplayFor(model => model.DirectoryTemplate) &nbsp;
             </dd>
             <dt class="sy-dt">
+                @Html.DisplayNameFor(model => model.RegexOk)
+            </dt>
+            <dd class="sy-dd">
+                @(Model.RegexOk ? "Yes" : "No")
+            </dd>
+            <dt class="sy-dt">
                 @Html.DisplayNameFor(model => model.DirName)
             </dt>
             <dd class="sy-dd">
